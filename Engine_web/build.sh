@@ -1,0 +1,1 @@
+tsc --out build/build.js src/Engine/Engine.ts -sourcemap --module commonjs --target es5
