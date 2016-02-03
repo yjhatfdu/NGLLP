@@ -1,3 +1,8 @@
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 ///<reference path='../Core/GlTexture.ts'/>
 ///<reference path='../Base.ts'/>
 ///<reference path='../Engine.ts'/>
@@ -5,57 +10,33 @@
 /**
  * Created by yjh on 15/12/21.
  */
-namespace Core2D {
-    import ImageItem = Resource.ImageItem;
-
-    export interface SpriteProtocol extends Base.NodeBase {
-        batchNode;
-        isRootSprite;
-        opacity;
-        zIndex;
-    }
-
-    export class Sprite extends Events.TouchItem implements SpriteProtocol {
-        texture:Core.GlTexture;
-        frameCount;
-        stride;
-        row;
-        rotation = 0;
-        opacity = 1;
-        sx;
-        sy;
-        sw;
-        sh;
-        batchNode;
-        isRootSprite = false;
-        rx;
-        ry;
-        rw;
-        rh;
-        rScale;
-        rRotation;
-        rOpacity;
-        frame = 0;
-        actions={};
-        resourceName;
-
-        constructor(imageItem:ImageItem, x?, y?, w?, h?, sx = 0, sy = 0, sw = 1, sh = 1, frameCount?, stride?, zIndex = 0) {
-            super(x || 0, y || 0,w || 2 * imageItem.width / Engine.render.designResolution[1],
-                h || 2 * imageItem.height / Engine.render.designResolution[1]);
-            if(imageItem){
+var Core2D;
+(function (Core2D) {
+    var Sprite = (function (_super) {
+        __extends(Sprite, _super);
+        function Sprite(imageItem, x, y, w, h, sx, sy, sw, sh, frameCount, stride, zIndex) {
+            if (sx === void 0) { sx = 0; }
+            if (sy === void 0) { sy = 0; }
+            if (sw === void 0) { sw = 1; }
+            if (sh === void 0) { sh = 1; }
+            if (zIndex === void 0) { zIndex = 0; }
+            _super.call(this, x || 0, y || 0, w || 2 * imageItem.width / Engine.render.designResolution[1], h || 2 * imageItem.height / Engine.render.designResolution[1]);
+            this.rotation = 0;
+            this.opacity = 1;
+            this.isRootSprite = false;
+            this.frame = 0;
+            this.actions = {};
+            if (imageItem) {
                 this.texture = imageItem.texture;
-                this.resourceName=imageItem.name;
+                this.resourceName = imageItem.name;
             }
-
-
             this.frameCount = frameCount || 1;
             this.stride = stride || 1;
             this.row = Math.floor(this.frameCount / this.stride);
-            [this.sx, this.sy, this.sw, this.sh, this.zIndex] = [sx, sy, sw, sh, zIndex];
-
+            _a = [sx, sy, sw, sh, zIndex], this.sx = _a[0], this.sy = _a[1], this.sw = _a[2], this.sh = _a[3], this.zIndex = _a[4];
+            var _a;
         }
-
-        update() {
+        Sprite.prototype.update = function () {
             if (this.isRootSprite) {
                 this.rx = this.x;
                 this.ry = this.y;
@@ -64,8 +45,9 @@ namespace Core2D {
                 this.rScale = this.scale;
                 this.rRotation = this.rotation;
                 this.rOpacity = this.opacity;
-            } else {
-                var parent = this.parent as Sprite;
+            }
+            else {
+                var parent = this.parent;
                 this.rx = this.x + parent.rx;
                 this.ry = this.y + parent.ry;
                 this.rw = this.w * parent.rw;
@@ -74,10 +56,10 @@ namespace Core2D {
                 this.rRotation = this.rotation + parent.rRotation;
                 this.rOpacity = this.opacity * parent.rOpacity;
             }
-            super.update(null);
+            _super.prototype.update.call(this, null);
             //没有纹理的化为虚拟sprite,直接跳过
-            if(!this.texture){
-                return
+            if (!this.texture) {
+                return;
             }
             //纹理不同的话,先绘制buffer
             if (this.batchNode.currentTexture != this.texture) {
@@ -108,92 +90,75 @@ namespace Core2D {
             var uvW = this.sw / this.stride;
             var uvH = this.sh / this.row;
             var uvX = uvW * frame % this.stride;
-            var uvY = uvH *  Math.floor(frame / this.stride);
+            var uvY = uvH * Math.floor(frame / this.stride);
             var tw = this.texture.sw;
             var th = this.texture.sh;
             var tx = this.texture.sx;
             var ty = this.texture.sy;
             var cursor = this.batchNode.updateCursor * 2;
             posBuffer[cursor] = x0;
-            uvBuffer[cursor] = tx + tw * uvX ;
-
+            uvBuffer[cursor] = tx + tw * uvX;
             cursor++;
             posBuffer[cursor] = y0;
-            uvBuffer[cursor] = ty+th*uvY;
-
+            uvBuffer[cursor] = ty + th * uvY;
             cursor++;
             posBuffer[cursor] = x1;
-            uvBuffer[cursor] = tx + tw * (uvX+ uvW);
-
+            uvBuffer[cursor] = tx + tw * (uvX + uvW);
             cursor++;
             posBuffer[cursor] = y1;
             uvBuffer[cursor] = uvBuffer[cursor - 2];
-
             cursor++;
             posBuffer[cursor] = x2;
             uvBuffer[cursor] = uvBuffer[cursor - 2];
-
             cursor++;
             posBuffer[cursor] = y2;
             uvBuffer[cursor] = ty + th * (uvY + uvH);
-
             cursor++;
             posBuffer[cursor] = x3;
             uvBuffer[cursor] = uvBuffer[cursor - 6];
-
             cursor++;
             posBuffer[cursor] = y3;
             uvBuffer[cursor] = uvBuffer[cursor - 2];
-
             cursor = this.batchNode.updateCursor;
             opacityBuffer[cursor] = opacityBuffer[cursor + 1] = opacityBuffer[cursor + 2] = opacityBuffer[cursor + 3] = this.rOpacity;
-
-            this.batchNode.updateCursor += 4
-        }
-
-        setNewChild() {
+            this.batchNode.updateCursor += 4;
+        };
+        Sprite.prototype.setNewChild = function () {
             if (!this.batchNode) {
-                return
+                return;
             }
             for (var i = 0; i < this.children.length; i++) {
-                var child = this.children[i] as Sprite;
+                var child = this.children[i];
                 child.batchNode = this.batchNode;
-                child.isRootSprite=false;
-                child.setNewChild()
+                child.isRootSprite = false;
+                child.setNewChild();
             }
-        }
-
-        appendChild(item:Sprite) {
+        };
+        Sprite.prototype.appendChild = function (item) {
             this.setNewChild();
-            super.appendChild(item)
-        }
-
-        insertChild(item:Sprite, index) {
+            _super.prototype.appendChild.call(this, item);
+        };
+        Sprite.prototype.insertChild = function (item, index) {
             this.setNewChild();
-            super.insertChild(item, index)
-        }
-        static deserialize(object){
+            _super.prototype.insertChild.call(this, item, index);
+        };
+        Sprite.deserialize = function (object) {
             //todo
-            var spr=new Sprite(Engine.resourceCtl.getItem(object.resourceName),object.x,object.y,
-                object.w,object.h,object.sx,object.sy,object.sw,object.sh,
-                object.frameCount,object.stride,object.zIndex);
-            for(var i=0;i<object.children.length;i++){
-                spr.appendChild(Sprite.deserialize(object[i]))
+            var spr = new Sprite(Engine.resourceCtl.getItem(object.resourceName), object.x, object.y, object.w, object.h, object.sx, object.sy, object.sw, object.sh, object.frameCount, object.stride, object.zIndex);
+            for (var i = 0; i < object.children.length; i++) {
+                spr.appendChild(Sprite.deserialize(object[i]));
             }
-            return spr
-        }
-        serialize(){
-            var object={} as any;
-            object.children=[];
+            return spr;
+        };
+        Sprite.prototype.serialize = function () {
+            var object = {};
+            object.children = [];
             //todo
-            for(var i=0;i<this.children.length;i++){
-                object.children.push((this.children[i] as Sprite).serialize())
+            for (var i = 0; i < this.children.length; i++) {
+                object.children.push(this.children[i].serialize());
             }
-        }
-
-    }
-}
-
-
-
-
+        };
+        return Sprite;
+    })(Events.TouchItem);
+    Core2D.Sprite = Sprite;
+})(Core2D || (Core2D = {}));

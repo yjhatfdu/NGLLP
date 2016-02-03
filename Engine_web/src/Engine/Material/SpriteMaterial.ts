@@ -1,12 +1,14 @@
 /**
  * Created by yjh on 15/12/25.
  */
+    ///<reference path='../Core/Material.ts'/>
+    ///<reference path='../Core/GlProgram.ts'/>
 namespace Material{
     export class SpriteMaterial extends Core.Material{
 
         uniforms=[
             {name:'posZ',type:'1f'},
-            {name:'texture',type:'1i'}
+            {name:'texture',type:'1i',value:0}
         ];
         attributes=[
             {name:'position',size:2},
@@ -16,6 +18,7 @@ namespace Material{
 
         constructor(){
             super();
+            this.autoBindAttrib=false;
             var vst=`
                 attribute vec2 position;
                 attribute vec2 uv;
@@ -24,7 +27,7 @@ namespace Material{
                 uniform float posZ;
                 varying float vOpacity;
                 varying vec2 uvCoord;
-                {
+                void main(){
                     vec4 pos=vec4(position,posZ,1.0);
                     gl_Position=mvpMat*pos;
                     uvCoord=uv;
@@ -38,7 +41,7 @@ namespace Material{
                 varying float vOpacity;
                 void main(){
                     vec4 color=texture2D(texture,uvCoord);
-                    color[3]=color[3]*vopacity;
+                    color[3]=color[3]*vOpacity;
                     gl_FragColor=color;
                 }
             `;

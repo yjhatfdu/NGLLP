@@ -2,9 +2,9 @@
  * Created by yjh on 15/12/15.
  */
     ///<reference path='../Base.ts'/>
-
+    ///<reference path='../Core3D/Camera.ts'/>
     namespace Core {
-        export class Render extends Base.NodeBase {
+        export class Render extends Core.Object3D {
 
             designResolution:Array<number>=[1024,768];
             width:number=0;
@@ -14,17 +14,24 @@
             container:HTMLElement;
             canvas:HTMLCanvasElement;
             gl;
-            vpMatrix;
+            vpMat=mat4.create();
+            viewMat;
+            perspectiveMat;
             materialStack=[];
+            defaultCamera;
+            aspect;
             constructor() {
                 super();
                 this.root=this;
+                this.isRoot=true;
                 this.p = Engine.settings.pixelRatio;
                 this.container = Engine.settings.container;
                 this.canvas=document.createElement('canvas');
                 this.container.appendChild(this.canvas);
                 this.canvas.style.width=this.canvas.style.height="100%";
                 this.setupGL();
+                this.defaultCamera=new Core3D.PerspectiveCamera(this);
+                this.defaultCamera.setAsDefaultCamera();
                 this.resize();
                 this.dispatchEvent('InitFinished');
                 this.update();
@@ -45,7 +52,8 @@
 
             resize(){
                 this.canvas.width=(this.width=this.canvas.offsetWidth)*this.p;
-                this.canvas.height=(this.width=this.canvas.offsetWidth)*this.p;
+                this.canvas.height=(this.height=this.canvas.offsetHeight)*this.p;
+                this.aspect=this.height/this.width;
                 this.gl.viewport(0,0,this.width*this.p,this.height*this.p)
             }
             update(){
@@ -53,7 +61,11 @@
                 this.gl.clear(this.gl.COLOR_BUFFER_BIT);
                 Engine.audioCtl.update();
                 this.dispatchEvent("BeforeUpdate");
-                super.update(0);
+                if(this.defaultCamera){
+                    this.defaultCamera.update();
+                }
+                mat4.multiply(this.vpMat,this.perspectiveMat,this.viewMat);
+                super.update();
                 this.dispatchEvent("AfterUpdate")
             }
         }

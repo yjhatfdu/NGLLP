@@ -1,6 +1,7 @@
 /**
  * Created by yjh on 15/12/20.
  */
+    ///<reference path='../Engine.ts'/>
 namespace Core{
 
     class BufferTexture{
@@ -123,7 +124,7 @@ namespace Core{
 
         update(){
             var gl=Engine.render.gl;
-            gl.activeTexture(gl.Texture0);
+            gl.activeTexture(gl.TEXTURE0);
             gl.bindTexture(gl.TEXTURE_2D,this.bufferTex.glTexture);
             gl.texSubImage2D(gl.TEXTURE_2D,0,this.x,this.y,gl.RGBA,gl.UNSIGNED_BYTE,this.source);
         }

@@ -1,6 +1,8 @@
 /**
  * Created by yjh on 15/12/19.
  */
+    ///<reference path='../Core/GlTexture.ts'/>
+    ///<reference path='../Base.ts'/>
 namespace Resource{
     import GlTexture = Core.GlTexture;
     export class ResourceItem extends Base.ObjectBase{

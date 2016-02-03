@@ -1,12 +1,15 @@
 /**
  * Created by yjh on 15/12/15.
  */
-
+    ///<reference path='Engine.ts'/>
 namespace Base{
     export class ObjectBase{
         uuid:string;
         constructor(){
             this.uuid=Math.random()+''
+        }
+        destroy(){
+
         }
     }
     export class EventBase extends ObjectBase{
@@ -16,22 +19,24 @@ namespace Base{
             super();
         }
 
-        dispatchEvent(event:string, args?:any) {
+        dispatchEvent(event:string, args?:any,captureOnly=false) {
             if (!this.listeners[event]) {
-                return true
+                return false
             }
             for (var i in this.listeners[event]) {
                 var l = this.listeners[event][i];
+                if( l.useCapture==false && captureOnly==true ){
+                    continue
+                }
                 l.listener( args,this);
+
                 if(l.oneTime){
                     delete this.listeners[event][i];
-                    return
                 }
-                if (l.useCapture) {
-                    return false
-                }
+                return true
+
             }
-            return true
+            return false
         }
 
         addEventListener(event:string, listener:Function, useCapture:boolean = false):number {
@@ -42,7 +47,7 @@ namespace Base{
             this.listeners[event].push({listener: listener, useCapture: useCapture,id:id});
             return id
         }
-        addOnetimeListener(event:string,listener:Function):number{
+        addOneTimeListener(event:string,listener:Function):number{
             if (!this.listeners[event]) {
                 this.listeners[event] = []
             }
@@ -69,22 +74,26 @@ namespace Base{
         }
     }
     export class NodeBase extends EventBase{
-        root:Core.Render;
+        root;
         children:Array<any>=[];
         parent;
-        visible:boolean;
+        visible:boolean=true;
+        level=0;
         constructor(){
             super()
         }
         setNode(){
-
+            this.level=this.parent.level+1;
+            for(var i=0;i<this.children.length;i++){
+                this.children[i].setNode();
+            }
         }
 
-        update(currentTime?){
+        update(flag?){
             for (var i=0;i<this.children.length;i++){
                 var node=this.children[i];
                 if(node.visible){
-                    node.update(currentTime)
+                    node.update()
                 }
             }
         }
@@ -93,13 +102,18 @@ namespace Base{
             child.parent=this;
             child.setNode();
             this.children.push(child);
+            child.setNode();
         }
         insertChild(child:NodeBase,index=0){
             child.root=this.root;
             child.parent=this;
             child.setNode();
-            this.children.splice(index,0,child)
+            this.children.splice(index,0,child);
+            child.setNode();
+
         }
+
+
         indexOfChild(child:NodeBase):number{
             return this.children.indexOf(child)
         }

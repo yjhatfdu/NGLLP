@@ -1,6 +1,7 @@
 /**
  * Created by yjh on 15/12/21.
  */
+    ///<reference path='Sprite.ts'/>
 namespace Core2D{
     class QuadrangleSprite extends Base.NodeBase implements SpriteProtocol{
         batchNode;

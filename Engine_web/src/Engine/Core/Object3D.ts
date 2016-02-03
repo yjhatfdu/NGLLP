@@ -1,9 +1,11 @@
 /**
  * Created by yjh on 15/12/21.
  */
+    ///<reference path='../Base.ts'/>
+    ///<reference path='../../../lib/gl-matrix.d.ts'/>
     namespace Core {
     export class Object3D extends Base.NodeBase {
-        isroot = false;
+        isRoot = false;
         position = vec3.create();
         rotate = vec3.create();
         scaleV = vec3.clone(new Float32Array([1, 1, 1]));
@@ -13,20 +15,20 @@
         material;
         parent:Object3D;
 
-        update(currentTime?) {
-            if (!this.isroot) {
+        update() {
+            if (!this.isRoot) {
                 mat4.identity(this.modelMat);
                 mat4.rotate(this.modelMat, this.modelMat, 1, this.rotate);
                 mat4.scale(this.modelMat, this.modelMat, this.scaleV);
                 mat4.translate(this.modelMat, this.modelMat, this.position);
                 mat4.mul(this.worldMat, this.modelMat, this.parent.worldMat);
-                mat4.mul(this.mvpMat, this.root.vpMatrix, this.worldMat);
+                mat4.mul(this.mvpMat, this.root.vpMat, this.worldMat);
             }
             if (this.material) {
                 this.material.mvpMat = this.mvpMat;
                 this.material.active();
             }
-            super.update(currentTime)
+            super.update()
         }
 
         set posX(v) {

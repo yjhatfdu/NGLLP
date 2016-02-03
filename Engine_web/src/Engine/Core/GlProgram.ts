@@ -1,6 +1,7 @@
 /**
  * Created by yjh on 15/12/20.
  */
+    ///<reference path='../Engine.ts'/>
 namespace Core{
     export class GlProgram{
         static programCache={};
