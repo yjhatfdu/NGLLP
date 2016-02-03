@@ -265,24 +265,29 @@ declare namespace Util{
 
         }
 
-        interface Response{
+        var Response:{
             error:string
             status:number
             data:string
-        }
+        };
+
         //export interface Requests extends Base.EventBase{
         //    get(url:string,callback,queries?:Object,headers?:Object)
         //    post(url:string,callback,postbody?:Object,headers?:Object)
         //}
-        interface Request {
-            open(url, method?, params?, headers?, postObject?, onload?, onerror?,onprogress?)
-        }
+
 
 
     }
 
 
-
+declare namespace Network{
+    interface Request {
+        new()
+        open(url, method?, params?, headers?, postObject?, onload?, onerror?,onprogress?)
+    }
+    var Request:Request
+}
 declare module Engine{
     export var render:Core.Render;
     export var audioCtl:Core.AudioCtl;
@@ -293,6 +298,3 @@ declare module Engine{
 //    declare function log(message:string)
 //}
 
-interface Test{
-
-}
