@@ -4,7 +4,7 @@
  */
 
 
-    namespace Base{
+    declare namespace Base{
         /**
          * 基类,初始化时生成随机的标示
          */
@@ -27,7 +27,7 @@
              * @param useCapture 表示是否捕捉事件,如果捕捉则不再继续查找事件
              * @return 返回event的id,可以用于注销事件监听
              */
-            addEventListener(event:string,listener:Function,useCapture:boolean=false):number
+            addEventListener(event:string,listener:Function,useCapture?:boolean):number
             /**
              * 一次性的监听器
              * @param event
@@ -81,7 +81,7 @@
              * @param child
              * @param index
              */
-            insertChildAt(child:NodeBase,index?:number)
+            insertChild(child:NodeBase,index?:number)
 
             /**
              * 移除指定的child
@@ -105,23 +105,23 @@
 
 
 
-    namespace Core {
+declare namespace Core {
         export interface Object3D extends Base.NodeBase {
             /**
              * default 0.0
              */
-            posX,
-            posY,
+            posX;
+            posY;
             posZ;
-            rotateX,
-            rotateY,
+            rotateX;
+            rotateY;
             rotateZ;
 
             /**
              * default 1.0
              */
-            scaleX,
-            scaleY,
+            scaleX;
+            scaleY;
             scaleZ;
 
             translate(x:number, y:number, z:number)
@@ -141,11 +141,11 @@
              */
         }
 
-        enum RenderEvent{
-            InitFinished="InitFinished",
-            BeforeUpdate="BeforeUpdate",
-            AfterUpdate="AfterUpdate"
-        }
+        //enum RenderEvent{
+        //    InitFinished="InitFinished",
+        //    BeforeUpdate="BeforeUpdate",
+        //    AfterUpdate="AfterUpdate"
+        //}
 
         /**
          * 在创建引擎实例时分平台实现各自的画布初始化
@@ -153,7 +153,7 @@
          *  设计分辨率 默认为 [1024,768]
          */
         export interface Render extends Base.EventBase {
-            designResolution:Array;
+            designResolution:Array<number>;
             width:number;
             height:number;
             hiDPI:boolean;
@@ -197,7 +197,7 @@
     //
     //}
 
-    namespace Core2D{
+declare namespace Core2D{
 
         interface Sprite extends Event.TouchItem{
 
@@ -215,24 +215,25 @@
 
         }
     }
-    namespace Core3D{
+declare namespace Core3D{
         interface Camera extends Core.Object3D{
 
         }
     }
-    namespace Event{
+declare namespace Event{
         export interface TouchItem extends Base.EventBase{
 
         }
-        interface TOuchCtl extends Base.EventBase{
+        interface TouchCtl extends Base.EventBase{
 
         }
     }
-    namespace Resource{
+declare namespace Resource{
         /**
          * 不能直接构建,只能从Engine.resourceCtl.getItem(name)获取
          */
         export interface ResourceItem{
+            constructor(controller,name)
             prepare()
         }
         export interface ImageItem extends ResourceItem{
@@ -253,36 +254,45 @@
              * @param callBack
              * @param failCallBack
              */
-            loadResources(list:Array,callBack,failCallBack?,progressCallBack?)
+            loadResources(list,callBack,failCallBack?,progressCallBack?)
             getItem(resourceName:string):ResourceItem
             checkCacheState(url:string):boolean
         }
     }
-    namespace Util{
-        declare function getTime()
-        export interface KVStorage{
+declare namespace Util{
+        function getTime()
+        interface KVStorage{
 
         }
 
-        export interface Response{
+        interface Response{
             error:string
             status:number
             data:string
         }
-        export interface Requests extends Base.EventBase{
-            get(url:string,callback,queries?:Object,headers?:Object)
-            post(url:string,callback,postbody?:Object,headers?:Object)
+        //export interface Requests extends Base.EventBase{
+        //    get(url:string,callback,queries?:Object,headers?:Object)
+        //    post(url:string,callback,postbody?:Object,headers?:Object)
+        //}
+        interface Request {
+            open(url, method?, params?, headers?, postObject?, onload?, onerror?,onprogress?)
         }
+
 
     }
 
 
-module Engine{
+
+declare module Engine{
     export var render:Core.Render;
     export var audioCtl:Core.AudioCtl;
     export var resourceCtl:Resource.ResourceCtl
 }
+//
+//module console{
+//    declare function log(message:string)
+//}
 
-module console{
-    declare function log(message:string)
+interface Test{
+
 }
