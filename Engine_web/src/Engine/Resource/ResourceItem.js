@@ -69,3 +69,4 @@ var Resource;
     })(ResourceItem);
     Resource.ImageItem = ImageItem;
 })(Resource || (Resource = {}));
+//# sourceMappingURL=ResourceItem.js.map

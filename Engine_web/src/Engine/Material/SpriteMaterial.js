@@ -25,3 +25,4 @@ var Material;
         return spriteMaterial;
     };
 })(Material || (Material = {}));
+//# sourceMappingURL=SpriteMaterial.js.map

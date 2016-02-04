@@ -70,3 +70,4 @@ var Events;
     })(Base.NodeBase);
     Events.TouchItem = TouchItem;
 })(Events || (Events = {}));
+//# sourceMappingURL=TouchItem.js.map

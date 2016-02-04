@@ -5,7 +5,7 @@
 namespace Resource{
     export class ResourceCtl extends Base.EventBase{
         resultDic={};
-        loadResources(list:Array<any>,callBack,failCallBack?,progressCallBack?){
+        loadResources_raw(list:Array<any>,callBack,failCallBack?,progressCallBack?){
             failCallBack=failCallBack||function(){};
             progressCallBack=progressCallBack||function(){};
             var jobCount=0;
@@ -38,7 +38,7 @@ namespace Resource{
                             }
                             progressCallBack(p/jobCount);
                             if(runningJobCount==0){
-                                callBack()
+                                callBack(this)
                             }
                         }.bind(this);
                         img.onerror=function(e){
@@ -54,6 +54,9 @@ namespace Resource{
                         x.open('GET',url,true);
                         x.responseType='arraybuffer';
                         x.onload=function(){
+                            if(x.status>=400){
+                                failCallBack(x.statusText)
+                            }
                             Engine.audioCtl.ctx.decodeAudioData(
                                 x.response,
                                 function(buffer){
@@ -65,7 +68,7 @@ namespace Resource{
                                         callBack()
                                     }
                                 }.bind(this),function(){
-                                    'AudioFile Decode Error: Resource name'+name
+                                    failCallBack('AudioFile Decode Error: Resource name'+name)
                                 })
                         }.bind(this);
                         x.onprogress=function(x){
@@ -75,6 +78,9 @@ namespace Resource{
                                 p+=progress[j]
                             }
                             progressCallBack(p/jobCount);
+                        };
+                        x.onerror=function(){
+                          failCallBack(x.statusText)
                         };
                         x.send()
                     }

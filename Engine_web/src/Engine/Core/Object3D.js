@@ -103,3 +103,4 @@ var Core;
     })(Base.NodeBase);
     Core.Object3D = Object3D;
 })(Core || (Core = {}));
+//# sourceMappingURL=Object3D.js.map

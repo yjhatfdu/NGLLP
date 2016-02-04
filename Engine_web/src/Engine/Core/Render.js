@@ -68,3 +68,4 @@ var Core;
     })(Core.Object3D);
     Core.Render = Render;
 })(Core || (Core = {}));
+//# sourceMappingURL=Render.js.map

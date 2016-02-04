@@ -66,3 +66,4 @@ var Core3D;
     })(Camera);
     Core3D.PerspectiveCamera = PerspectiveCamera;
 })(Core3D || (Core3D = {}));
+//# sourceMappingURL=Camera.js.map

@@ -158,3 +158,4 @@ var Base;
     })(EventBase);
     Base.NodeBase = NodeBase;
 })(Base || (Base = {}));
+//# sourceMappingURL=Base.js.map

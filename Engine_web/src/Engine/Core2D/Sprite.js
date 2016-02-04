@@ -179,3 +179,4 @@ var Core2D;
     })(Events.TouchItem);
     Core2D.Sprite = Sprite;
 })(Core2D || (Core2D = {}));
+//# sourceMappingURL=Sprite.js.map

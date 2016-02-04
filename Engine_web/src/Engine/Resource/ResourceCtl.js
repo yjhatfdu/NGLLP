@@ -15,7 +15,7 @@ var Resource;
             _super.apply(this, arguments);
             this.resultDic = {};
         }
-        ResourceCtl.prototype.loadResources = function (list, callBack, failCallBack, progressCallBack) {
+        ResourceCtl.prototype.loadResources_raw = function (list, callBack, failCallBack, progressCallBack) {
             failCallBack = failCallBack || function () { };
             progressCallBack = progressCallBack || function () { };
             var jobCount = 0;
@@ -46,7 +46,7 @@ var Resource;
                             }
                             progressCallBack(p / jobCount);
                             if (runningJobCount == 0) {
-                                callBack();
+                                callBack(this);
                             }
                         }.bind(this);
                         img.onerror = function (e) {
@@ -63,6 +63,9 @@ var Resource;
                         x.open('GET', url, true);
                         x.responseType = 'arraybuffer';
                         x.onload = function () {
+                            if (x.status >= 400) {
+                                failCallBack(x.statusText);
+                            }
                             Engine.audioCtl.ctx.decodeAudioData(x.response, function (buffer) {
                                 this.resultDic[name] = new Resource.AudioItem(buffer, this, name);
                                 runningJobCount--;
@@ -72,7 +75,7 @@ var Resource;
                                     callBack();
                                 }
                             }.bind(this), function () {
-                                'AudioFile Decode Error: Resource name' + name;
+                                failCallBack('AudioFile Decode Error: Resource name' + name);
                             });
                         }.bind(this);
                         x.onprogress = function (x) {
@@ -82,6 +85,9 @@ var Resource;
                                 p += progress[j];
                             }
                             progressCallBack(p / jobCount);
+                        };
+                        x.onerror = function () {
+                            failCallBack(x.statusText);
                         };
                         x.send();
                     }
@@ -99,3 +105,4 @@ var Resource;
     })(Base.EventBase);
     Resource.ResourceCtl = ResourceCtl;
 })(Resource || (Resource = {}));
+//# sourceMappingURL=ResourceCtl.js.map

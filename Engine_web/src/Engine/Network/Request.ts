@@ -3,7 +3,7 @@
  */
 namespace Network{
     export class Request{
-        open(url,method='GET',params={},headers={},postObject=null,onload=function(content,status){},onerror=function(message,status){},onprogress=function(progress){}){
+        open(url,method='GET',params={},headers={},postObject=null,onload=function(content){},onerror=function(err){},onprogress=function(progress){}){
             var x=new XMLHttpRequest();
             var query=[];
             for(var i in params){
@@ -23,15 +23,17 @@ namespace Network{
             }
             x.onload=function(){
                 if(x.status>=400){
-                    onerror('http err code:'+x.status,x.status)
+                    onerror(x.statusText)
                 }else{
                     if(x.getResponseHeader('Content-Type')=='application/json'){
-                        onload(JSON.parse(x.responseText),x.status)
+                        onload(JSON.parse(x.responseText))
+                    }else{
+                        onload(x.responseText)
                     }
                 }
             };
             x.onerror=function(e){
-                onerror(e.toString(),x.status)
+                onerror(x.statusText)
             };
             x.onprogress=function(e){
                 onprogress(e.loaded/e.total)

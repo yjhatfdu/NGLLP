@@ -96,3 +96,4 @@ var Core2D;
     })(Core.Object3D);
     Core2D.SpriteBatchNode = SpriteBatchNode;
 })(Core2D || (Core2D = {}));
+//# sourceMappingURL=SpriteBatchNode.js.map

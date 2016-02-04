@@ -56,3 +56,4 @@ var Core;
     })();
     Core.GlProgram = GlProgram;
 })(Core || (Core = {}));
+//# sourceMappingURL=GlProgram.js.map

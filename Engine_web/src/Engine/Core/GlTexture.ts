@@ -4,7 +4,7 @@
     ///<reference path='../Engine.ts'/>
 namespace Core{
 
-    protected class BufferTexture{
+    class BufferTexture{
         glTexture;
         subTextures=[];
         size;

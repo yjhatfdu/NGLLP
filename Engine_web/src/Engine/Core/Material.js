@@ -152,3 +152,4 @@ var Core;
     })(Base.ObjectBase);
     Core.Material = Material;
 })(Core || (Core = {}));
+//# sourceMappingURL=Material.js.map

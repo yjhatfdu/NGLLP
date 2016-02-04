@@ -127,3 +127,4 @@ var Events;
     })(Base.EventBase);
     Events.TouchCtl = TouchCtl;
 })(Events || (Events = {}));
+//# sourceMappingURL=TouchCtl.js.map
