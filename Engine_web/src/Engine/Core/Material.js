@@ -20,7 +20,7 @@ var Core;
             this.enableBlend = false;
             this.enableDepthTest = false;
             this.enableDepthWrite = false;
-            this.uniformList = [];
+            this.uniformList = {};
             this.attributeList = {};
             this.textures = [];
             this.uniforms = [];
@@ -38,12 +38,15 @@ var Core;
             this.bindAttributes(this.attributes);
         };
         Material.prototype.bindUniform = function (name, type, value) {
-            this.uniformList.push({ name: name, location: this.gl.getUniformLocation(this.program, name), func: this.gl['uniform' + type].bind(this.gl), ismat: type.indexOf('Matrix') >= 0, value: value });
+            this.uniformList[name] = { name: name, location: this.gl.getUniformLocation(this.program, name), func: this.gl['uniform' + type].bind(this.gl), ismat: type.indexOf('Matrix') >= 0, value: value };
         };
         Material.prototype.bindUniforms = function (list) {
             for (var i = 0; i < list.length; i++) {
                 this.bindUniform(list[i].name, list[i].type, list[i].value);
             }
+        };
+        Material.prototype.uniformData = function (name, data) {
+            this.uniformList[name].value = data;
         };
         Material.prototype.bindAttribute = function (name, size) {
             this.attributeList[name] = { name: name, location: this.gl.getAttribLocation(this.program, name), size: size };
@@ -109,7 +112,7 @@ var Core;
             }
             this.gl.depthMask(this.enableDepthWrite);
             //bind uniforms
-            for (var i = 0; i < this.uniformList.length; i++) {
+            for (var i in this.uniformList) {
                 var uniform = this.uniformList[i];
                 if (uniform.ismat) {
                     uniform.func(uniform.location, false, uniform.value || this[uniform.name] || 0);
@@ -134,10 +137,10 @@ var Core;
                 this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.IBO);
             }
             //bind textures
-            for (var i = 0; i < this.textures.length; i++) {
-                if (this.textures[i]) {
-                    this.gl.activeTexture(this.gl.TEXTURE0 + i);
-                    this.gl.bindTexture(this.gl.TEXTURE_2D, this.textures[i]);
+            for (var k = 0; k < this.textures.length; k++) {
+                if (this.textures[k]) {
+                    this.gl.activeTexture(this.gl.TEXTURE0 + k);
+                    this.gl.bindTexture(this.gl.TEXTURE_2D, this.textures[k].active(k));
                 }
             }
         };

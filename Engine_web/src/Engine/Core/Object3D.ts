@@ -14,15 +14,22 @@
         mvpMat = mat4.create();
         material;
         parent:Object3D;
-
+        enablePerspective=true;
         update() {
             if (!this.isRoot) {
-                mat4.identity(this.modelMat);
-                mat4.rotate(this.modelMat, this.modelMat, 1, this.rotate);
-                mat4.scale(this.modelMat, this.modelMat, this.scaleV);
-                mat4.translate(this.modelMat, this.modelMat, this.position);
-                mat4.mul(this.worldMat, this.modelMat, this.parent.worldMat);
-                mat4.mul(this.mvpMat, this.root.vpMat, this.worldMat);
+                if(this.enablePerspective){
+                    mat4.identity(this.modelMat);
+                    mat4.rotate(this.modelMat, this.modelMat, 1, this.rotate);
+                    mat4.scale(this.modelMat, this.modelMat, this.scaleV);
+                    mat4.translate(this.modelMat, this.modelMat, this.position);
+                    mat4.mul(this.worldMat, this.modelMat, this.parent.worldMat);
+                    mat4.mul(this.mvpMat, this.root.vpMat, this.worldMat);
+                }else{
+                    //mat4.identity(this.mvpMat);
+                    //mat4.scale(this.mvpMat,this.mvpMat,new Float32Array([Engine.render.aspect,1,1]))
+                    this.mvpMat[0]=Engine.render.aspect;
+                }
+
             }
             if (this.material) {
                 this.material.mvpMat = this.mvpMat;

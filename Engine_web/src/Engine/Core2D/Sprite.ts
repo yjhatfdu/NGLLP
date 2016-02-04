@@ -13,6 +13,7 @@ namespace Core2D {
         isRootSprite;
         opacity;
         zIndex;
+        setNewChild();
     }
 
     export class Sprite extends Events.TouchItem implements SpriteProtocol {
@@ -80,8 +81,8 @@ namespace Core2D {
                 return
             }
             //纹理不同的话,先绘制buffer
-            if (this.batchNode.currentTexture != this.texture) {
-                this.batchNode.currentTexture = this.texture;
+            if (this.batchNode.currentTexture != this.texture.bufferTex) {
+                this.batchNode.currentTexture = this.texture.bufferTex;
                 this.batchNode.drawBuffer();
             }
             //加入绘制缓存
@@ -89,8 +90,8 @@ namespace Core2D {
             var uvBuffer = this.batchNode.uvBuffer;
             var opacityBuffer = this.batchNode.opacityBuffer;
             var frame = Math.round(this.frame);
-            var sx = this.rw * this.rScale;
-            var sy = this.rh * this.rScale;
+            var sx = this.rw * this.rScale*0.5;
+            var sy = this.rh * this.rScale*0.5;
             var ca = Math.cos(this.rRotation);
             var sa = Math.sin(this.rRotation);
             var casx = ca * sx;
@@ -113,39 +114,60 @@ namespace Core2D {
             var th = this.texture.sh;
             var tx = this.texture.sx;
             var ty = this.texture.sy;
-            var cursor = this.batchNode.updateCursor * 2;
-            posBuffer[cursor] = x0;
-            uvBuffer[cursor] = tx + tw * uvX ;
+            var uvCursor = this.batchNode.updateCursor * 2;
+            var posCursor= this.batchNode.updateCursor *3;
+            var zpos=this.batchNode.enableZPosition?this.zIndex:0;
+            posBuffer[posCursor] = x0;
+            uvBuffer[uvCursor] = tx + tw * uvX ;
 
-            cursor++;
-            posBuffer[cursor] = y0;
-            uvBuffer[cursor] = ty+th*uvY;
+            posCursor++;
+            uvCursor++;
+            posBuffer[posCursor] = y0;
+            uvBuffer[uvCursor] = ty+th*uvY;
 
-            cursor++;
-            posBuffer[cursor] = x1;
-            uvBuffer[cursor] = tx + tw * (uvX+ uvW);
+            posCursor++;
+            posBuffer[posCursor]=zpos;
 
-            cursor++;
-            posBuffer[cursor] = y1;
-            uvBuffer[cursor] = uvBuffer[cursor - 2];
+            posCursor++;
+            uvCursor++;
+            posBuffer[posCursor] = x1;
+            uvBuffer[uvCursor] = tx + tw * (uvX+ uvW);
 
-            cursor++;
-            posBuffer[cursor] = x2;
-            uvBuffer[cursor] = uvBuffer[cursor - 2];
+            posCursor++;
+            uvCursor++;
+            posBuffer[posCursor] = y1;
+            uvBuffer[uvCursor] = uvBuffer[uvCursor - 2];
 
-            cursor++;
-            posBuffer[cursor] = y2;
-            uvBuffer[cursor] = ty + th * (uvY + uvH);
+            posCursor++;
+            posBuffer[posCursor]=zpos;
 
-            cursor++;
-            posBuffer[cursor] = x3;
-            uvBuffer[cursor] = uvBuffer[cursor - 6];
+            posCursor++;
+            uvCursor++;
+            posBuffer[posCursor] = x2;
+            uvBuffer[uvCursor] = uvBuffer[uvCursor - 2];
 
-            cursor++;
-            posBuffer[cursor] = y3;
-            uvBuffer[cursor] = uvBuffer[cursor - 2];
+            posCursor++;
+            uvCursor++;
+            posBuffer[posCursor] = y2;
+            uvBuffer[uvCursor] = ty + th * (uvY + uvH);
 
-            cursor = this.batchNode.updateCursor;
+            posCursor++;
+            posBuffer[posCursor]=zpos;
+
+            posCursor++;
+            uvCursor++;
+            posBuffer[posCursor] = x3;
+            uvBuffer[uvCursor] = uvBuffer[uvCursor - 6];
+
+            posCursor++;
+            uvCursor++;
+            posBuffer[posCursor] = y3;
+            uvBuffer[uvCursor] = uvBuffer[uvCursor - 2];
+
+            posCursor++;
+            posBuffer[posCursor]=zpos;
+
+            var cursor = this.batchNode.updateCursor;
             opacityBuffer[cursor] = opacityBuffer[cursor + 1] = opacityBuffer[cursor + 2] = opacityBuffer[cursor + 3] = this.rOpacity;
 
             this.batchNode.updateCursor += 4

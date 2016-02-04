@@ -18,6 +18,9 @@ var Core;
             this.startTime = 0;
             this.ctx = new (window['AudioContext'] || window['webkitAudioContext'])();
         }
+        AudioCtl.prototype.startSession = function () {
+            this.ctx.resume();
+        };
         AudioCtl.prototype.loadBgm = function (item) {
             this.bgmBuffer = item.audioBuffer;
             this.duration = item.bgmDuration;

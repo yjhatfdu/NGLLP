@@ -10,8 +10,8 @@ var __extends = (this && this.__extends) || function (d, b) {
 var Events;
 (function (Events) {
     Events.TouchEvents = {
-        'OnTouchStart': 'OnTouchStart',
-        'touchEnd': 'touchEnd',
+        OnTouchStart: 'OnTouchStart',
+        OnTouchEnd: 'OnTouchEnd',
     };
     var TouchCtl = (function (_super) {
         __extends(TouchCtl, _super);
@@ -32,10 +32,11 @@ var Events;
         TouchCtl.prototype.onTouchStart = function (e) {
             e.stopPropagation();
             e.preventDefault();
-            //this.dispatchEvent("OnTouchStart")
+            this.dispatchEvent(Events.TouchEvents.OnTouchStart);
             for (var i = 0; i < e.changedTouches.length; i++) {
                 var touch = e.changedTouches[i];
-                this.figureState[touch.identifier] = { x: touch.pageX, y: touch.pageY };
+                //this.figureState[touch.identifier]={x:touch.pageX,y:touch.pageY};
+                this.findAndDispatchEvent(Events.TouchEvents.OnTouchStart, touch.pageX, touch.pageY);
             }
         };
         TouchCtl.prototype.onTouchMove = function (e) {
@@ -48,7 +49,7 @@ var Events;
         TouchCtl.prototype.onMouseDown = function (e) {
             e.stopPropagation();
             e.preventDefault();
-            this.findAndDispatchEvent('OnTouchStart', e.pageX, e.pageY);
+            this.findAndDispatchEvent(Events.TouchEvents.OnTouchStart, e.pageX, e.pageY);
             this.dispatchEvent("OnTouchStart");
         };
         TouchCtl.prototype.onMouseMove = function (e) {
@@ -88,8 +89,8 @@ var Events;
             if (!this.itemList[event]) {
                 return;
             }
-            var x = 2 * pageX / Engine.render.width - 1;
-            var y = (2 * pageY / Engine.render.height - 1) * Engine.render.aspect;
+            var x = (2 * pageX / Engine.render.width - 1) / Engine.render.aspect;
+            var y = 2 * pageY / Engine.render.height - 1;
             //handle capture
             for (var l = 0; l < this.itemList[event].length; l++) {
                 var list = this.itemList[event][l];

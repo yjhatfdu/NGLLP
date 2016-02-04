@@ -85,7 +85,29 @@ var Base;
             this.children = [];
             this.visible = true;
             this.level = 0;
+            this._id = null;
         }
+        NodeBase.getNodeById = function (id) {
+            return NodeBase.nodeList[id];
+        };
+        Object.defineProperty(NodeBase.prototype, "id", {
+            get: function () {
+                return this._id;
+            },
+            set: function (value) {
+                if (NodeBase.nodeList[value]) {
+                    throw "Duplicated id for node";
+                }
+                else {
+                    if (NodeBase.nodeList[this._id]) {
+                        delete NodeBase.nodeList[this._id];
+                    }
+                    NodeBase.nodeList[value] = this;
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
         NodeBase.prototype.setNode = function () {
             this.level = this.parent.level + 1;
             for (var i = 0; i < this.children.length; i++) {
@@ -128,6 +150,10 @@ var Base;
             }
             return count;
         };
+        NodeBase.prototype.destroy = function () {
+            delete NodeBase.nodeList[this._id];
+        };
+        NodeBase.nodeList = {};
         return NodeBase;
     })(EventBase);
     Base.NodeBase = NodeBase;

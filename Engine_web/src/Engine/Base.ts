@@ -74,11 +74,32 @@ namespace Base{
         }
     }
     export class NodeBase extends EventBase{
+        protected static nodeList={};
+
+        static getNodeById(id){
+            return NodeBase.nodeList[id]
+        }
+
         root;
         children:Array<any>=[];
         parent;
         visible:boolean=true;
         level=0;
+        _id=null;
+        set id(value){
+            if(NodeBase.nodeList[value]){
+                throw "Duplicated id for node"
+            }else{
+                if(NodeBase.nodeList[this._id]){
+                    delete NodeBase.nodeList[this._id]
+                }
+                NodeBase.nodeList[value]=this
+            }
+
+        }
+        get id(){
+            return this._id
+        }
         constructor(){
             super()
         }
@@ -126,6 +147,9 @@ namespace Base{
                 count+=this.children[i].getChildrenCount()
             }
             return count
+        }
+        destroy(){
+           delete NodeBase.nodeList[this._id]
         }
     }
 }

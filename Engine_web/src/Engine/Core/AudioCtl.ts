@@ -17,6 +17,9 @@ namespace Core{
             super();
             this.ctx=new (window['AudioContext']||window['webkitAudioContext'])();
         }
+        startSession(){
+            this.ctx.resume();
+        }
         loadBgm(item){
             this.bgmBuffer=item.audioBuffer;
             this.duration=item.bgmDuration;

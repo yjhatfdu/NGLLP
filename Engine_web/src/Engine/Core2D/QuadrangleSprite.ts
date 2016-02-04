@@ -10,7 +10,7 @@ namespace Core2D{
         zIndex;
         p0;p1;p2;p3;
         texture;
-        constructor(imgItem,point0,point1,point2,point3){
+        constructor(imgItem,point0:vec3,point1:vec3,point2:vec3,point3:vec3){
             super();
             this.texture=imgItem.texture;
             [this.p0,this.p1,this.p2,this.p3]=[point0,point1,point2,point3]

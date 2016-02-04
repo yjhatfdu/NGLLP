@@ -14,7 +14,7 @@
             enableBlend=false;
             enableDepthTest=false;
             enableDepthWrite=false;
-            uniformList=[];
+            uniformList={};
             attributeList={};
             IBO;
             gl;
@@ -37,12 +37,15 @@
                 this.bindAttributes(this.attributes);
             }
             bindUniform(name,type,value?){
-                this.uniformList.push({name:name,location:this.gl.getUniformLocation(this.program,name),func:this.gl['uniform'+type].bind(this.gl),ismat:type.indexOf('Matrix')>=0,value:value})
+                this.uniformList[name]={name:name,location:this.gl.getUniformLocation(this.program,name),func:this.gl['uniform'+type].bind(this.gl),ismat:type.indexOf('Matrix')>=0,value:value}
             }
             bindUniforms(list){
                 for(var i =0;i<list.length;i++){
                     this.bindUniform(list[i].name,list[i].type,list[i].value)
                 }
+            }
+            uniformData(name,data){
+              this.uniformList[name].value=data
             }
             bindAttribute(name,size){
                 this.attributeList[name]={name:name,location:this.gl.getAttribLocation(this.program,name),size:size}
@@ -102,7 +105,7 @@
                 }
                 this.gl.depthMask(this.enableDepthWrite);
                 //bind uniforms
-                for(var i=0;i<this.uniformList.length;i++){
+                for(var i in this.uniformList){
                     var uniform=this.uniformList[i];
                     if(uniform.ismat){
                         uniform.func(uniform.location,false,uniform.value||this[uniform.name]||0)
@@ -130,10 +133,10 @@
                 }
 
                 //bind textures
-                for(var i=0;i<this.textures.length;i++){
-                    if(this.textures[i]){
-                        this.gl.activeTexture(this.gl.TEXTURE0+i);
-                        this.gl.bindTexture(this.gl.TEXTURE_2D,this.textures[i])
+                for(var k=0;k<this.textures.length;k++){
+                    if(this.textures[k]){
+                        this.gl.activeTexture(this.gl.TEXTURE0+k);
+                        this.gl.bindTexture(this.gl.TEXTURE_2D,this.textures[k].active(k))
                     }
                 }
 

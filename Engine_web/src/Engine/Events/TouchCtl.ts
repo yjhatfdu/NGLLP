@@ -4,8 +4,8 @@
     ///<reference path='../Base.ts'/>
 namespace Events{
     export var TouchEvents={
-        'OnTouchStart':'OnTouchStart',
-        'touchEnd':'touchEnd',
+        OnTouchStart:'OnTouchStart',
+        OnTouchEnd:'OnTouchEnd',
 
         };
     export class TouchCtl extends Base.EventBase{
@@ -27,10 +27,11 @@ namespace Events{
         onTouchStart(e){
             e.stopPropagation();
             e.preventDefault();
-            //this.dispatchEvent("OnTouchStart")
+            this.dispatchEvent(TouchEvents.OnTouchStart);
             for(var i=0;i<e.changedTouches.length;i++){
                 var touch=e.changedTouches[i];
-                this.figureState[touch.identifier]={x:touch.pageX,y:touch.pageY};
+                //this.figureState[touch.identifier]={x:touch.pageX,y:touch.pageY};
+                this.findAndDispatchEvent(TouchEvents.OnTouchStart,touch.pageX,touch.pageY)
 
             }
         }
@@ -45,7 +46,7 @@ namespace Events{
         onMouseDown(e){
             e.stopPropagation();
             e.preventDefault();
-            this.findAndDispatchEvent('OnTouchStart',e.pageX,e.pageY);
+            this.findAndDispatchEvent(TouchEvents.OnTouchStart,e.pageX,e.pageY);
             this.dispatchEvent("OnTouchStart")
         }
         onMouseMove(e){
@@ -87,8 +88,8 @@ namespace Events{
             if(!this.itemList[event]){
                 return
             }
-            var x=2*pageX/Engine.render.width-1;
-            var y=(2*pageY/Engine.render.height-1)*Engine.render.aspect;
+            var x=(2*pageX/Engine.render.width-1)/Engine.render.aspect;
+            var y=2*pageY/Engine.render.height-1;
             //handle capture
             for(var l=0;l<this.itemList[event].length;l++){
                 var list=this.itemList[event][l];

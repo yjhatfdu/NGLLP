@@ -6,23 +6,27 @@
     ///<reference path='Sprite.ts'/>
 namespace Core2D{
     export class SpriteBatchNode extends Core.Object3D{
-        material=new Material.SpriteMaterial();
+        material=Material.createSpriteMaterial();
         constructor(size=32){
             super();
             this.initBuffer(size)
 
         }
 
-        posBuffer:Float32Array;
-        uvBuffer:Float32Array;
-        opacityBuffer:Float32Array;
+        protected posBuffer:Float32Array;
+        protected uvBuffer:Float32Array;
+        protected opacityBuffer:Float32Array;
         opacity;
-        updateCursor=0;
-        size;
-        currentTexture;
+        protected updateCursor=0;
+        protected size;
+        protected currentTexture;
+        enablePerspective=false;
+        //use z-index as z posistion
+        enableZPosition=false;
+        needUpdate=false;
         initBuffer(size){
             this.size=size;
-            this.posBuffer=new Float32Array(size*8);
+            this.posBuffer=new Float32Array(size*12);
             this.uvBuffer=new Float32Array(size*8);
             this.opacityBuffer=new Float32Array(size*4);
             var indexBuffer=new Uint16Array(size*6);
@@ -43,36 +47,44 @@ namespace Core2D{
             item.setNewChild();
             item.isRootSprite=true;
             super.appendChild(item);
-            this.children.sort(function (x:Sprite,y:Sprite) {
-                return x.zIndex-y.zIndex
-            })
+            this.needUpdate=true;
+
         }
-        insertChild(item:Sprite,index){
+        insertChild(item:SpriteProtocol,index){
             item.batchNode=this;
             item.setNewChild();
             item.isRootSprite=true;
             super.insertChild(item,index);
-            this.children.sort(function (x:Sprite,y:Sprite) {
-                return x.zIndex-y.zIndex
-            });
-            if(this.getChildrenCount()>this.size){
-                this.size*=2;
-                this.initBuffer(this.size)
-            }
+            this.needUpdate=true;
+
         }
+
         removeChild(item){
             super.removeChild(item);
-            var count=this.getChildrenCount();
-            if(count>16 && count<this.size*0.5){
-                this.size*=0.5;
-                this.initBuffer(this.size)
-            }
+
         }
 
         update(){
-
+            if(this.needUpdate){
+                this.updateChildren();
+            }
             super.update();
             this.drawBuffer();
+        }
+        private updateChildren(){
+            this.needUpdate=false;
+            this.children.sort(function (x:Sprite,y:Sprite) {
+                return x.zIndex-y.zIndex
+            });
+            var count=this.getChildrenCount();
+            if(count<this.size*0.5){
+                this.size=Math.max(Math.pow(2,Math.ceil(Math.log(count)/Math.log(2))),16);
+                this.initBuffer(this.size)
+            }
+            if(count>this.size){
+                this.size=Math.pow(2,Math.ceil(Math.log(count)/Math.log(2)));
+                this.initBuffer(this.size)
+            }
         }
         drawBuffer(){
             if(this.updateCursor==0){

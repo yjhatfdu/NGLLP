@@ -28,6 +28,11 @@ var Core;
                 GlTexture.removeBuffer(this);
             }
         };
+        BufferTexture.prototype.active = function (texIndex) {
+            if (texIndex === void 0) { texIndex = 0; }
+            this.gl.activeTexture(this.gl.TEXTURE0 + texIndex);
+            this.gl.bindTexture(this.gl.TEXTURE_2D, this.glTexture);
+        };
         return BufferTexture;
     })();
     var GlTexture = (function (_super) {
@@ -66,52 +71,33 @@ var Core;
         };
         GlTexture.findSpace = function (w, h, src) {
             //todo: optimize
-            var result;
             for (var i = 0; i < GlTexture.bufferTexList.length; i++) {
                 var bufferTexture = GlTexture.bufferTexList[i];
                 if (bufferTexture.subTextures.length == 0) {
-                    result = new GlTexture(src, bufferTexture, 0, 0, w, h);
+                    return new GlTexture(src, bufferTexture, 0, 0, w, h);
                 }
-                for (var j = bufferTexture.subTextures.length - 1; j--; j >= 0) {
+                for (var j = bufferTexture.subTextures.length - 1; j >= 0; j--) {
                     var subTex = bufferTexture.subTextures[j];
-                    var x = subTex.x + subTex.w, y = subTex.y;
-                    var conflict = false;
-                    for (var k = bufferTexture.subTextures.length - 1; k--; k >= 0) {
+                    //var x=subTex.x,y=subTex.y;
+                    var x1 = subTex.x + subTex.w + 2, y1 = subTex.y + 2;
+                    var x2 = subTex.x + 2, y2 = subTex.y + subTex.h + 2;
+                    var conflict = true;
+                    for (var k = bufferTexture.subTextures.length - 1; k >= 0; k--) {
                         var tmpSubTex = bufferTexture.subTextures[k];
                         var tx = tmpSubTex.x, ty = tmpSubTex.y, tw = tmpSubTex.w, th = tmpSubTex.h;
-                        if (!(x > tx + tw || y > ty + th || x + w < tx || y + h < ty)) {
-                            conflict = true;
-                            break;
+                        if (x1 > tx + tw || y1 > ty + th || x1 + w < tx || y1 + h < ty && x1 + w < bufferTexture.size && y1 + h < bufferTexture.size) {
+                            return new GlTexture(src, bufferTexture, x1, y1, w, h);
                         }
-                        if (!conflict) {
-                            result = new GlTexture(src, bufferTexture, x, y, w, h);
-                            return result;
-                        }
-                        x = subTex.x;
-                        y = subTex.y + subTex.h;
-                        conflict = false;
-                        for (var k = bufferTexture.subTextures.length - 1; k--; k >= 0) {
-                            var tmpSubTex = bufferTexture.subTextures[k];
-                            var tx = tmpSubTex.x, ty = tmpSubTex.y, tw = tmpSubTex.w, th = tmpSubTex.h;
-                            if (!(x > tx + tw || y > ty + th || x + w < tx || y + h < ty) || x + w > bufferTexture.size || y + h > bufferTexture.size) {
-                                conflict = true;
-                                break;
-                            }
-                            if (!conflict) {
-                                result = new GlTexture(src, bufferTexture, x, y, w, h);
-                                return result;
-                            }
+                        if (x2 > tx + tw || y2 > ty + th || x2 + w < tx || y2 + h < ty && x2 + w < bufferTexture.size && y2 + h < bufferTexture.size) {
+                            return new GlTexture(src, bufferTexture, x2, y2, w, h);
                         }
                     }
                 }
             }
-            if (!result) {
-                var gl = Engine.render.gl;
-                var newBufferTexture = new BufferTexture(gl, Math.min(gl.getParameter(gl.MAX_TEXTURE_SIZE), 4096));
-                GlTexture.bufferTexList.push(newBufferTexture);
-                result = new GlTexture(src, newBufferTexture, 0, 0, w, h);
-            }
-            return result;
+            var gl = Engine.render.gl;
+            var newBufferTexture = new BufferTexture(gl, Math.min(gl.getParameter(gl.MAX_TEXTURE_SIZE), 4096));
+            GlTexture.bufferTexList.push(newBufferTexture);
+            return new GlTexture(src, newBufferTexture, 0, 0, w, h);
         };
         GlTexture.removeBuffer = function (item) {
             GlTexture.bufferTexList.splice(GlTexture.bufferTexList.indexOf(item), 1);

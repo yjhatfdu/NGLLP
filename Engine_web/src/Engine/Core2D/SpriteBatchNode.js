@@ -16,13 +16,17 @@ var Core2D;
         function SpriteBatchNode(size) {
             if (size === void 0) { size = 32; }
             _super.call(this);
-            this.material = new Material.SpriteMaterial();
+            this.material = Material.createSpriteMaterial();
             this.updateCursor = 0;
+            this.enablePerspective = false;
+            //use z-index as z posistion
+            this.enableZPosition = false;
+            this.needUpdate = false;
             this.initBuffer(size);
         }
         SpriteBatchNode.prototype.initBuffer = function (size) {
             this.size = size;
-            this.posBuffer = new Float32Array(size * 8);
+            this.posBuffer = new Float32Array(size * 12);
             this.uvBuffer = new Float32Array(size * 8);
             this.opacityBuffer = new Float32Array(size * 4);
             var indexBuffer = new Uint16Array(size * 6);
@@ -41,34 +45,39 @@ var Core2D;
             item.setNewChild();
             item.isRootSprite = true;
             _super.prototype.appendChild.call(this, item);
-            this.children.sort(function (x, y) {
-                return x.zIndex - y.zIndex;
-            });
+            this.needUpdate = true;
         };
         SpriteBatchNode.prototype.insertChild = function (item, index) {
             item.batchNode = this;
             item.setNewChild();
             item.isRootSprite = true;
             _super.prototype.insertChild.call(this, item, index);
-            this.children.sort(function (x, y) {
-                return x.zIndex - y.zIndex;
-            });
-            if (this.getChildrenCount() > this.size) {
-                this.size *= 2;
-                this.initBuffer(this.size);
-            }
+            this.needUpdate = true;
         };
         SpriteBatchNode.prototype.removeChild = function (item) {
             _super.prototype.removeChild.call(this, item);
-            var count = this.getChildrenCount();
-            if (count > 16 && count < this.size * 0.5) {
-                this.size *= 0.5;
-                this.initBuffer(this.size);
-            }
         };
         SpriteBatchNode.prototype.update = function () {
+            if (this.needUpdate) {
+                this.updateChildren();
+            }
             _super.prototype.update.call(this);
             this.drawBuffer();
+        };
+        SpriteBatchNode.prototype.updateChildren = function () {
+            this.needUpdate = false;
+            this.children.sort(function (x, y) {
+                return x.zIndex - y.zIndex;
+            });
+            var count = this.getChildrenCount();
+            if (count < this.size * 0.5) {
+                this.size = Math.max(Math.pow(2, Math.ceil(Math.log(count) / Math.log(2))), 16);
+                this.initBuffer(this.size);
+            }
+            if (count > this.size) {
+                this.size = Math.pow(2, Math.ceil(Math.log(count) / Math.log(2)));
+                this.initBuffer(this.size);
+            }
         };
         SpriteBatchNode.prototype.drawBuffer = function () {
             if (this.updateCursor == 0) {
