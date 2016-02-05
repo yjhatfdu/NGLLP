@@ -156,6 +156,7 @@ namespace Core{
             var gl=Engine.render.gl;
             gl.activeTexture(gl.TEXTURE0+textureId);
             gl.bindTexture(gl.TEXTURE_2D,this.glTexture);
+            Engine.render.currentGlTexture[textureId]=this.glTexture;
         }
     }
 }

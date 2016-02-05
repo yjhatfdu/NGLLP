@@ -1,7 +1,7 @@
 /**
  * Created by yjh on 16/2/4.
  */
-///<reference path='../lib/Promise.d.ts'/>
+///<reference path='../../lib/Promise.d.ts'/>
 //promise patch
 declare var Resource;
 Resource.ResourceCtl.prototype.loadResources=function(list:Array<any>,progressCallBack?){

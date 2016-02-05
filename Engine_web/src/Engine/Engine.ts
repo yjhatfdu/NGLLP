@@ -7,7 +7,8 @@
 ///<reference path='Core/Render.ts'/>
 ///<reference path='Events/TouchCtl.ts'/>
 ///<reference path='Core2D/Sprite.ts'/>
-    ///<reference path='Core2D/SpriteBatchNode.ts'/>
+///<reference path='Core2D/SpriteBatchNode.ts'/>
+///<reference path='Core2D/TextSprite.ts'/>
 
  module Engine{
 
@@ -21,7 +22,8 @@
         Engine. audioCtl=new Core.AudioCtl();
         Engine. resourceCtl=new Resource.ResourceCtl();
         Engine. render=new Core.Render();
-        Engine. touchCtl=new Events.TouchCtl()
+        Engine. touchCtl=new Events.TouchCtl();
+        Engine.eventBus=new Base.EventBase();
     }
     export function loadScript(src){
         var scriptNode=document.createElement('script');
@@ -31,5 +33,6 @@
     export var audioCtl:Core.AudioCtl;
     export var resourceCtl:Resource.ResourceCtl;
     export var render:Core.Render;
-    export var touchCtl:Events.TouchCtl
+    export var touchCtl:Events.TouchCtl;
+    export var eventBus:Base.EventBase;
 }

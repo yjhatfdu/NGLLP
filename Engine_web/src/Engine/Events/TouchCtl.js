@@ -10,8 +10,8 @@ var __extends = (this && this.__extends) || function (d, b) {
 var Events;
 (function (Events) {
     Events.TouchEvents = {
-        OnTouchStart: 'OnTouchStart',
-        OnTouchEnd: 'OnTouchEnd',
+        OnTouchStart: 'touchstart',
+        OnTouchEnd: 'touchend',
     };
     var TouchCtl = (function (_super) {
         __extends(TouchCtl, _super);
@@ -44,20 +44,20 @@ var Events;
         TouchCtl.prototype.onTouchEnd = function (e) {
             e.stopPropagation();
             e.preventDefault();
-            this.dispatchEvent("OnTouch");
+            this.dispatchEvent("touch");
         };
         TouchCtl.prototype.onMouseDown = function (e) {
             e.stopPropagation();
             e.preventDefault();
             this.findAndDispatchEvent(Events.TouchEvents.OnTouchStart, e.pageX, e.pageY);
-            this.dispatchEvent("OnTouchStart");
+            this.dispatchEvent("touchstart");
         };
         TouchCtl.prototype.onMouseMove = function (e) {
         };
         TouchCtl.prototype.onMouseUp = function (e) {
             e.stopPropagation();
             e.preventDefault();
-            this.dispatchEvent("OnTouch");
+            this.dispatchEvent("touch");
         };
         TouchCtl.prototype.addTouchItem = function (item, event) {
             var level = item.level;
@@ -101,7 +101,7 @@ var Events;
                             continue;
                         }
                         if (x > item.rx - 0.5 * item.rw && x < item.rx + 0.5 * item.rw && y > item.ry - 0.5 * item.rh && y < item.ry + 0.5 * item.rh) {
-                            if (item.dispatchEvent(event, null, true)) {
+                            if (item.dispatchEvent(event, item, true)) {
                                 return;
                             }
                             else {
@@ -116,7 +116,7 @@ var Events;
                 if (list) {
                     for (var j = list.length - 1; j >= 0; j--) {
                         if (list[j].hit == true) {
-                            list[j].dispatchEvent(event);
+                            list[j].dispatchEvent(event, list[j]);
                             list[j].hit = false;
                         }
                     }

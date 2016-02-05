@@ -4,8 +4,8 @@
     ///<reference path='../Base.ts'/>
 namespace Events{
     export var TouchEvents={
-        OnTouchStart:'OnTouchStart',
-        OnTouchEnd:'OnTouchEnd',
+        OnTouchStart:'touchstart',
+        OnTouchEnd:'touchend',
 
         };
     export class TouchCtl extends Base.EventBase{
@@ -41,13 +41,13 @@ namespace Events{
         onTouchEnd(e){
             e.stopPropagation();
             e.preventDefault();
-            this.dispatchEvent("OnTouch")
+            this.dispatchEvent("touch")
         }
         onMouseDown(e){
             e.stopPropagation();
             e.preventDefault();
             this.findAndDispatchEvent(TouchEvents.OnTouchStart,e.pageX,e.pageY);
-            this.dispatchEvent("OnTouchStart")
+            this.dispatchEvent("touchstart")
         }
         onMouseMove(e){
 
@@ -55,7 +55,7 @@ namespace Events{
         onMouseUp(e){
             e.stopPropagation();
             e.preventDefault();
-            this.dispatchEvent("OnTouch")
+            this.dispatchEvent("touch")
         }
         addTouchItem(item,event){
             var level=item.level;
@@ -100,7 +100,7 @@ namespace Events{
                             continue
                         }
                         if(x>item.rx-0.5*item.rw  && x<item.rx+0.5*item.rw && y>item.ry-0.5*item.rh && y<item.ry+0.5*item.rh){
-                            if(item.dispatchEvent(event,null,true)){
+                            if(item.dispatchEvent(event,item,true)){
                                 return
                             }else{
                                 item.hit=true;
@@ -114,7 +114,7 @@ namespace Events{
                 if(list){
                     for(var j=list.length-1;j>=0;j--){
                         if(list[j].hit==true){
-                           list[j].dispatchEvent(event);
+                           list[j].dispatchEvent(event,list[j]);
                             list[j].hit=false
                         }
                     }

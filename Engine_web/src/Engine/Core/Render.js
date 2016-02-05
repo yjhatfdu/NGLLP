@@ -20,6 +20,7 @@ var Core;
             this.p = 1;
             this.vpMat = mat4.create();
             this.materialStack = [];
+            this.currentGlTexture = [];
             this.root = this;
             this.isRoot = true;
             this.p = Engine.settings.pixelRatio;
@@ -31,6 +32,9 @@ var Core;
             this.defaultCamera = new Core3D.PerspectiveCamera(this);
             this.defaultCamera.setAsDefaultCamera();
             this.resize();
+            window.addEventListener('resize', function () {
+                this.resize();
+            }.bind(this));
             this.dispatchEvent('InitFinished');
             this.update();
         }
@@ -56,13 +60,13 @@ var Core;
             window.requestAnimationFrame(this.update.bind(this));
             this.gl.clear(this.gl.COLOR_BUFFER_BIT);
             Engine.audioCtl.update();
-            this.dispatchEvent("BeforeUpdate");
+            this.dispatchEvent("beforeupdate");
             if (this.defaultCamera) {
                 this.defaultCamera.update();
             }
             mat4.multiply(this.vpMat, this.perspectiveMat, this.viewMat);
             _super.prototype.update.call(this);
-            this.dispatchEvent("AfterUpdate");
+            this.dispatchEvent("afterupdate");
         };
         return Render;
     })(Core.Object3D);

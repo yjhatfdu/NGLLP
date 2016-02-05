@@ -1,4 +1,4 @@
-///<reference path='../lib/Promise.d.ts'/>
+///<reference path='../../lib/Promise.d.ts'/>
 Resource.ResourceCtl.prototype.loadResources = function (list, progressCallBack) {
     var _this = this;
     return new Promise(function (resolve, reject) {

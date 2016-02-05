@@ -10,7 +10,6 @@ var __extends = (this && this.__extends) || function (d, b) {
 ///<reference path='../Base.ts'/>
 var Resource;
 (function (Resource) {
-    var GlTexture = Core.GlTexture;
     var ResourceItem = (function (_super) {
         __extends(ResourceItem, _super);
         function ResourceItem(controller, name) {
@@ -57,7 +56,7 @@ var Resource;
         ImageItem.prototype.prepare = function (standAlone) {
             if (standAlone === void 0) { standAlone = false; }
             if (!this.prepared) {
-                this.texture = GlTexture.getTexture(this.img, standAlone);
+                this.texture = Core.GlTexture.getTexture(this.img, standAlone);
                 this.texture.deleteSource();
                 this.img = null;
             }
