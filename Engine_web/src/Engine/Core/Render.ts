@@ -20,6 +20,11 @@
             materialStack=[];
             defaultCamera;
             aspect;
+
+            currentGlTexture=[];
+            currentGlProgram;
+
+
             constructor() {
                 super();
                 this.root=this;
@@ -33,6 +38,9 @@
                 this.defaultCamera=new Core3D.PerspectiveCamera(this);
                 this.defaultCamera.setAsDefaultCamera();
                 this.resize();
+                window.addEventListener('resize',function(){
+                   this.resize()
+                }.bind(this));
                 this.dispatchEvent('InitFinished');
                 this.update();
             }

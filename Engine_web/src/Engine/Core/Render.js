@@ -20,6 +20,7 @@ var Core;
             this.p = 1;
             this.vpMat = mat4.create();
             this.materialStack = [];
+            this.currentGlTexture = [];
             this.root = this;
             this.isRoot = true;
             this.p = Engine.settings.pixelRatio;
@@ -31,6 +32,9 @@ var Core;
             this.defaultCamera = new Core3D.PerspectiveCamera(this);
             this.defaultCamera.setAsDefaultCamera();
             this.resize();
+            window.addEventListener('resize', function () {
+                this.resize();
+            }.bind(this));
             this.dispatchEvent('InitFinished');
             this.update();
         }

@@ -101,7 +101,7 @@ var Events;
                             continue;
                         }
                         if (x > item.rx - 0.5 * item.rw && x < item.rx + 0.5 * item.rw && y > item.ry - 0.5 * item.rh && y < item.ry + 0.5 * item.rh) {
-                            if (item.dispatchEvent(event, null, true)) {
+                            if (item.dispatchEvent(event, item, true)) {
                                 return;
                             }
                             else {
@@ -116,7 +116,7 @@ var Events;
                 if (list) {
                     for (var j = list.length - 1; j >= 0; j--) {
                         if (list[j].hit == true) {
-                            list[j].dispatchEvent(event);
+                            list[j].dispatchEvent(event, list[j]);
                             list[j].hit = false;
                         }
                     }

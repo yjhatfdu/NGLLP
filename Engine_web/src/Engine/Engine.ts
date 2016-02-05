@@ -7,7 +7,8 @@
 ///<reference path='Core/Render.ts'/>
 ///<reference path='Events/TouchCtl.ts'/>
 ///<reference path='Core2D/Sprite.ts'/>
-    ///<reference path='Core2D/SpriteBatchNode.ts'/>
+///<reference path='Core2D/SpriteBatchNode.ts'/>
+///<reference path='Core2D/TextSprite.ts'/>
 
  module Engine{
 

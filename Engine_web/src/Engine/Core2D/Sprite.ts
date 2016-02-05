@@ -2,11 +2,12 @@
 ///<reference path='../Base.ts'/>
 ///<reference path='../Engine.ts'/>
 ///<reference path='../Events/TouchItem.ts'/>
+///<reference path='../Resource/ResourceItem.ts'/>
 /**
  * Created by yjh on 15/12/21.
  */
 namespace Core2D {
-    import ImageItem = Resource.ImageItem;
+
 
     export interface SpriteProtocol extends Base.NodeBase {
         batchNode;
@@ -39,13 +40,15 @@ namespace Core2D {
         frame = 0;
         actions={};
         resourceName;
+        resource;
 
-        constructor(imageItem:ImageItem, x?, y?, w?, h?, sx = 0, sy = 0, sw = 1, sh = 1, frameCount?, stride?, zIndex = 0) {
+        constructor(imageItem:Resource.ImageItemProtocol, x?, y?, w?, h?, sx = 0, sy = 0, sw = 1, sh = 1, frameCount?, stride?, zIndex = 0) {
             super(x || 0, y || 0,w || 2 * imageItem.width / Engine.render.designResolution[1],
                 h || 2 * imageItem.height / Engine.render.designResolution[1]);
             if(imageItem){
                 this.texture = imageItem.texture;
                 this.resourceName=imageItem.name;
+                this.resource=imageItem;
             }
 
 
@@ -104,7 +107,7 @@ namespace Core2D {
             var y1 = y0 + sasx + sasx;
             var x2 = x1 + sasy + sasy;
             var y2 = y1 - casy - casy;
-            var x3 = x2 - casy - casy;
+            var x3 = x0 + sasy + sasy;
             var y3 = y2 - sasx - sasx;
             var uvW = this.sw / this.stride;
             var uvH = this.sh / this.row;

@@ -7,6 +7,7 @@ var __extends = (this && this.__extends) || function (d, b) {
 ///<reference path='../Base.ts'/>
 ///<reference path='../Engine.ts'/>
 ///<reference path='../Events/TouchItem.ts'/>
+///<reference path='../Resource/ResourceItem.ts'/>
 /**
  * Created by yjh on 15/12/21.
  */
@@ -29,6 +30,7 @@ var Core2D;
             if (imageItem) {
                 this.texture = imageItem.texture;
                 this.resourceName = imageItem.name;
+                this.resource = imageItem;
             }
             this.frameCount = frameCount || 1;
             this.stride = stride || 1;
@@ -85,7 +87,7 @@ var Core2D;
             var y1 = y0 + sasx + sasx;
             var x2 = x1 + sasy + sasy;
             var y2 = y1 - casy - casy;
-            var x3 = x2 - casy - casy;
+            var x3 = x0 + sasy + sasy;
             var y3 = y2 - sasx - sasx;
             var uvW = this.sw / this.stride;
             var uvH = this.sh / this.row;

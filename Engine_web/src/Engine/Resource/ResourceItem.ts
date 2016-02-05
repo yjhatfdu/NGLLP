@@ -4,7 +4,15 @@
     ///<reference path='../Core/GlTexture.ts'/>
     ///<reference path='../Base.ts'/>
 namespace Resource{
-    import GlTexture = Core.GlTexture;
+
+    export interface ImageItemProtocol{
+        width;
+        height;
+        name;
+        texture:Core.GlTexture;
+        destroy();
+    }
+
     export class ResourceItem extends Base.ObjectBase{
         controller;
         name;
@@ -42,7 +50,7 @@ namespace Resource{
         }
     }
 
-    export class ImageItem extends ResourceItem{
+    export class ImageItem extends ResourceItem implements ImageItemProtocol{
         img;
         width;
         height;
@@ -55,7 +63,7 @@ namespace Resource{
         }
         prepare(standAlone=false){
             if(!this.prepared){
-                this.texture=GlTexture.getTexture(this.img,standAlone);
+                this.texture=Core.GlTexture.getTexture(this.img,standAlone);
                 this.texture.deleteSource();
                 this.img=null
             }
