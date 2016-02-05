@@ -10,8 +10,8 @@ var __extends = (this && this.__extends) || function (d, b) {
 var Events;
 (function (Events) {
     Events.TouchEvents = {
-        OnTouchStart: 'OnTouchStart',
-        OnTouchEnd: 'OnTouchEnd',
+        OnTouchStart: 'touchstart',
+        OnTouchEnd: 'touchend',
     };
     var TouchCtl = (function (_super) {
         __extends(TouchCtl, _super);
@@ -44,20 +44,20 @@ var Events;
         TouchCtl.prototype.onTouchEnd = function (e) {
             e.stopPropagation();
             e.preventDefault();
-            this.dispatchEvent("OnTouch");
+            this.dispatchEvent("touch");
         };
         TouchCtl.prototype.onMouseDown = function (e) {
             e.stopPropagation();
             e.preventDefault();
             this.findAndDispatchEvent(Events.TouchEvents.OnTouchStart, e.pageX, e.pageY);
-            this.dispatchEvent("OnTouchStart");
+            this.dispatchEvent("touchstart");
         };
         TouchCtl.prototype.onMouseMove = function (e) {
         };
         TouchCtl.prototype.onMouseUp = function (e) {
             e.stopPropagation();
             e.preventDefault();
-            this.dispatchEvent("OnTouch");
+            this.dispatchEvent("touch");
         };
         TouchCtl.prototype.addTouchItem = function (item, event) {
             var level = item.level;

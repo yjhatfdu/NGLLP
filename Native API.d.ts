@@ -254,7 +254,7 @@ declare namespace Resource{
              * @param callBack
              * @param failCallBack
              */
-            loadResources(list,callBack,failCallBack?,progressCallBack?)
+            loadResources_raw(list,callBack,failCallBack?,progressCallBack?)
             getItem(resourceName:string):ResourceItem
             checkCacheState(url:string):boolean
         }
@@ -291,7 +291,8 @@ declare namespace Network{
 declare module Engine{
     export var render:Core.Render;
     export var audioCtl:Core.AudioCtl;
-    export var resourceCtl:Resource.ResourceCtl
+    export var resourceCtl:Resource.ResourceCtl;
+    export var eventBase:Base.EventBase;
 }
 //
 //module console{

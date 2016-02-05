@@ -23,6 +23,7 @@ var Engine;
         Engine.resourceCtl = new Resource.ResourceCtl();
         Engine.render = new Core.Render();
         Engine.touchCtl = new Events.TouchCtl();
+        Engine.eventBus = new Base.EventBase();
     }
     Engine.setEngine = setEngine;
     function loadScript(src) {

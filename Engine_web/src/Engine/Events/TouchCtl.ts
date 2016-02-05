@@ -4,8 +4,8 @@
     ///<reference path='../Base.ts'/>
 namespace Events{
     export var TouchEvents={
-        OnTouchStart:'OnTouchStart',
-        OnTouchEnd:'OnTouchEnd',
+        OnTouchStart:'touchstart',
+        OnTouchEnd:'touchend',
 
         };
     export class TouchCtl extends Base.EventBase{
@@ -41,13 +41,13 @@ namespace Events{
         onTouchEnd(e){
             e.stopPropagation();
             e.preventDefault();
-            this.dispatchEvent("OnTouch")
+            this.dispatchEvent("touch")
         }
         onMouseDown(e){
             e.stopPropagation();
             e.preventDefault();
             this.findAndDispatchEvent(TouchEvents.OnTouchStart,e.pageX,e.pageY);
-            this.dispatchEvent("OnTouchStart")
+            this.dispatchEvent("touchstart")
         }
         onMouseMove(e){
 
@@ -55,7 +55,7 @@ namespace Events{
         onMouseUp(e){
             e.stopPropagation();
             e.preventDefault();
-            this.dispatchEvent("OnTouch")
+            this.dispatchEvent("touch")
         }
         addTouchItem(item,event){
             var level=item.level;

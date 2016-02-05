@@ -3,7 +3,7 @@
  */
     ///<reference path='../../../Native API.d.ts'/>
     ///<reference path='../../../Engine_web/lib/gl-matrix.d.ts'/>
-    ///<reference path='../lib/Promise.d.ts'/>
+    ///<reference path='../../lib/Promise.d.ts'/>
 
 namespace Network{
     //class HTTPPromise{
