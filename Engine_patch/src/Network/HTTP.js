@@ -6,37 +6,6 @@
 ///<reference path='../../lib/Promise.d.ts'/>
 var Network;
 (function (Network) {
-    //class HTTPPromise{
-    //    request:Request;
-    //    onload;
-    //    onerror;
-    //    onprogress;
-    //    constructor(url,method,headers,params,postObject?){
-    //        this.request =new Network.Request();
-    //        this.request.open(url,method,params,headers,postObject,function(response,status){
-    //            if(this.onload){
-    //                this.onload(response,status)
-    //            }
-    //        }.bind(this),function(message,status){
-    //            if(this.onerror){
-    //                this.onerror(message,status)
-    //            }
-    //        }.bind(this),function(progress){
-    //            if(this.onprogress){
-    //                this.onprogress(progress)
-    //            }
-    //        }.bind(this))
-    //    }
-    //    then(onload){
-    //        this.onload=onload
-    //    }
-    //    error(onerror){
-    //        this.onerror=onerror
-    //    }
-    //    progress(onprogress){
-    //        this.onprogress=onprogress
-    //    }
-    //}
     function HTTP(url, method, config, postObject, onprogress) {
         if (method === void 0) { method = 'GET'; }
         if (config === void 0) { config = { headers: {}, params: {} }; }
@@ -63,4 +32,25 @@ var Network;
     }
     Network.POST = POST;
 })(Network || (Network = {}));
+//Network.GET('/index.html')
+//    .then(function (res) {
+//        console.log(res);
+//        return Network.GET('/test.json')
+//    }).then(function(res){
+//    console.log(res)
+//})
+//    .catch(function (err) {
+//        console.log(err)
+//    });
+//
+//async function load(){
+//    try{
+//        var res = await Network.GET('index.html');
+//        console.log(res);
+//        var res2 = await Network.GET('test.json');
+//        console.log(res2)
+//    }catch (e){
+//        console.log(e)
+//    }
+//} 
 //# sourceMappingURL=HTTP.js.map

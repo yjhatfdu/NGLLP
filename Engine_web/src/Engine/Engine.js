@@ -9,6 +9,7 @@
 ///<reference path='Core2D/Sprite.ts'/>
 ///<reference path='Core2D/SpriteBatchNode.ts'/>
 ///<reference path='Core2D/TextSprite.ts'/>
+///<reference path='Util/Util.ts'/>
 var Engine;
 (function (Engine) {
     Engine.settings = {
@@ -23,7 +24,6 @@ var Engine;
         Engine.resourceCtl = new Resource.ResourceCtl();
         Engine.render = new Core.Render();
         Engine.touchCtl = new Events.TouchCtl();
-        Engine.eventBus = new Base.EventBase();
     }
     Engine.setEngine = setEngine;
     function loadScript(src) {
@@ -32,5 +32,6 @@ var Engine;
         scriptNode.src = src;
     }
     Engine.loadScript = loadScript;
+    Engine.eventBus = new Base.EventBase();
 })(Engine || (Engine = {}));
 //# sourceMappingURL=Engine.js.map

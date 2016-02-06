@@ -260,7 +260,15 @@ declare namespace Resource{
         }
     }
 declare namespace Util{
+    //封装系统获取timestamp的API
         function getTime()
+    //可以暂停和获取时间的API
+        interface Time{
+            start();
+            pause();
+            now();
+        }
+
         interface KVStorage{
 
         }
@@ -292,7 +300,7 @@ declare module Engine{
     export var render:Core.Render;
     export var audioCtl:Core.AudioCtl;
     export var resourceCtl:Resource.ResourceCtl;
-    export var eventBase:Base.EventBase;
+    export var eventBus:Base.EventBase;
 }
 //
 //module console{

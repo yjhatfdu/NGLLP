@@ -3,3 +3,4 @@
  */
 ///<reference path='Network/HTTP.ts'/>
 ///<reference path='Resource/ResourceCtl.ts'/>
+///<reference path='Animation/Tween.ts'/>

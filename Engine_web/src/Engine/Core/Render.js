@@ -58,15 +58,15 @@ var Core;
         };
         Render.prototype.update = function () {
             window.requestAnimationFrame(this.update.bind(this));
-            this.gl.clear(this.gl.COLOR_BUFFER_BIT);
+            Engine.eventBus.dispatchEvent("beforeupdate");
             Engine.audioCtl.update();
-            this.dispatchEvent("beforeupdate");
+            this.gl.clear(this.gl.COLOR_BUFFER_BIT);
             if (this.defaultCamera) {
                 this.defaultCamera.update();
             }
             mat4.multiply(this.vpMat, this.perspectiveMat, this.viewMat);
             _super.prototype.update.call(this);
-            this.dispatchEvent("afterupdate");
+            Engine.eventBus.dispatchEvent("afterupdate");
         };
         return Render;
     })(Core.Object3D);
