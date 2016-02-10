@@ -2,7 +2,7 @@
  * Created by yjh on 15/3/29.
  */
 
-        namespace Animation{
+
            export class Easing  {
                static easeInQuad ( t, b, c, d) {
                    return c * (t /= d) * t + b;
@@ -149,7 +149,7 @@
                }
 
            }
-       }
+
 
 
 

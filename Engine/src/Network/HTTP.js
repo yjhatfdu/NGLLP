@@ -1,17 +1,16 @@
 /**
  * Created by yjh on 16/1/29.
  */
-///<reference path='../../../Native API.d.ts'/>
-///<reference path='../../../Engine_web/lib/gl-matrix.d.ts'/>
+///<reference path='../../Native API.d.ts'/>
 ///<reference path='../../lib/Promise.d.ts'/>
-var Network;
-(function (Network) {
+System.register(['Network/Request'], function(exports_1) {
+    var Request_1;
     function HTTP(url, method, config, postObject, onprogress) {
         if (method === void 0) { method = 'GET'; }
         if (config === void 0) { config = { headers: {}, params: {} }; }
         if (postObject === void 0) { postObject = null; }
         return new Promise(function (resolve, reject) {
-            var request = new Network.Request();
+            var request = new Request_1.Request();
             request.open(url, method, config.params, config.headers, postObject, function (content) {
                 resolve(content);
             }, function (err) {
@@ -19,19 +18,31 @@ var Network;
             }, onprogress);
         });
     }
-    Network.HTTP = HTTP;
+    exports_1("HTTP", HTTP);
     function GET(url, config, onprogress) {
         if (config === void 0) { config = { headers: {}, params: {} }; }
         return HTTP(url, 'GET', config, null, onprogress);
     }
-    Network.GET = GET;
+    exports_1("GET", GET);
     function POST(url, config, postObject, onprogress) {
         if (config === void 0) { config = { headers: {}, params: {} }; }
         if (postObject === void 0) { postObject = null; }
         return HTTP(url, 'POST', config, postObject, onprogress);
     }
-    Network.POST = POST;
-})(Network || (Network = {}));
+    exports_1("POST", POST);
+    return {
+        setters:[
+            function (Request_1_1) {
+                Request_1 = Request_1_1;
+            }],
+        execute: function() {
+        }
+    }
+});
+//before typescript support partial module, we should patch the module like this
+//Network['HTTP']=HTTP;
+//Network['GET']=GET;
+//Network['POST']=POST;
 //Network.GET('/index.html')
 //    .then(function (res) {
 //        console.log(res);

@@ -2,9 +2,11 @@
  * Created by yjh on 15/11/18.
  */
     ///<reference path='easing.ts'/>
-    ///<reference path='../../../Native API.d.ts'/>
+    ///<reference path='../../Native API.d.ts'/>
+import {Easing} from './easing'
+import {Engine} from 'Engine'
+import * as Base from 'Base'
 
-         namespace Animation{
              namespace TweenAction{
                 export class Translate{
                     easing;
@@ -234,7 +236,7 @@
                                 }
                             }
                             if(oneAct['easing']){
-                                actions.easing(Animation.Easing[oneAct['easing']])
+                                actions.easing(Easing[oneAct['easing']])
                             }
                         }
                     }
@@ -246,7 +248,7 @@
                     }
                 }
             }
-        }
 
-    var TweenCtl=new Animation.TweenCtl();
-    var Tween=TweenCtl.add.bind(TweenCtl);
+
+    window['TweenCtl']=new TweenCtl();
+    window['Tween']=window['TweenCtl'].add.bind(TweenCtl);
