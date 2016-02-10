@@ -5,7 +5,7 @@ import android.graphics.Point;
 /**
  * Created by lyt on 16-2-5.
  */
-public class testTriangle {
+public class testTriangle extends NodeBase{
     private float[] vertices;
     public testTriangle(Point[] vertices)
     {
