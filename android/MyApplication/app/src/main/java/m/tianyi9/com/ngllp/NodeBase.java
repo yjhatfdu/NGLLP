@@ -13,9 +13,9 @@ import java.util.Random;
  * Created by lyt on 16-2-5.
  */
 public class NodeBase extends EventBase {
-    private ArrayList<NodeBase> mChildren;
+    private ArrayList<NodeBase> mChildren = null;
     private NodeBase Parent;
-    private NodeBase Root;
+    private static NodeBase Root = null;
     private boolean mVisible = true;
     private int mid;
     private static HashMap<Integer,NodeBase> id_Node;
@@ -25,8 +25,15 @@ public class NodeBase extends EventBase {
     public NodeBase()
     {
         super();
+        if(Root == null)
+        {
+            Root = this;
+        }
     }
-
+    public static NodeBase getRoot()
+    {
+        return Root;
+    }
     public void setid(int id)
     {
         mid = id;
@@ -48,14 +55,20 @@ public class NodeBase extends EventBase {
         }
         while(id_Node.keySet().contains(id));
         id_Node.put(id, child);
+        if(mChildren == null)
+        {
+            mChildren = new ArrayList<NodeBase>();
+        }
         mChildren.add(child);
         child.setNode();
         child.setid(id);
         child.Parent = this;
-        child.Root = Root;
         return id;
     }
-
+    public int appendToRoot(NodeBase child)
+    {
+        return Root.appendChild(child);
+    }
     /**
      * 返回指定child的索引,没有的话返回-1
      * @param child
@@ -76,12 +89,15 @@ public class NodeBase extends EventBase {
             id = mrandom.nextInt(End);
         }
         while(id_Node.keySet().contains(id));
-        id_Node.put(id,child);
+        id_Node.put(id, child);
+        if(mChildren == null)
+        {
+            mChildren = new ArrayList<NodeBase>();
+        }
         mChildren.add(index, child);
         child.setNode();
         child.setid(id);
         child.Parent = this;
-        child.Root = Root;
         return id;
     }
     /**
@@ -90,14 +106,18 @@ public class NodeBase extends EventBase {
      */
     public void removeChild(NodeBase child)
     {
-        mChildren.remove(child);
-        id_Node.remove(child.getid());
+        if(mChildren != null) {
+            mChildren.remove(child);
+            id_Node.remove(child.getid());
+        }
     }
     public void removeAllChildren()
     {
-        for(NodeBase child : mChildren)
-        {
-            removeChild(child);
+        if(mChildren != null) {
+            for (NodeBase child : mChildren) {
+                removeChild(child);
+            }
+            mChildren = null;
         }
     }
     /**
@@ -105,29 +125,87 @@ public class NodeBase extends EventBase {
      * 遍内部节点,并调用自节点的update()
      * @param current 当前时间
      */
-    public void update(int current)
+    public void update(long current)
     {
-        for(NodeBase child : mChildren)
-        {
-            child.update(current);
+        if(mChildren != null) {
+            for (NodeBase child : mChildren) {
+                child.update(current);
+            }
         }
     }
-
+    public void onDraw()
+    {
+        if(mChildren != null)
+        {
+            for (NodeBase child : mChildren)
+            {
+                child.onDraw();
+            }
+        }
+    }
     //在append的时候执行
     public void setNode()
     {
         level = Parent.level + 1;
-        for(NodeBase child : mChildren)
-        {
-            child.setNode();
+        if(mChildren != null) {
+            for (NodeBase child : mChildren) {
+                child.setNode();
+            }
         }
     }
 
     public int getChildrenCount()
     {
-        return mChildren.size();
+        if(mChildren != null) {
+            int childrensize = 0;
+            int subcount = 0;
+            for(NodeBase child : mChildren)
+            {
+                subcount = child.getChildrenCount();
+                if(subcount != 0) {
+                    childrensize += subcount;
+                }
+                else
+                {
+                    childrensize += 1;
+                }
+            }
+            return childrensize;
+        }
+        else {
+            return 0;
+        }
     }
 
+
+    public void Rotate(float deg)
+    {
+
+    }
+    public void Move(Vec2 move)
+    {
+
+    }
+    public void Move(Vec3 move)
+    {
+
+    }
+    public void Scale(Vec2 scale)
+    {
+
+    }
+    public void Scale(Vec3 scale)
+    {
+
+    }
+    public void SetAnchorPoint(Vec2 point)
+    {
+
+    }
+    public void SetAnchorPoint(Vec3 point)
+    {
+
+    }
     @Override
     protected void finalize()
     {

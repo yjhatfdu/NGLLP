@@ -1,9 +1,14 @@
 package m.tianyi9.com.ngllp;
 
+import android.app.ActivityManager;
 import android.content.Context;
+import android.content.pm.ConfigurationInfo;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.WindowManager;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -12,8 +17,13 @@ import javax.microedition.khronos.opengles.GL10;
  * Created by lyt on 16-2-5.
  */
 public class mGLSurfaceView extends GLSurfaceView{
-    class mRenderer implements Renderer {
 
+
+    class mRenderer implements Renderer {
+         public mRenderer()
+         {
+             super();
+         }
         /**
          * Called when the surface is created or recreated.
          * <p/>
@@ -38,9 +48,12 @@ public class mGLSurfaceView extends GLSurfaceView{
          *               test if the interface supports GL11 or higher interfaces.
          * @param config the EGLConfig of the created surface. Can be used
          */
+        private long currentabsolutetime = System.currentTimeMillis();
+        private long lastabsolutetimee = currentabsolutetime;
         @Override
         public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-            GLES20.glClearColor(0.0f,0.0f,0.0f,1.0f);
+            GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+            new testTriangle(new float[]{-0.5f,-0.5f, 0.5f,0.0f, -0.5f,0.5f});
         }
 
         /**
@@ -91,14 +104,39 @@ public class mGLSurfaceView extends GLSurfaceView{
         @Override
         public void onDrawFrame(GL10 gl) {
             GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
+            lastabsolutetimee = currentabsolutetime;
+            currentabsolutetime = System.currentTimeMillis();
+            NodeBase.getRoot().update(currentabsolutetime - lastabsolutetimee);
+            NodeBase.getRoot().onDraw();
+            GLES20.glFlush();
         }
     }
     private final mRenderer renderer;
     public mGLSurfaceView(Context context) {
         super(context);
-        setEGLContextClientVersion(2);  //set EGL ver to 2
+        // Check if the system supports OpenGL ES 2.0.
+        final ActivityManager activityManager = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
+        final ConfigurationInfo configurationInfo = activityManager
+                .getDeviceConfigurationInfo();
+        final boolean supportsEs2 = configurationInfo.reqGlEsVersion >= 0x20000;
+
+        if (supportsEs2) {
+            Log.i("JO", "configurationInfo.reqGlEsVersion:"
+                    + configurationInfo.reqGlEsVersion + "supportsEs2:"
+                    + supportsEs2);
+            // Request an OpenGL ES 2.0 compatible context.
+            setEGLContextClientVersion(2);
+
+
+            // Set the renderer to our demo renderer, defined below.
+        } else {
+            // This is where you could create an OpenGL ES 1.x compatible
+            // renderer if you wanted to support both ES 1 and ES 2.
+            setEGLContextClientVersion(1);
+        }
         renderer = new mRenderer();
         setRenderer(renderer);
+        //setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
     }
 }
 
