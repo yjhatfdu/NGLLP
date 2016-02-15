@@ -1,4 +1,4 @@
-package m.tianyi9.com.ngllp;
+package m.tianyi9.com.ngllp.Base;
 
 import java.util.Random;
 import java.util.UUID;

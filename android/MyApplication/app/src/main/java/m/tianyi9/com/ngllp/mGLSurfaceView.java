@@ -9,16 +9,22 @@ import android.opengl.GLSurfaceView.Renderer;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
+import android.widget.Toast;
+
+import org.w3c.dom.Node;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
+
+import m.tianyi9.com.ngllp.Base.NodeBase;
+import m.tianyi9.com.ngllp.GL.GLHelper;
+import m.tianyi9.com.ngllp.core.Render;
 
 /**
  * Created by lyt on 16-2-5.
  */
 public class mGLSurfaceView extends GLSurfaceView{
-
-
+    
     class mRenderer implements Renderer {
          public mRenderer()
          {
@@ -53,7 +59,8 @@ public class mGLSurfaceView extends GLSurfaceView{
         @Override
         public void onSurfaceCreated(GL10 gl, EGLConfig config) {
             GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-            new testTriangle(new float[]{-0.5f,-0.5f, 0.5f,0.0f, -0.5f,0.5f});
+            new Render();
+            NodeBase.getRoot().appendChild(new testScene());
         }
 
         /**
@@ -83,6 +90,8 @@ public class mGLSurfaceView extends GLSurfaceView{
         @Override
         public void onSurfaceChanged(GL10 gl, int width, int height) {
             GLES20.glViewport(0,0,width,height);
+            GLHelper.viewportH = height;
+            GLHelper.viewportW = width;
         }
 
         /**
@@ -106,8 +115,11 @@ public class mGLSurfaceView extends GLSurfaceView{
             GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
             lastabsolutetimee = currentabsolutetime;
             currentabsolutetime = System.currentTimeMillis();
-            NodeBase.getRoot().update(currentabsolutetime - lastabsolutetimee);
+            long delta = currentabsolutetime - lastabsolutetimee;
+            float FPS = 1000 /delta;
+            NodeBase.getRoot().update(delta);
             NodeBase.getRoot().onDraw();
+
             GLES20.glFlush();
         }
     }

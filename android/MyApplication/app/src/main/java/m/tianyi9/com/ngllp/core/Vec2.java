@@ -1,12 +1,12 @@
-package m.tianyi9.com.ngllp;
+package m.tianyi9.com.ngllp.core;
 
 /**
  * Created by lyt on 16-2-11.
  */
 public class Vec2 {
-    public double x = 0;
-    public double y = 0;
-    public Vec2(double x, double y)
+    public float x = 0;
+    public float y = 0;
+    public Vec2(float x, float y)
     {
         this.x = x;
         this.y = y;

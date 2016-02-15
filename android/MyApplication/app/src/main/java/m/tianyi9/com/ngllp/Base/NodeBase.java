@@ -1,4 +1,4 @@
-package m.tianyi9.com.ngllp;
+package m.tianyi9.com.ngllp.Base;
 
 import android.util.Log;
 
@@ -9,16 +9,20 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Random;
 
+import m.tianyi9.com.ngllp.Base.EventBase;
+import m.tianyi9.com.ngllp.core.Vec2;
+import m.tianyi9.com.ngllp.core.Vec3;
+
 /**
  * Created by lyt on 16-2-5.
  */
-public class NodeBase extends EventBase {
+public abstract class NodeBase extends EventBase {
     private ArrayList<NodeBase> mChildren = null;
     private NodeBase Parent;
     private static NodeBase Root = null;
     private boolean mVisible = true;
     private int mid;
-    private static HashMap<Integer,NodeBase> id_Node;
+    private static HashMap<Integer,NodeBase> id_Node = new HashMap<Integer,NodeBase>();
     private static final Random mrandom = new Random();
     private static final int End = (int)Math.pow(2,31);
     private int level = 0;
@@ -146,7 +150,15 @@ public class NodeBase extends EventBase {
     //在append的时候执行
     public void setNode()
     {
-        level = Parent.level + 1;
+        if(Parent == null)
+        {
+            //is root
+            level = 0;
+        }
+        else {
+            level = Parent.level + 1;
+
+        }
         if(mChildren != null) {
             for (NodeBase child : mChildren) {
                 child.setNode();
@@ -178,34 +190,16 @@ public class NodeBase extends EventBase {
     }
 
 
-    public void Rotate(float deg)
-    {
-
-    }
-    public void Move(Vec2 move)
-    {
-
-    }
-    public void Move(Vec3 move)
-    {
-
-    }
-    public void Scale(Vec2 scale)
-    {
-
-    }
-    public void Scale(Vec3 scale)
-    {
-
-    }
-    public void SetAnchorPoint(Vec2 point)
-    {
-
-    }
-    public void SetAnchorPoint(Vec3 point)
-    {
-
-    }
+    public abstract void Rotate(Vec3 deg);
+    public abstract void RotateX(float deg);
+    public abstract void RotateY(float deg);
+    public abstract void RotateZ(float deg);
+    public abstract void Move(Vec2 move);
+    public abstract void Move(Vec3 move);
+    public abstract void Scale(Vec2 scale);
+    public abstract void Scale(Vec3 scale);
+    public abstract void SetAnchorPoint(Vec2 point);
+    public abstract void SetAnchorPoint(Vec3 point);
     @Override
     protected void finalize()
     {
