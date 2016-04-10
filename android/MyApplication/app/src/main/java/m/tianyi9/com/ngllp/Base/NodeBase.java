@@ -22,6 +22,7 @@ public abstract class NodeBase extends EventBase {
     private static NodeBase Root = null;
     private boolean mVisible = true;
     private int mid;
+    public boolean minited = false;
     private static HashMap<Integer,NodeBase> id_Node = new HashMap<Integer,NodeBase>();
     private static final Random mrandom = new Random();
     private static final int End = (int)Math.pow(2,31);
@@ -188,8 +189,17 @@ public abstract class NodeBase extends EventBase {
             return 0;
         }
     }
-
-
+    public void invalidate() //do on surface change
+    {
+        minited = false;
+        if(mChildren == null)
+            return;
+        for(NodeBase child : mChildren)
+        {
+             child.invalidate();
+        }
+    }
+    public abstract void init();
     public abstract void Rotate(Vec3 deg);
     public abstract void RotateX(float deg);
     public abstract void RotateY(float deg);

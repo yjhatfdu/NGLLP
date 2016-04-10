@@ -19,6 +19,7 @@ import javax.microedition.khronos.opengles.GL10;
 import m.tianyi9.com.ngllp.Base.NodeBase;
 import m.tianyi9.com.ngllp.GL.GLHelper;
 import m.tianyi9.com.ngllp.core.Render;
+import m.tianyi9.com.ngllp.core.Vec2;
 
 /**
  * Created by lyt on 16-2-5.
@@ -26,10 +27,10 @@ import m.tianyi9.com.ngllp.core.Render;
 public class mGLSurfaceView extends GLSurfaceView{
     
     class mRenderer implements Renderer {
-         public mRenderer()
-         {
-             super();
-         }
+        public mRenderer() {
+            super();
+        }
+
         /**
          * Called when the surface is created or recreated.
          * <p/>
@@ -51,7 +52,7 @@ public class mGLSurfaceView extends GLSurfaceView{
          * <p/>
          *
          * @param gl     the GL interface. Use <code>instanceof</code> to
-         *               test if the interface supports GL11 or higher interfaces.
+         * test if the interface supports GL11 or higher interfaces.
          * @param config the EGLConfig of the created surface. Can be used
          */
         private long currentabsolutetime = System.currentTimeMillis();
@@ -59,8 +60,6 @@ public class mGLSurfaceView extends GLSurfaceView{
         @Override
         public void onSurfaceCreated(GL10 gl, EGLConfig config) {
             GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-            new Render();
-            NodeBase.getRoot().appendChild(new testScene());
         }
 
         /**
@@ -89,9 +88,13 @@ public class mGLSurfaceView extends GLSurfaceView{
          */
         @Override
         public void onSurfaceChanged(GL10 gl, int width, int height) {
-            GLES20.glViewport(0,0,width,height);
+            Vec2 resolu = Render.getInstance().getdesign_res();
+            float ratio = (float)resolu.x / resolu.y; //x = 1024 , y = 768
+
+            Render.getInstance().init();
+            GLES20.glViewport(0, 0, (int)(height * ratio), height);
             GLHelper.viewportH = height;
-            GLHelper.viewportW = width;
+            GLHelper.viewportW = (int)(height * ratio);
         }
 
         /**
@@ -112,18 +115,40 @@ public class mGLSurfaceView extends GLSurfaceView{
          */
         @Override
         public void onDrawFrame(GL10 gl) {
-            GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
+            //GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
             lastabsolutetimee = currentabsolutetime;
             currentabsolutetime = System.currentTimeMillis();
             long delta = currentabsolutetime - lastabsolutetimee;
             float FPS = 1000 /delta;
             NodeBase.getRoot().update(delta);
             NodeBase.getRoot().onDraw();
-
-            GLES20.glFlush();
+            //Log.d("timereport", "" + FPS);
+            //GLES20.glFlush();
         }
     }
     private final mRenderer renderer;
+    public void setDesignedResolution(Vec2 resolution)
+    {
+        Render.getInstance().setdesign_res(resolution);
+    }
+    @Override
+    public void onPause()
+    {
+        Log.d("State", "onPause");
+        Render.getInstance().invalidate();
+        super.onPause();
+    }
+    @Override
+    public void onResume()
+    {
+        Log.d("State", "onResume");
+        Render.getInstance().init();
+        super.onResume();
+    }
+    public void setBaseScene(NodeBase scene)
+    {
+        Render.getInstance().appendChild(scene);
+    }
     public mGLSurfaceView(Context context) {
         super(context);
         // Check if the system supports OpenGL ES 2.0.
@@ -148,6 +173,7 @@ public class mGLSurfaceView extends GLSurfaceView{
         }
         renderer = new mRenderer();
         setRenderer(renderer);
+        setBaseScene(new testScene());
         //setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
     }
 }

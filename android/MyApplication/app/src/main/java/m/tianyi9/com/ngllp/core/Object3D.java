@@ -54,13 +54,16 @@ public class Object3D extends NodeBase {
 
     @Override
     public void Move(Vec2 move) {
-        this.posXYZ.x = move.x;
-        this.posXYZ.y = move.y;
+
+        this.posXYZ.x += move.x;
+        this.posXYZ.y += move.y;
     }
 
     @Override
     public void Move(Vec3 move) {
-        this.posXYZ = move;
+        this.posXYZ.x += move.x;
+        this.posXYZ.y += move.y;
+        this.posXYZ.z += move.z;
     }
 
     @Override
@@ -83,16 +86,31 @@ public class Object3D extends NodeBase {
     public void SetAnchorPoint(Vec3 point) {
 
     }
+    public Vec3 getPos()
+    {
+        return posXYZ;
+
+    }
     @Override
     public void update(long current)
     {
+        if(!minited)
+        {
+            init();
+        }
+        Vec2 Resolu = Render.getInstance().getdesign_res();
         Matrix.setIdentityM(mMMatrix, 0);
         Matrix.setIdentityM(mVPMatrix,0);
-        Matrix.translateM(mMMatrix, 0, posXYZ.x, posXYZ.y, posXYZ.z);
+        Matrix.translateM(mMMatrix, 0,  (float)posXYZ.x / (0.5f * Resolu.x),  (float)posXYZ.y / (0.5f * Resolu.y), (float)posXYZ.z / (0.5f * Resolu.x));
         Matrix.scaleM(mMMatrix, 0, ScaleXYZ.x,ScaleXYZ.y,ScaleXYZ.z);
         Matrix.rotateM(mMMatrix,0,RotXYZ.x, 1, 0 ,0);
         Matrix.rotateM(mMMatrix, 0, RotXYZ.y, 0, 1, 0);
         Matrix.rotateM(mMMatrix, 0, RotXYZ.z, 0, 0, 1);
         super.update(current);
+    }
+
+    @Override
+    public void init() {
+        minited = true;
     }
 }

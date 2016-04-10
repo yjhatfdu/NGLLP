@@ -27,15 +27,18 @@ public class testTriangle extends Object3D {
             throw new IllegalArgumentException("Must have at least 3 vertices");
         }
         this.vertices = vertices;
-        HashMap<String, Object> result = CreateGLProgram(ExampleShaders.MVP_VShader, ExampleShaders.Simple_Fshader);
-        Program = (int)result.get("program");
-        vshader = (int)result.get("vshader");
-        fshader = (int)result.get("fshader");
+
      //   int Program1 = (int)CreateGLProgram(ExampleShaders.MVP_VShader, ExampleShaders.Simple_Fshader).get("program");
+    }
+    @Override
+    public void update(long current)
+    {
+        super.update(current);
     }
     @Override
     public void onDraw()
     {
+
         GLES20.glUseProgram(Program);
         if(!CheckError())
         {
@@ -50,9 +53,17 @@ public class testTriangle extends Object3D {
         GLHelper.glUniformMatrix4fv(Program, "mVPMatrix", mVPMatrix);
         GLHelper.glUniform3fv(Program, "Color", color);
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertices.length / 2);
-        GLES20.glDisableVertexAttribArray(GLHelper.glGetAttribLocation(Program,"position"));
+        GLES20.glDisableVertexAttribArray(GLHelper.glGetAttribLocation(Program, "position"));
         super.onDraw();
     }
-
+    @Override
+    public void init()
+    {
+        HashMap<String, Object> result = CreateGLProgram(ExampleShaders.MVP_VShader, ExampleShaders.Simple_Fshader);
+        Program = (int)result.get("program");
+        vshader = (int)result.get("vshader");
+        fshader = (int)result.get("fshader");
+        super.init();
+    }
 
 }
