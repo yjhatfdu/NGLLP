@@ -1,76 +1,21 @@
-package m.tianyi9.com.ngllp.core;
+package m.tianyi9.com.ngllp.Base;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Random;
 
-import m.tianyi9.com.ngllp.Base.IEventListener;
-import m.tianyi9.com.ngllp.Base.NodeBase;
-import m.tianyi9.com.ngllp.Core2D.Scene;
-import m.tianyi9.com.ngllp.Core2D.Vec2;
-
 /**
- * Created by lyt on 16-2-14.
+ * Created by lyt on 2016/4/17 0017.
  */
-public class Render extends Object3D {
-    //Director
-    private Vec2 design_resolution;
-    private static Render mInstance;
-    private ArrayList<Scene> scenes = new ArrayList<Scene>();
-
-    public void setdesign_res(Vec2 resolution) {
-        design_resolution = resolution;
-    }
-
-    public Vec2 getdesign_res() {
-        return design_resolution;
-    }
-
-    private Render() {
-
-    }
-    public Scene getSceneOnTheTop()
-    {
-        return scenes.get(scenes.size() - 1);
-    }
-    public void popScene()
-    {
-        removeChild(scenes.get(scenes.size() - 1));
-        scenes.remove(scenes.size() - 1);
-    }
-
-    public static Render getInstance() {
-        if (mInstance == null) {
-            mInstance = new Render();
-        }
-        return mInstance;
-    }
-
-    @Override
-    public void update(long millis) {
-        if (scenes.size() <= 0) {
-            exit();
-        }
-        super.update(millis);
-    }
-    @Override
-    public int appendChild(NodeBase child) {
-        init();
-        if (child instanceof Scene) {
-            scenes.add((Scene) child);
-            return super.appendChild(child);
-        } else
-            throw new UnsupportedOperationException("Appending Non-scene child to Render is not allowed");
-    }
-    private void exit()
-    {
-        //to be implemented
-    }
-
+public class EventBaseImpl implements IEventBase{
+     //hash map : Get a list of events with a specified key ,and we can watch all events in the list
     private HashMap<String, LinkedHashMap<Integer, HashMap<String,Object>>> listeners = new HashMap<String, LinkedHashMap<Integer, HashMap<String,Object>>>();
     private static final Random mrandom = new Random();
     private static final int End = (int)Math.pow(2, 31);
+    /**
+    * @interface IEventListener
+    * represents a function being called on dispatching the event
+    * */
 
 
     public boolean checkId(Integer id)

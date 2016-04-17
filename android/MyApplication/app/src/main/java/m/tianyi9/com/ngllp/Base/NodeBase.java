@@ -2,31 +2,28 @@ package m.tianyi9.com.ngllp.Base;
 
 import android.util.Log;
 
-import org.w3c.dom.Node;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Random;
 
-import m.tianyi9.com.ngllp.Base.EventBase;
-import m.tianyi9.com.ngllp.core.Vec2;
-import m.tianyi9.com.ngllp.core.Vec3;
+import m.tianyi9.com.ngllp.Core2D.Vec2;
+import m.tianyi9.com.ngllp.Core2D.Vec3;
 
 /**
  * Created by lyt on 16-2-5.
  */
-public abstract class NodeBase extends EventBase {
-    private ArrayList<NodeBase> mChildren = null;
-    private NodeBase Parent;
-    private static NodeBase Root = null;
-    private boolean mVisible = true;
-    private int mid;
-    public boolean minited = false;
-    private static HashMap<Integer,NodeBase> id_Node = new HashMap<Integer,NodeBase>();
-    private static final Random mrandom = new Random();
-    private static final int End = (int)Math.pow(2,31);
-    private int level = 0;
+//export interface NodeBase extends EventBase
+public abstract class NodeBase implements IEventBase {
+    protected ArrayList<NodeBase> mChildren = null;
+    protected NodeBase Parent;
+    protected static NodeBase Root = null;
+    protected boolean mVisible = true;
+    protected int mid;
+    protected boolean minited = false;
+    protected static HashMap<Integer,NodeBase> id_Node = new HashMap<Integer,NodeBase>();
+    protected static final Random mrandom = new Random();
+    protected static final int End = (int)Math.pow(2,31);
+    protected int level = 0;
     public NodeBase()
     {
         super();

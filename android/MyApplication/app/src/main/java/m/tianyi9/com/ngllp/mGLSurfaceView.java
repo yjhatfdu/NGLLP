@@ -5,14 +5,7 @@ import android.content.Context;
 import android.content.pm.ConfigurationInfo;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
-import android.opengl.GLSurfaceView.Renderer;
-import android.opengl.Matrix;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.WindowManager;
-import android.widget.Toast;
-
-import org.w3c.dom.Node;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -20,7 +13,7 @@ import javax.microedition.khronos.opengles.GL10;
 import m.tianyi9.com.ngllp.Base.NodeBase;
 import m.tianyi9.com.ngllp.GL.GLHelper;
 import m.tianyi9.com.ngllp.core.Render;
-import m.tianyi9.com.ngllp.core.Vec2;
+import m.tianyi9.com.ngllp.Core2D.Vec2;
 
 /**
  * Created by lyt on 16-2-5.
@@ -136,7 +129,7 @@ public class mGLSurfaceView extends GLSurfaceView{
             float FPS = 1000 /delta;
             NodeBase.getRoot().update(delta);
             NodeBase.getRoot().onDraw();
-            //Log.d("timereport", "" + FPS);
+            Log.d("timereport", "" + FPS);
             //GLES20.glFlush();
         }
     }

@@ -4,10 +4,10 @@ import android.opengl.Matrix;
 import android.opengl.GLES20;
 import java.util.HashMap;
 
+import m.tianyi9.com.ngllp.Base.IEventListener;
 import m.tianyi9.com.ngllp.GL.ExampleShaders;
 import m.tianyi9.com.ngllp.GL.GLHelper;
 import m.tianyi9.com.ngllp.core.Object3D;
-import m.tianyi9.com.ngllp.core.Vec2;
 
 import static m.tianyi9.com.ngllp.GL.GLHelper.CheckError;
 import static m.tianyi9.com.ngllp.GL.GLHelper.CreateGLProgram;
@@ -67,4 +67,28 @@ public class testTriangle extends Object3D {
         super.init();
     }
 
+    @Override
+    public boolean checkId(Integer id) {
+        return false;
+    }
+
+    @Override
+    public int addEventListener(String EventKey, IEventListener Listener, boolean Capture) {
+        return 0;
+    }
+
+    @Override
+    public int addEventListenerOnce(String EventKey, IEventListener Listener, boolean Capture) {
+        return 0;
+    }
+
+    @Override
+    public void dispatchEvent(String EventKey, Object[] args, boolean CaptureOnly) {
+
+    }
+
+    @Override
+    public void removeListenerById(String EventKey, Integer Id) {
+
+    }
 }

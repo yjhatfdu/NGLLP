@@ -1,29 +1,79 @@
-package m.tianyi9.com.ngllp.Base;
+package m.tianyi9.com.ngllp.Core2D;
 
-import java.util.ArrayList;
-import java.util.EventListener;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Random;
 
+import m.tianyi9.com.ngllp.Base.IEventListener;
+import m.tianyi9.com.ngllp.Base.NodeBase;
+
 /**
- * Created by lyt on 16-2-5.
+ * Created by lyt on 16-4-9.
  */
-public class EventBase extends Base{
-    //hash map : Get a list of events with a specified key ,and we can watch all events in the list
+public class Scene extends NodeBase{
+
+    @Override
+    public void init() {
+
+    }
+
+    @Override
+    public final void Rotate(Vec3 deg) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public final void RotateX(float deg) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public final void RotateY(float deg) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public final void RotateZ(float deg) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public final void Move(Vec2 move) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public final void Move(Vec3 move) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public final void Scale(Vec2 scale) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public final void Scale(Vec3 scale) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public final void SetAnchorPoint(Vec2 point) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public final void SetAnchorPoint(Vec3 point) {
+        throw new UnsupportedOperationException();
+    }
     private HashMap<String, LinkedHashMap<Integer, HashMap<String,Object>>> listeners = new HashMap<String, LinkedHashMap<Integer, HashMap<String,Object>>>();
     private static final Random mrandom = new Random();
     private static final int End = (int)Math.pow(2, 31);
     /**
-    * @interface IEventListener
-    * represents a function being called on dispatching the event
-    * */
-    interface IEventListener
-    {
-        public void handleEvent(EventBase event, Object[] args);
-    }
+     * @interface IEventListener
+     * represents a function being called on dispatching the event
+     * */
+
 
     public boolean checkId(Integer id)
     {

@@ -3,11 +3,13 @@ package m.tianyi9.com.ngllp.core;
 import android.opengl.Matrix;
 
 import m.tianyi9.com.ngllp.Base.NodeBase;
+import m.tianyi9.com.ngllp.Core2D.Vec2;
+import m.tianyi9.com.ngllp.Core2D.Vec3;
 
 /**
  * Created by lyt on 16-2-13.
  */
-public class Object3D extends NodeBase {
+public abstract class Object3D extends NodeBase {
     protected int Program;
     protected int vshader;
     protected int fshader;
@@ -55,15 +57,15 @@ public class Object3D extends NodeBase {
     @Override
     public void Move(Vec2 move) {
 
-        this.posXYZ.x += move.x;
-        this.posXYZ.y += move.y;
+        this.posXYZ.x = move.x;
+        this.posXYZ.y = move.y;
     }
 
     @Override
     public void Move(Vec3 move) {
-        this.posXYZ.x += move.x;
-        this.posXYZ.y += move.y;
-        this.posXYZ.z += move.z;
+        this.posXYZ.x = move.x;
+        this.posXYZ.y = move.y;
+        this.posXYZ.z = move.z;
     }
 
     @Override
