@@ -6,6 +6,7 @@ import android.content.pm.ConfigurationInfo;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
+import android.opengl.Matrix;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
@@ -90,11 +91,24 @@ public class mGLSurfaceView extends GLSurfaceView{
         public void onSurfaceChanged(GL10 gl, int width, int height) {
             Vec2 resolu = Render.getInstance().getdesign_res();
             float ratio = (float)resolu.x / resolu.y; //x = 1024 , y = 768
-
             Render.getInstance().init();
-            GLES20.glViewport(0, 0, (int)(height * ratio), height);
-            GLHelper.viewportH = height;
-            GLHelper.viewportW = (int)(height * ratio);
+            if(width > height)
+            {
+
+                GLHelper.viewportH =  height;
+                GLHelper.viewportW =  (int)(width * ratio);
+                int startx = (int)(width - GLHelper.viewportW) / 2;
+                GLES20.glViewport(startx , 0 , (int)(width * ratio), height);
+
+            }
+            else
+            {
+                GLHelper.viewportW = width;
+                GLHelper.viewportH = (int)(width / ratio);
+                int starty = (int)(height - GLHelper.viewportH)/ 2;
+                GLES20.glViewport(0, starty, width, (int)(width / ratio));
+            }
+
         }
 
         /**

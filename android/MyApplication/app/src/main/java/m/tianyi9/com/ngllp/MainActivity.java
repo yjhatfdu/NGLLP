@@ -1,12 +1,12 @@
 package m.tianyi9.com.ngllp;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
 import android.os.Bundle;
 
 import m.tianyi9.com.ngllp.core.Render;
 import m.tianyi9.com.ngllp.core.Vec2;
 //BUG : crash when rotating screen
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
     private mGLSurfaceView surface;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

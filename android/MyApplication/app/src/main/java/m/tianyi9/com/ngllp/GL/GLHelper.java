@@ -3,6 +3,8 @@ package m.tianyi9.com.ngllp.GL;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
+import android.opengl.GLUtils;
+import android.opengl.Matrix;
 import android.util.Log;
 
 import java.nio.ByteBuffer;
@@ -11,6 +13,9 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 import java.util.HashMap;
+
+import javax.microedition.khronos.opengles.GL10;
+
 /**
  * Created by lyt on 16-2-10.
  */
@@ -23,8 +28,8 @@ public class GLHelper {
 
     public static class Texture {
         String name;
-        final int[] textureObjectids = new int[1];
-        int refs = 0;
+        public final int[] textureObjectids = new int[1];
+        private int refs = 0;
         public int width = 0;
         public int height = 0;
         public boolean validity = false;
@@ -36,7 +41,8 @@ public class GLHelper {
         }
         public void Destroy()
         {
-            GLES20.glDeleteTextures(1,textureObjectids,0);
+            if(refs <= 0 )
+                GLES20.glDeleteTextures(1,textureObjectids,0);
         }
     }
 
@@ -68,7 +74,9 @@ public class GLHelper {
     }
 
     public static boolean CheckError() {
-        if (GLES20.glGetError() != GLES20.GL_NO_ERROR) {
+        int errcode =GLES20.glGetError();
+        if (errcode != GLES20.GL_NO_ERROR) {
+            Log.d("ERROR", GLUtils.getEGLErrorString(errcode));
             return false;
         } else {
             return true;
@@ -159,10 +167,10 @@ public class GLHelper {
         GLES20.glUniform3fv(mLocation, 1, newFloat32Array(vector));
     }
 
-    public static void glVertexAttribPointer(int Program, String Location, int vertex_count, int data_type, boolean normalized, int vertex_stride, float[] dataset) {
+    public static void glVertexAttribPointer(int Program, String Location, int element_count_per_vertex, int data_type, boolean normalized, int vertex_stride, float[] dataset) {
         int mLocation = glGetAttribLocation(Program, Location);
         GLES20.glEnableVertexAttribArray(mLocation);
-        GLES20.glVertexAttribPointer(mLocation, vertex_count, data_type, normalized, vertex_stride, newFloat32Array(dataset));
+        GLES20.glVertexAttribPointer(mLocation, element_count_per_vertex, data_type, normalized, vertex_stride, newFloat32Array(dataset));
     }
 
     public static Texture glRevalidateTexture(Texture origin)
@@ -181,17 +189,20 @@ public class GLHelper {
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, t.textureObjectids[0]);
             BitmapFactory.Options opts = new BitmapFactory.Options();
             opts.inScaled = false;
-            final Bitmap bmp = BitmapFactory.decodeFile(Pathin, opts);
+            final Bitmap bmp = BitmapFactory.decodeFile(Pathin,opts);
             if (bmp == null) {
                 Log.d("Error", "Error decoding bitmap " + Pathin);
                 GLES20.glDeleteTextures(1, t.textureObjectids, 0);
                 return null;
             }
+            ///
+            android.graphics.Matrix m = new android.graphics.Matrix();
+            m.postScale(1f, -1f);
+            Bitmap flipped = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), m, true);
+            ///Flipping Bitmap
             GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR_MIPMAP_LINEAR);
             GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
-            int[] pixels = new int[bmp.getWidth() * bmp.getHeight()];
-            bmp.getPixels(pixels, 0, bmp.getWidth(), 0, 0, bmp.getWidth(), bmp.getHeight());
-            GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, bmp.getWidth(), bmp.getHeight(), 0, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, newInt32Array(pixels));
+            GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, flipped, 0);
             GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D);
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
             TextureCache.put(Pathin, t);
@@ -199,6 +210,8 @@ public class GLHelper {
             t.validity = true;
             t.height = bmp.getHeight();
             t.width = bmp.getWidth();
+            bmp.recycle();
+            flipped.recycle();
         }
         return t;
     }

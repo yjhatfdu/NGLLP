@@ -45,6 +45,7 @@ public class testTriangle extends Object3D {
             String Message = GLES20.glGetProgramInfoLog(Program);
             throw new RuntimeException("Message From Linker : " + Message);
         }
+
         GLHelper.glVertexAttribPointer(Program, "position", vertices.length / 2, GLES20.GL_FLOAT, false, 4 * 2, vertices);
         Matrix.frustumM(mPMatrix, 0, GLHelper.viewportW / -GLHelper.viewportH, GLHelper.viewportW / GLHelper.viewportH, -1, 1, 3, 7);
         Matrix.setLookAtM(mViewMatrix, 0, 0, 0, 3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
