@@ -8,9 +8,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Random;
 
-import m.tianyi9.com.ngllp.Base.IEventBase;
 import m.tianyi9.com.ngllp.Base.IEventListener;
-import m.tianyi9.com.ngllp.Event.TouchItem;
+import m.tianyi9.com.ngllp.Event.TouchItem2D;
 import m.tianyi9.com.ngllp.GL.Basic2DTextureShader;
 import m.tianyi9.com.ngllp.GL.GLHelper;
 import m.tianyi9.com.ngllp.core.Object3D;
@@ -22,7 +21,8 @@ import static m.tianyi9.com.ngllp.GL.GLHelper.CreateGLProgram;
 /**
  * Created by lyt on 16-2-11.
  */
-public class Sprite2D extends Object3D implements TouchItem {
+//Base -> EventBase -> NodeBase -> Object2D -> TouchItem -> Sprite
+public class Sprite2D extends TouchItem2D {
     private GLHelper.Texture mTexture = null;
     private float[] TexCoord = null;
     private Vec2 size = null;

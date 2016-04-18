@@ -13,7 +13,8 @@ import m.tianyi9.com.ngllp.Core2D.Vec3;
  * Created by lyt on 16-2-5.
  */
 //export interface NodeBase extends EventBase
-public abstract class NodeBase implements IEventBase {
+//Base -> EventBase -> NodeBase -> Object2D -> TouchItem -> Sprite
+public abstract class NodeBase extends EventBase {
     protected ArrayList<NodeBase> mChildren = null;
     protected NodeBase Parent;
     protected static NodeBase Root = null;

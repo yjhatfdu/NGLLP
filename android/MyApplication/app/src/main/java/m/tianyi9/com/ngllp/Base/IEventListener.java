@@ -5,5 +5,5 @@ package m.tianyi9.com.ngllp.Base;
  * */
 public interface IEventListener
 {
-    public void handleEvent(IEventBase event, Object[] args);
+    public void handleEvent(EventBase event, Object[] args);
 }

@@ -7,6 +7,12 @@ import java.util.UUID;
  * Created by lyt on 16-2-5.
  */
 //Native API Export : export interface ObjectBase
-public interface Base {
-
+//Base -> EventBase -> NodeBase -> Object2D -> TouchItem -> Sprite
+public class Base {
+    private int mID;
+    public Base() {
+        {
+            mID = new Random().nextInt();
+        }
+    }
 }

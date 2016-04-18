@@ -5,17 +5,18 @@ import java.util.LinkedHashMap;
 import java.util.Random;
 
 /**
- * Created by lyt on 2016/4/17 0017.
+ * Created by lyt on 16-4-18.
  */
-public class EventBaseImpl implements IEventBase{
-     //hash map : Get a list of events with a specified key ,and we can watch all events in the list
+//Base -> EventBase -> NodeBase -> Object2D -> TouchItem -> Sprite
+public class EventBase extends Base {
+    //hash map : Get a list of events with a specified key ,and we can watch all events in the list
     private HashMap<String, LinkedHashMap<Integer, HashMap<String,Object>>> listeners = new HashMap<String, LinkedHashMap<Integer, HashMap<String,Object>>>();
     private static final Random mrandom = new Random();
     private static final int End = (int)Math.pow(2, 31);
     /**
-    * @interface IEventListener
-    * represents a function being called on dispatching the event
-    * */
+     * @interface IEventListener
+     * represents a function being called on dispatching the event
+     * */
 
 
     public boolean checkId(Integer id)
