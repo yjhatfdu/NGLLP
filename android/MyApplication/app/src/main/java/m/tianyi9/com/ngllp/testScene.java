@@ -8,17 +8,18 @@ import m.tianyi9.com.ngllp.Core2D.Vec2;
  * Created by lyt on 16-2-14.
  */
 public class testScene extends Scene {
-    private testTriangle tri1;
+    private Sprite2D  tri1;
     private Sprite2D tri2;
     private Sprite2D spr;
     float time = 0;
 
     public testScene()
     {
-        tri1 = new testTriangle(new float[]{-0.5f, -0.5f, 0.5f, 0.0f, -0.5f, 0.5f});
+        tri1 = Sprite2D.createFromFile("/sdcard/test.png",new float[]{0, 0, 0.5f, 0,0.0f , 0.5f, 0.5f, 0.5f});
         tri2 = Sprite2D.createFromFile("/sdcard/test.png");
-        tri2.Scale(new Vec2(0.5f,0.5f));
+        tri2.Scale(new Vec2(0.2f,0.2f));
         appendChild(tri1);
+
         appendChild(tri2);
         spr = Sprite2D.createFromFile("/sdcard/ngllp.png");
         spr.Move(new Vec2(0,0));

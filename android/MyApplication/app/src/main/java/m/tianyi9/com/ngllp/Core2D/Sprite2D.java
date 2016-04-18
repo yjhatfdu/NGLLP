@@ -14,6 +14,7 @@ import m.tianyi9.com.ngllp.Event.TouchItem;
 import m.tianyi9.com.ngllp.GL.Basic2DTextureShader;
 import m.tianyi9.com.ngllp.GL.GLHelper;
 import m.tianyi9.com.ngllp.core.Object3D;
+import m.tianyi9.com.ngllp.core.Render;
 
 import static m.tianyi9.com.ngllp.GL.GLHelper.CheckError;
 import static m.tianyi9.com.ngllp.GL.GLHelper.CreateGLProgram;
@@ -29,8 +30,12 @@ public class Sprite2D extends Object3D implements TouchItem {
     private String texturekey = null;
     private Vec2 calcSize()
     {
-        int height = (int)(mTexture.height * (TexCoord[2] - TexCoord[0]));
-        int width = (int)(mTexture.height * (TexCoord[6] - TexCoord[1]));
+        int h1 = (int)(mTexture.height * (TexCoord[7] - TexCoord[1]));
+        int h2 = (int)(mTexture.height * (TexCoord[5] - TexCoord[3]));
+        int w1 = (int)(mTexture.width * (TexCoord[2] - TexCoord[0]));
+        int w2 = (int)(mTexture.width * (TexCoord[4] - TexCoord[6]));
+        int height = (h1 > h2) ? h1 : h2;
+        int width = (w1 > w2) ? w1 : w2;
         return new Vec2(width,height);
     }
     private Sprite2D(String Key, float[] texCoord) {
@@ -80,13 +85,14 @@ public class Sprite2D extends Object3D implements TouchItem {
         {
             //0 1 3 1 2 3
             float aspectratio = (float)mTexture.width / (float)mTexture.height;
+            float h = size.y / Render.getInstance().getdesign_res().y;
             vertices = new float[]{
-                    -size.x / (2 * size.x) * aspectratio, -size.y / (2 * size.y),
-                    size.x / (2 * size.x) * aspectratio, -size.y / (2 * size.y),
-                    -size.x / (2 * size.x) * aspectratio, size.y / (2 * size.y),
-                    size.x / (2 * size.x) * aspectratio, -size.y / (2 * size.y),
-                    size.x / (2 * size.x) * aspectratio, size.y /(2 * size.y),
-                    -size.x / (2 * size.x) * aspectratio, size.y / (2 * size.y)
+                    - h * aspectratio , -h ,
+                    h * aspectratio , -h ,
+                    -h * aspectratio , h ,
+                    h * aspectratio , -h ,
+                    h * aspectratio , h ,
+                    -h * aspectratio , h
             };
         }
     }

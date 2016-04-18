@@ -89,9 +89,9 @@ public class mGLSurfaceView extends GLSurfaceView{
             {
 
                 GLHelper.viewportH =  height;
-                GLHelper.viewportW =  (int)(width * ratio);
+                GLHelper.viewportW =  (int)(height * ratio);
                 int startx = (int)(width - GLHelper.viewportW) / 2;
-                GLES20.glViewport(startx , 0 , (int)(width * ratio), height);
+                GLES20.glViewport(startx , 0 , (int)GLHelper.viewportW , (int)GLHelper.viewportH);
 
             }
             else
