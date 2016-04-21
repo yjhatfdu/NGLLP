@@ -102,7 +102,7 @@ public class EventBase extends Base {
             {
                 continue;
             }
-            ((IEventListener)event.get("Listener")).handleEvent(this, args);
+            ((IEventListener)event.get("Listener")).handleEvent(this);
             if(event.get("once") != null)
             {
                 collection.remove(key);

@@ -7,7 +7,9 @@ import java.util.HashMap;
 import m.tianyi9.com.ngllp.Base.IEventListener;
 import m.tianyi9.com.ngllp.GL.ExampleShaders;
 import m.tianyi9.com.ngllp.GL.GLHelper;
+import m.tianyi9.com.ngllp.core.Core2D.Vec2;
 import m.tianyi9.com.ngllp.core.Object3D;
+import m.tianyi9.com.ngllp.core.core3D.Vec3;
 
 import static m.tianyi9.com.ngllp.GL.GLHelper.CheckError;
 import static m.tianyi9.com.ngllp.GL.GLHelper.CreateGLProgram;
@@ -65,6 +67,16 @@ public class testTriangle extends Object3D {
         vshader = (int)result.get("vshader");
         fshader = (int)result.get("fshader");
         super.init();
+    }
+
+    @Override
+    public void Move_d(Vec2 d) {
+
+    }
+
+    @Override
+    public void Move_d(Vec3 d) {
+
     }
 
     @Override

@@ -6,8 +6,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-import m.tianyi9.com.ngllp.Core2D.Vec2;
-import m.tianyi9.com.ngllp.Core2D.Vec3;
+import m.tianyi9.com.ngllp.core.Core2D.Vec2;
+import m.tianyi9.com.ngllp.core.core3D.Vec3;
+import m.tianyi9.com.ngllp.core.Transformation.Action;
 
 /**
  * Created by lyt on 16-2-5.
@@ -25,6 +26,10 @@ public abstract class NodeBase extends EventBase {
     protected static final Random mrandom = new Random();
     protected static final int End = (int)Math.pow(2,31);
     protected int level = 0;
+    protected Vec3 posXYZ = new Vec3(0.0f,0.0f,0.0f);
+    protected Vec3 RotXYZ = new Vec3(0.0f,0.0f,0.0f);
+    protected Vec3 ScaleXYZ = new Vec3(1.0f,1.0f,1.0f);
+    protected Vec3 Anchor = new Vec3(0.0f,0.0f,0.0f);
     public NodeBase()
     {
         super();
@@ -32,6 +37,22 @@ public abstract class NodeBase extends EventBase {
         {
             Root = this;
         }
+    }
+    public Vec3 getPos()
+    {
+        return posXYZ;
+    }
+    public Vec3 getScale()
+    {
+        return ScaleXYZ;
+    }
+    public Vec3 getRot()
+    {
+        return RotXYZ;
+    }
+    public Vec3 getAnchor()
+    {
+        return Anchor;
     }
     public static NodeBase getRoot()
     {
@@ -204,6 +225,8 @@ public abstract class NodeBase extends EventBase {
     public abstract void RotateZ(float deg);
     public abstract void Move(Vec2 move);
     public abstract void Move(Vec3 move);
+    public abstract void Move_d(Vec2 d);
+    public abstract void Move_d(Vec3 d);
     public abstract void Scale(Vec2 scale);
     public abstract void Scale(Vec3 scale);
     public abstract void SetAnchorPoint(Vec2 point);
@@ -213,5 +236,9 @@ public abstract class NodeBase extends EventBase {
     {
         Log.d("NodeBase", "Removing Child with id " + mid);
         removeAllChildren();
+    }
+    public void runAction(NodeBase node, Action act)
+    {
+
     }
 }

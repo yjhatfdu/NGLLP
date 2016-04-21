@@ -1,25 +1,18 @@
 package m.tianyi9.com.ngllp.core;
 
 import android.opengl.Matrix;
-import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Random;
-
-import m.tianyi9.com.ngllp.Base.IEventListener;
 import m.tianyi9.com.ngllp.Base.NodeBase;
-import m.tianyi9.com.ngllp.Core2D.Vec2;
-import m.tianyi9.com.ngllp.Core2D.Vec3;
-import m.tianyi9.com.ngllp.Event.TouchItem2D;
+import m.tianyi9.com.ngllp.core.Core2D.Vec2;
+import m.tianyi9.com.ngllp.core.core3D.Vec3;
+import m.tianyi9.com.ngllp.core.Transformation.Action;
 
 /**
  * Created by lyt on 16-4-18.
  */
 public class Object2D extends NodeBase
 {
-        protected int Program;
+    protected int Program;
     protected int vshader;
     protected int fshader;
     protected float[] mVPMatrix = new float[16];
@@ -27,10 +20,7 @@ public class Object2D extends NodeBase
     protected float[] mViewMatrix = new float[16];
     protected float[] mPMatrix = new float[16];
     protected float[] mMMatrix = new float[16];
-    protected Vec3 posXYZ = new Vec3(0.0f,0.0f,0.0f);
-    protected Vec3 RotXYZ = new Vec3(0.0f,0.0f,0.0f);
-    protected Vec3 ScaleXYZ = new Vec3(1.0f,1.0f,1.0f);
-    protected Vec3 Anchor = new Vec3(0.0f,0.0f,0.0f);
+    protected Action mAction = null;
     public Object2D()
     {
         super();
@@ -76,6 +66,19 @@ public class Object2D extends NodeBase
         this.posXYZ.y = move.y;
         this.posXYZ.z = move.z;
     }
+    @Override
+    public void Move_d(Vec2 d) {
+
+        this.posXYZ.x += d.x;
+        this.posXYZ.y += d.y;
+    }
+
+    @Override
+    public void Move_d(Vec3 d) {
+        this.posXYZ.x += d.x;
+        this.posXYZ.y += d.y;
+        this.posXYZ.z += d.z;
+    }
 
     @Override
     public void Scale(Vec2 scale) {
@@ -103,7 +106,7 @@ public class Object2D extends NodeBase
 
     }
     @Override
-    public void update(long current)
+    public void update(long delta)
     {
         if(!minited)
         {
@@ -117,11 +120,25 @@ public class Object2D extends NodeBase
         Matrix.rotateM(mMMatrix,0,RotXYZ.x, 1, 0 ,0);
         Matrix.rotateM(mMMatrix, 0, RotXYZ.y, 0, 1, 0);
         Matrix.rotateM(mMMatrix, 0, RotXYZ.z, 0, 0, 1);
-        super.update(current);
+        super.update(delta);
+        if(mAction != null)
+        {
+            if(mAction.mStarted)
+                mAction.doAction(delta);
+            else
+                mAction = null;
+        }
+
     }
 
     @Override
     public void init() {
         minited = true;
+    }
+    @Override
+    public void runAction(NodeBase node, Action act)
+    {
+        mAction = act;
+        mAction.runAction(node);
     }
 }

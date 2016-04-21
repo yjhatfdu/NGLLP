@@ -7,18 +7,19 @@ import java.util.Random;
 
 import m.tianyi9.com.ngllp.Base.IEventListener;
 import m.tianyi9.com.ngllp.Base.NodeBase;
-import m.tianyi9.com.ngllp.Core2D.Scene;
-import m.tianyi9.com.ngllp.Core2D.Vec2;
+import m.tianyi9.com.ngllp.core.Core2D.Scene;
+import m.tianyi9.com.ngllp.core.Core2D.Vec2;
+import m.tianyi9.com.ngllp.core.core3D.Vec3;
 
 /**
  * Created by lyt on 16-2-14.
  */
-public class Render extends Object3D {
+public class Render extends NodeBase {
     //Director
     private Vec2 design_resolution;
     private static Render mInstance;
     private ArrayList<Scene> scenes = new ArrayList<Scene>();
-
+    public static long globaltimemills = 0;
     public void setdesign_res(Vec2 resolution) {
         design_resolution = resolution;
     }
@@ -28,7 +29,7 @@ public class Render extends Object3D {
     }
 
     private Render() {
-
+        super();
     }
     public Scene getSceneOnTheTop()
     {
@@ -52,8 +53,75 @@ public class Render extends Object3D {
         if (scenes.size() <= 0) {
             exit();
         }
+        globaltimemills += millis;
         super.update(millis);
     }
+
+    @Override
+    public void init() {
+
+    }
+
+    @Override
+    public void Rotate(Vec3 deg) {
+
+    }
+
+    @Override
+    public void RotateX(float deg) {
+
+    }
+
+    @Override
+    public void RotateY(float deg) {
+
+    }
+
+    @Override
+    public void RotateZ(float deg) {
+
+    }
+
+    @Override
+    public void Move(Vec2 move) {
+
+    }
+
+    @Override
+    public void Move(Vec3 move) {
+
+    }
+
+    @Override
+    public void Move_d(Vec2 d) {
+
+    }
+
+    @Override
+    public void Move_d(Vec3 d) {
+
+    }
+
+    @Override
+    public void Scale(Vec2 scale) {
+
+    }
+
+    @Override
+    public void Scale(Vec3 scale) {
+
+    }
+
+    @Override
+    public void SetAnchorPoint(Vec2 point) {
+
+    }
+
+    @Override
+    public void SetAnchorPoint(Vec3 point) {
+
+    }
+
     @Override
     public int appendChild(NodeBase child) {
         init();
@@ -156,7 +224,7 @@ public class Render extends Object3D {
             {
                 continue;
             }
-            ((IEventListener)event.get("Listener")).handleEvent(this, args);
+            ((IEventListener)event.get("Listener")).handleEvent(this);
             if(event.get("once") != null)
             {
                 collection.remove(key);

@@ -3,8 +3,8 @@ package m.tianyi9.com.ngllp.core;
 import android.opengl.Matrix;
 
 import m.tianyi9.com.ngllp.Base.NodeBase;
-import m.tianyi9.com.ngllp.Core2D.Vec2;
-import m.tianyi9.com.ngllp.Core2D.Vec3;
+import m.tianyi9.com.ngllp.core.Core2D.Vec2;
+import m.tianyi9.com.ngllp.core.core3D.Vec3;
 
 /**
  * Created by lyt on 16-2-13.
