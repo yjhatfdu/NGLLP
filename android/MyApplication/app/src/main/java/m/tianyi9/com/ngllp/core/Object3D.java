@@ -9,7 +9,7 @@ import m.tianyi9.com.ngllp.core.core3D.Vec3;
 /**
  * Created by lyt on 16-2-13.
  */
-public abstract class Object3D extends NodeBase {
+public class Object3D extends NodeBase {
     protected int Program;
     protected int vshader;
     protected int fshader;
@@ -66,6 +66,21 @@ public abstract class Object3D extends NodeBase {
         this.posXYZ.x = move.x;
         this.posXYZ.y = move.y;
         this.posXYZ.z = move.z;
+    }
+
+    @Override
+    public void Move_d(Vec2 d) {
+
+    }
+
+    @Override
+    public void Move_d(Vec3 d) {
+
+    }
+
+    @Override
+    public void Scale_d(Vec3 d) {
+
     }
 
     @Override

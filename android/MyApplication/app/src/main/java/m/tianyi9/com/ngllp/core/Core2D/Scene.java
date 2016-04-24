@@ -59,6 +59,11 @@ public class Scene extends NodeBase{
     }
 
     @Override
+    public void Scale_d(Vec3 d) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public final void Scale(Vec2 scale) {
         throw new UnsupportedOperationException();
     }

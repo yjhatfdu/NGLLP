@@ -36,14 +36,16 @@ public class MoveTo extends Action {
         {
             mStarted = false;
             nodetorun.Move(mTarget);
-            mEvent.handleEvent(nodetorun);
+            if(mEvent != null) {
+                mEvent.handleEvent(nodetorun);
+            }
         }
     }
 
     @Override
     public void runAction(NodeBase node) {
         initPOS = node.getPos();
-        deltaPOS = mTarget.mulnum(1 / (float)mTimeCost, false);
+        deltaPOS = mTarget.minus(initPOS,false).mulnum(1 / (float)mTimeCost, false);
         nodetorun = node;
     }
 

@@ -7,6 +7,7 @@ import java.util.Random;
 
 import m.tianyi9.com.ngllp.Base.IEventListener;
 import m.tianyi9.com.ngllp.Base.NodeBase;
+import m.tianyi9.com.ngllp.GL.GLHelper;
 import m.tianyi9.com.ngllp.core.Core2D.Scene;
 import m.tianyi9.com.ngllp.core.Core2D.Vec2;
 import m.tianyi9.com.ngllp.core.core3D.Vec3;
@@ -20,6 +21,7 @@ public class Render extends NodeBase {
     private static Render mInstance;
     private ArrayList<Scene> scenes = new ArrayList<Scene>();
     public static long globaltimemills = 0;
+    public static boolean EGLContextAvail = false;
     public void setdesign_res(Vec2 resolution) {
         design_resolution = resolution;
     }
@@ -99,6 +101,11 @@ public class Render extends NodeBase {
 
     @Override
     public void Move_d(Vec3 d) {
+
+    }
+
+    @Override
+    public void Scale_d(Vec3 d) {
 
     }
 
@@ -244,5 +251,11 @@ public class Render extends NodeBase {
                 collection.remove(Id);
             }
         }
+    }
+    @Override
+    public void invalidate()
+    {
+        GLHelper.clearLocations();
+        super.invalidate();
     }
 }

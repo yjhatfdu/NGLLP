@@ -24,15 +24,20 @@ public  class SimutaniousAct extends Action {
                    act.doAction(millis);
                 else {
                     act.mStarted = false;
-                    mSubActs.remove(act);
                 }
             }
+        }
+        else
+        {
+            mStarted = false;
+            mSubActs.clear();
         }
     }
 
     @Override
     public void runAction(NodeBase node) {
+        nodetorun = node;
         for( Action act : mSubActs)
-            act.nodetorun = nodetorun;
+            act.runAction(node);
     }
 }

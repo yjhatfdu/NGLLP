@@ -54,6 +54,10 @@ public class mGLSurfaceView extends GLSurfaceView{
         @Override
         public void onSurfaceCreated(GL10 gl, EGLConfig config) {
             GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+            lastabsolutetimee = System.currentTimeMillis();
+            currentabsolutetime = lastabsolutetimee;
+            Render.EGLContextAvail = true;
+            Render.getInstance().init();
         }
 
         /**
@@ -126,10 +130,10 @@ public class mGLSurfaceView extends GLSurfaceView{
             lastabsolutetimee = currentabsolutetime;
             currentabsolutetime = System.currentTimeMillis();
             long delta = currentabsolutetime - lastabsolutetimee;
-            float FPS = 1000 /delta;
+            float FPS = 1000 / (delta + 0.0000000001f);
             NodeBase.getRoot().update(delta);
             NodeBase.getRoot().onDraw();
-            Log.d("timereport", "" + FPS);
+            //Log.d("timereport", "" + FPS);
             GLES20.glFlush();
         }
     }
@@ -142,6 +146,7 @@ public class mGLSurfaceView extends GLSurfaceView{
     public void onPause()
     {
         Log.d("State", "onPause");
+        Render.EGLContextAvail = false;
         Render.getInstance().invalidate();
         super.onPause();
     }
@@ -149,7 +154,7 @@ public class mGLSurfaceView extends GLSurfaceView{
     public void onResume()
     {
         Log.d("State", "onResume");
-        Render.getInstance().init();
+
         super.onResume();
     }
     public void setBaseScene(NodeBase scene)

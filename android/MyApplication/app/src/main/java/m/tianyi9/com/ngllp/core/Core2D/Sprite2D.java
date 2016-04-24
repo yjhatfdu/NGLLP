@@ -3,6 +3,7 @@ package m.tianyi9.com.ngllp.core.Core2D;
 
 import android.opengl.GLES20;
 import android.opengl.Matrix;
+import android.util.Log;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -44,6 +45,8 @@ public class Sprite2D extends TouchItem2D {
     private Sprite2D(String Key, float[] texCoord) {
         texturekey = Key;
         TexCoord = texCoord;
+        mTexture = GLHelper.Texture.createFromFile(Key);
+        mTexture.Use();
     }
     //create Sprite: we should only create the sprite without loading texture before gl runs
     //so we put texture init in init() function
@@ -63,21 +66,14 @@ public class Sprite2D extends TouchItem2D {
     {
         if(mTexture != null) {
             mTexture.validity = false;
-            mTexture.Destroy();
+            mTexture.invalidate();
         }
         super.invalidate();
     }
     @Override
     public void init() {
         //Re load texture due to
-        if(mTexture == null)
-        {
-            mTexture = GLHelper.glLoadTexture(texturekey);
-        }
-        else if(mTexture.validity == false)
-        {
-            mTexture = GLHelper.glRevalidateTexture(mTexture);
-        }
+        mTexture.init();
         HashMap<String, Object> result = CreateGLProgram(Basic2DTextureShader.vshader, Basic2DTextureShader.fshader);
         Program = (int)result.get("program");
         vshader = (int)result.get("vshader");
@@ -106,7 +102,8 @@ public class Sprite2D extends TouchItem2D {
             GLES20.glUseProgram(Program);
             if (!CheckError()) {
                 String Message = GLES20.glGetProgramInfoLog(Program);
-                throw new RuntimeException("Message From Linker : " + Message);
+                Log.d("Warning", "Something wrong !!");
+                //throw new RuntimeException("Message From Linker : " + Message);
             }
             //after init procedure we got a Handler of loader texture and texture coords we are going to use
             //vertices vbo
@@ -251,5 +248,11 @@ public class Sprite2D extends TouchItem2D {
                 collection.remove(Id);
             }
         }
+    }
+    @Override
+    protected void finalize()
+    {
+        super.finalize();
+        mTexture.Unuse();
     }
 }

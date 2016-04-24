@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import m.tianyi9.com.ngllp.GL.GLHelper;
 import m.tianyi9.com.ngllp.core.Core2D.Vec2;
+import m.tianyi9.com.ngllp.core.Render;
 import m.tianyi9.com.ngllp.core.core3D.Vec3;
 import m.tianyi9.com.ngllp.core.Transformation.Action;
 
@@ -151,6 +153,10 @@ public abstract class NodeBase extends EventBase {
      */
     public void update(long current)
     {
+        if(!minited && Render.EGLContextAvail)
+        {
+            init();
+        }
         if(mChildren != null) {
             for (NodeBase child : mChildren) {
                 child.update(current);
@@ -227,6 +233,7 @@ public abstract class NodeBase extends EventBase {
     public abstract void Move(Vec3 move);
     public abstract void Move_d(Vec2 d);
     public abstract void Move_d(Vec3 d);
+    public abstract void Scale_d(Vec3 d);
     public abstract void Scale(Vec2 scale);
     public abstract void Scale(Vec3 scale);
     public abstract void SetAnchorPoint(Vec2 point);

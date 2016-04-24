@@ -1,5 +1,7 @@
 package m.tianyi9.com.ngllp.core.Transformation;
 
+import android.util.Log;
+
 import m.tianyi9.com.ngllp.Base.IEventListener;
 import m.tianyi9.com.ngllp.Base.NodeBase;
 
@@ -20,4 +22,9 @@ public abstract class Action {
     }
     public abstract void doAction(long millis);
     public abstract void runAction(NodeBase node);
+    @Override
+    protected void finalize()
+    {
+        Log.d("Action","Action Destoryed");
+    }
 }

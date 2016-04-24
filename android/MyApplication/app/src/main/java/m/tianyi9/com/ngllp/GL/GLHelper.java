@@ -27,22 +27,76 @@ public class GLHelper {
     public static float viewportH = 0;
 
     public static class Texture {
+        //new Texture, Create an Object but not init it
+        //Use when inited
         String name;
         public final int[] textureObjectids = new int[1];
         private int refs = 0;
         public int width = 0;
         public int height = 0;
         public boolean validity = false;
+        private Texture(String name)
+        {
+            this.name = name;
+        }
+        public static Texture createFromFile(String name)
+        {
+            if(TextureCache.get(name) != null)
+            {
+                return TextureCache.get(name);
+            }
+            return new Texture(name);
+        }
         public void Use() {
+            //called on creation of Sprite2D or some other thing
             refs++;
         }
         public void Unuse() {
-            refs--;
-        }
-        public void Destroy()
-        {
-            if(refs <= 0 )
+            //called in Node's finalize()
+            if(refs <= 0)
                 GLES20.glDeleteTextures(1,textureObjectids,0);
+            else
+                refs--;
+        }
+        public void invalidate()
+        {
+            //invalidate texture when there's no EGLContext(go in to background)
+            if(!validity)
+                return;
+            GLES20.glDeleteTextures(1,textureObjectids,0);
+            validity = false;
+        }
+        public void init() throws IllegalArgumentException
+        {
+            if(validity)
+                return;
+            //Init Texture when created or switched back from background
+            GLES20.glGenTextures(1, this.textureObjectids, 0);
+            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, this.textureObjectids[0]);
+            BitmapFactory.Options opts = new BitmapFactory.Options();
+            opts.inScaled = false;
+            final Bitmap bmp = BitmapFactory.decodeFile(name,opts);
+            if (bmp == null) {
+                Log.d("Error", "Error decoding bitmap " + name);
+                GLES20.glDeleteTextures(1, this.textureObjectids, 0);
+                throw new IllegalArgumentException("No Bitmap was decode on " + name);
+            }
+            ///
+            android.graphics.Matrix m = new android.graphics.Matrix();
+            m.postScale(1f, -1f);
+            Bitmap flipped = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), m, true);
+            ///Flipping Bitmap
+            GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR_MIPMAP_LINEAR);
+            GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
+            GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, flipped, 0);
+            GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D);
+            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
+            TextureCache.put(name, this);
+            validity = true;
+            height = bmp.getHeight();
+            width = bmp.getWidth();
+            bmp.recycle();
+            flipped.recycle();
         }
     }
 
@@ -172,47 +226,9 @@ public class GLHelper {
         GLES20.glEnableVertexAttribArray(mLocation);
         GLES20.glVertexAttribPointer(mLocation, element_count_per_vertex, data_type, normalized, vertex_stride, newFloat32Array(dataset));
     }
-
-    public static Texture glRevalidateTexture(Texture origin)
+    public static void clearLocations()
     {
-        TextureCache.remove(origin.name);
-        Texture target = glLoadTexture(origin.name);
-        target.refs = origin.refs;
-        return target;
-    }
-    public static Texture glLoadTexture(String Pathin) {
-        Texture t = null;
-        t = TextureCache.get(Pathin);
-        if(t == null) {
-            t = new Texture();
-            GLES20.glGenTextures(1, t.textureObjectids, 0);
-            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, t.textureObjectids[0]);
-            BitmapFactory.Options opts = new BitmapFactory.Options();
-            opts.inScaled = false;
-            final Bitmap bmp = BitmapFactory.decodeFile(Pathin,opts);
-            if (bmp == null) {
-                Log.d("Error", "Error decoding bitmap " + Pathin);
-                GLES20.glDeleteTextures(1, t.textureObjectids, 0);
-                return null;
-            }
-            ///
-            android.graphics.Matrix m = new android.graphics.Matrix();
-            m.postScale(1f, -1f);
-            Bitmap flipped = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), m, true);
-            ///Flipping Bitmap
-            GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR_MIPMAP_LINEAR);
-            GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
-            GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, flipped, 0);
-            GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D);
-            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
-            TextureCache.put(Pathin, t);
-            t.name = Pathin;
-            t.validity = true;
-            t.height = bmp.getHeight();
-            t.width = bmp.getWidth();
-            bmp.recycle();
-            flipped.recycle();
-        }
-        return t;
+        UniformLocations.clear();
+        AttribLocations.clear();
     }
 }

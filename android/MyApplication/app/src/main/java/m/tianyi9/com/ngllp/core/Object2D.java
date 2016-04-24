@@ -1,6 +1,7 @@
 package m.tianyi9.com.ngllp.core;
 
 import android.opengl.Matrix;
+import android.util.Log;
 
 import m.tianyi9.com.ngllp.Base.NodeBase;
 import m.tianyi9.com.ngllp.core.Core2D.Vec2;
@@ -32,24 +33,24 @@ public class Object2D extends NodeBase
 
     @Override
     public void Rotate(Vec3 deg) {
-        this.RotXYZ.x = deg.x;
-        this.RotXYZ.y = deg.y;
-        this.RotXYZ.z = deg.z;
+        this.RotXYZ.x += deg.x;
+        this.RotXYZ.y += deg.y;
+        this.RotXYZ.z += deg.z;
     }
 
     @Override
     public void RotateX(float deg) {
-        this.RotXYZ.x = deg;
+        this.RotXYZ.x += deg;
     }
 
     @Override
     public void RotateY(float deg) {
-        this.RotXYZ.y =deg;
+        this.RotXYZ.y +=deg;
     }
 
     @Override
     public void RotateZ(float deg) {
-        this.RotXYZ.z = deg;
+        this.RotXYZ.z += deg;
     }
 
 
@@ -78,6 +79,12 @@ public class Object2D extends NodeBase
         this.posXYZ.x += d.x;
         this.posXYZ.y += d.y;
         this.posXYZ.z += d.z;
+    }
+    @Override
+    public void Scale_d(Vec3 d) {
+        this.ScaleXYZ.x += d.x;
+        this.ScaleXYZ.y += d.y;
+        this.ScaleXYZ.z += d.z;
     }
 
     @Override
@@ -108,25 +115,24 @@ public class Object2D extends NodeBase
     @Override
     public void update(long delta)
     {
-        if(!minited)
-        {
-            init();
-        }
+
         Vec2 Resolu = Render.getInstance().getdesign_res();
         Matrix.setIdentityM(mMMatrix, 0);
         Matrix.setIdentityM(mVPMatrix,0);
         Matrix.translateM(mMMatrix, 0,  (float)posXYZ.x / (0.5f * Resolu.x),  (float)posXYZ.y / (0.5f * Resolu.y), (float)posXYZ.z / (0.5f * Resolu.x));
-        Matrix.scaleM(mMMatrix, 0, ScaleXYZ.x,ScaleXYZ.y,ScaleXYZ.z);
         Matrix.rotateM(mMMatrix,0,RotXYZ.x, 1, 0 ,0);
         Matrix.rotateM(mMMatrix, 0, RotXYZ.y, 0, 1, 0);
         Matrix.rotateM(mMMatrix, 0, RotXYZ.z, 0, 0, 1);
+        Matrix.scaleM(mMMatrix, 0, ScaleXYZ.x,ScaleXYZ.y,ScaleXYZ.z);
         super.update(delta);
         if(mAction != null)
         {
             if(mAction.mStarted)
                 mAction.doAction(delta);
-            else
+            else {
+                Log.d("Action", "Finishing Action");
                 mAction = null;
+            }
         }
 
     }
