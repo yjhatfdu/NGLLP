@@ -5,7 +5,7 @@
 ///<reference path='../../Native API.d.ts'/>
 
 //promise patch for ResourceCtl
-import {ResourceCtl} from 'Resource/ResourceCtl'
+import {ResourceCtl} from 'Resource'
 ResourceCtl.prototype['loadResources']=function(list:Array<any>,progressCallBack?){
     return new Promise((resolve,reject) =>
         this.loadResources_raw(list,resolve,reject,progressCallBack)

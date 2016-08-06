@@ -4,9 +4,11 @@
     ///<reference path='../Material/SpriteMaterial.ts'/>
     ///<reference path='../Core/Object3D.ts'/>
     ///<reference path='Sprite.ts'/>
-namespace Core2D{
-    export class SpriteBatchNode extends Core.Object3D{
-        material=Material.createSpriteMaterial();
+    import {Object3D} from '../Core/Object3D'
+    import {Sprite,SpriteProtocol} from './Sprite'
+    import {CreateSpriteMaterial} from '../Material/SpriteMaterial'
+    export class SpriteBatchNode extends Object3D{
+        material=CreateSpriteMaterial();
         constructor(size=32){
             super();
             this.initBuffer(size)
@@ -100,4 +102,3 @@ namespace Core2D{
             this.updateCursor=0;
         }
     }
-}

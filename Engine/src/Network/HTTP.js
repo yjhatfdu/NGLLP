@@ -5,13 +5,14 @@
 ///<reference path='../../lib/Promise.d.ts'/>
 System.register(['Network/Request'], function(exports_1) {
     var Request_1;
-    function HTTP(url, method, config, postObject, onprogress) {
+    function HTTP(url, method, config, postObject, type, onprogress) {
         if (method === void 0) { method = 'GET'; }
         if (config === void 0) { config = { headers: {}, params: {} }; }
         if (postObject === void 0) { postObject = null; }
         return new Promise(function (resolve, reject) {
+            config = config || { headers: {}, params: {} };
             var request = new Request_1.Request();
-            request.open(url, method, config.params, config.headers, postObject, function (content) {
+            request.open(url, method, config.params, config.headers, postObject, type, function (content) {
                 resolve(content);
             }, function (err) {
                 reject(err);
@@ -19,9 +20,9 @@ System.register(['Network/Request'], function(exports_1) {
         });
     }
     exports_1("HTTP", HTTP);
-    function GET(url, config, onprogress) {
+    function GET(url, config, type, onprogress) {
         if (config === void 0) { config = { headers: {}, params: {} }; }
-        return HTTP(url, 'GET', config, null, onprogress);
+        return HTTP(url, 'GET', config, null, type, onprogress);
     }
     exports_1("GET", GET);
     function POST(url, config, postObject, onprogress) {

@@ -11,15 +11,24 @@
 </div>
 <div id="ind" style="position: absolute;color: white;"></div>
 </body>
+<script src="lib/system.js"></script>
 <script src="../Engine_web/lib/gl-matrix.js"></script>
 <script src="../Engine_web/lib/md5.js"></script>
 <script src="../Engine_web/build/build.js"></script>
-<script src="../Engine_patch/build/build.js"></script>
-
+<script src="../Engine/build/build.js"></script>
+<!--<script src="build/build.js"></script>-->
 <script>
-        Engine.setEngine(document.querySelector('#con'));
+//        System.import('NGLLP/Engine').then( function(result){
+//                    var Engine=result.Engine;
+//                    Engine.setEngine(document.querySelector('#con'));
+//                    System.import('Test')
+//            }
+//        );
+    System.import('scripts/Test.js')
+
+
 </script>
 
 
-<script src="scripts/sprite.js"></script>
+
 </html>

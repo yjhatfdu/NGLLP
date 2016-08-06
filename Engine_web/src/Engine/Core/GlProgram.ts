@@ -2,21 +2,23 @@
  * Created by yjh on 15/12/20.
  */
     ///<reference path='../Engine.ts'/>
-namespace Core{
+import {Engine} from '../Engine'
+
+
     export class GlProgram{
         static programCache={};
         static getProgram(vShaderText,fShaderText,flags?){
-            var flag=GlProgram.getFlags(flags);
+            let flag=GlProgram.getFlags(flags);
             vShaderText=flag+vShaderText;
             fShaderText=flag+fShaderText;
-            var hash=window['md5'](vShaderText)+window['md5'](fShaderText);
+            let hash=window['md5'](vShaderText)+window['md5'](fShaderText);
             if(GlProgram.programCache[hash]){
                 return GlProgram.programCache[hash]
             }
-            var gl=Engine.render.gl;
-            var vs=GlProgram.getShader(vShaderText,gl,true);
-            var fs=GlProgram.getShader(fShaderText,gl,false);
-            var program=gl.createProgram();
+            let gl=Engine.render.gl;
+            let vs=GlProgram.getShader(vShaderText,gl,true);
+            let fs=GlProgram.getShader(fShaderText,gl,false);
+            let program=gl.createProgram();
             gl.attachShader(program,vs);
             gl.attachShader(program,fs);
             gl.linkProgram(program);
@@ -29,7 +31,7 @@ namespace Core{
 
         }
         private static getShader(source,gl,isVertex){
-            var shader=gl.createShader(isVertex?gl.VERTEX_SHADER:gl.FRAGMENT_SHADER);
+            let shader=gl.createShader(isVertex?gl.VERTEX_SHADER:gl.FRAGMENT_SHADER);
             gl.shaderSource(shader,source);
             gl.compileShader(shader);
             if(gl.getShaderParameter(shader,gl.COMPILE_STATUS)){
@@ -43,10 +45,9 @@ namespace Core{
                 return ''
             }
             var result='';
-            for (var i in flags){
+            for (let i in flags){
                 result+=`#define ${i} ${flags[i]}\n`
             }
             return result;
         }
     }
-}

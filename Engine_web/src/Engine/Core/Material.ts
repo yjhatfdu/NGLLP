@@ -6,8 +6,11 @@
  */
     ///<reference path='Render.ts'/>
     ///<reference path='GlProgram.ts'/>
+import * as Base from '../Base'
+import {Engine} from '../Engine'
+import {GlProgram} from './GlProgram'
 
-     namespace Core{
+
         export class Material extends Base.ObjectBase{
             render;
             program;
@@ -44,18 +47,27 @@
                     this.bindUniform(list[i].name,list[i].type,list[i].value)
                 }
             }
-            uniformData(name,data){
-              this.uniformList[name].value=data
+            uniformData(name,data,rightNow=false){
+                this.uniformList[name].value=data;
+                if(rightNow){
+                    var uniform=this.uniformList[name];
+                    if(uniform.ismat){
+                        uniform.func(uniform.location,false,data)
+                    }else{
+                        uniform.func(uniform.location,data)
+                    }
+                }
+
             }
-            bindAttribute(name,size){
-                this.attributeList[name]={name:name,location:this.gl.getAttribLocation(this.program,name),size:size}
+            bindAttribute(name,size,type='FLOAT'){
+                this.attributeList[name]={name:name,location:this.gl.getAttribLocation(this.program,name),size:size,type:this.gl[type]}
             }
             bindVBO(name,vbo){
-                var attrib=this.attributeList[name];
+                let attrib=this.attributeList[name];
                 if(!attrib){return}
                 this.gl.bindBuffer(this.gl.ARRAY_BUFFER,vbo);
                 this.gl.enableVertexAttribArray(attrib.location);
-                this.gl.vertexAttribPointer(attrib.location,attrib.size,this.gl.FLOAT,false,0,0)
+                this.gl.vertexAttribPointer(attrib.location,attrib.size,attrib.type,false,0,0)
             }
             bindIBO(IBO){
                 this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER,IBO);
@@ -69,11 +81,11 @@
             }
             bindAttributes(list){
                 for(var i =0;i<list.length;i++){
-                    this.bindAttribute(list[i].name,list[i].size)
+                    this.bindAttribute(list[i].name,list[i].size,list[i].type)
                 }
             }
             bufferData(name,data,dynamic=false){
-                var attrib=this.attributeList[name];
+                let attrib=this.attributeList[name];
                 if(!attrib.vbo){
                     attrib.vbo=this.gl.createBuffer();
                 }
@@ -117,7 +129,7 @@
                 //bind attributes
                 if(this.autoBindAttrib){
                     for(var j in this.attributeList){
-                        var attrib=this.attributeList[j];
+                        let attrib=this.attributeList[j];
                         if(!attrib.vbo){
                             continue
                         }
@@ -133,7 +145,7 @@
                 }
 
                 //bind textures
-                for(var k=0;k<this.textures.length;k++){
+                for(let k=0;k<this.textures.length;k++){
                     if(this.textures[k]){
                         this.gl.activeTexture(this.gl.TEXTURE0+k);
                         this.gl.bindTexture(this.gl.TEXTURE_2D,this.textures[k].active(k))
@@ -146,4 +158,4 @@
                 Engine.render.materialStack[Engine.render.materialStack.length-1].active()
             }
         }
-    }
+

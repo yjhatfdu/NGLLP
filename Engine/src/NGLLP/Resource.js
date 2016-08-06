@@ -1,4 +1,4 @@
-System.register(['Core3D/Camera'], function(exports_1) {
+System.register(['Resource'], function(exports_1) {
     function exportStar_1(m) {
         var exports = {};
         for(var n in m) {
@@ -8,11 +8,11 @@ System.register(['Core3D/Camera'], function(exports_1) {
     }
     return {
         setters:[
-            function (Camera_1_1) {
-                exportStar_1(Camera_1_1);
+            function (Resource_1_1) {
+                exportStar_1(Resource_1_1);
             }],
         execute: function() {
         }
     }
 });
-//# sourceMappingURL=Core3D.js.map
+//# sourceMappingURL=Resource.js.map

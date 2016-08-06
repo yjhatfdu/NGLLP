@@ -1,3 +1,6 @@
 # Created by .ignore support plugin (hsz.mobi)
 Engine_web/build
+Engine_patch/build
+*.map
 .idea
+JS API1.0.js

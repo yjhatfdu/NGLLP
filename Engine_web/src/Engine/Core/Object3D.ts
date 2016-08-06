@@ -3,7 +3,9 @@
  */
     ///<reference path='../Base.ts'/>
     ///<reference path='../../../lib/gl-matrix.d.ts'/>
-    namespace Core {
+import * as Base from '../Base'
+import {Engine} from '../Engine'
+
     export class Object3D extends Base.NodeBase {
         isRoot = false;
         position = vec3.create();
@@ -85,7 +87,4 @@
             this.rotate[1] = y;
             this.rotate[2] = z;
         }
-
-
-    }
 }

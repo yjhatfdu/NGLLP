@@ -10,8 +10,13 @@
 ///<reference path='Core2D/SpriteBatchNode.ts'/>
 ///<reference path='Core2D/TextSprite.ts'/>
 ///<reference path='Util/Util.ts'/>
+import * as Base from './Base'
+import {Render} from './Core/Render'
+import {TouchCtl} from './Events/TouchCtl'
+import {ResourceCtl} from './Resource/ResourceCtl'
+import {AudioCtl} from './Core/AudioCtl'
 
- module Engine{
+ export module Engine{
 
     export var settings={
         container:null,
@@ -20,19 +25,19 @@
     export function setEngine(container,pixelRatio=window.devicePixelRatio){
         settings.container=container;
         settings.pixelRatio=pixelRatio;
-        Engine. audioCtl=new Core.AudioCtl();
-        Engine. resourceCtl=new Resource.ResourceCtl();
-        Engine. render=new Core.Render();
-        Engine. touchCtl=new Events.TouchCtl();
+        Engine. audioCtl=new AudioCtl();
+        Engine. resourceCtl=new ResourceCtl();
+        Engine. render=new Render();
+        Engine. touchCtl=new TouchCtl();
     }
     export function loadScript(src){
         var scriptNode=document.createElement('script');
         document.body.appendChild(scriptNode);
         scriptNode.src=src
     }
-    export var audioCtl:Core.AudioCtl;
-    export var resourceCtl:Resource.ResourceCtl;
-    export var render:Core.Render;
-    export var touchCtl:Events.TouchCtl;
+    export var audioCtl:AudioCtl;
+    export var resourceCtl:ResourceCtl;
+    export var render:Render;
+    export var touchCtl:TouchCtl;
     export var eventBus:Base.EventBase =new Base.EventBase();
 }

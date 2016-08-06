@@ -2,8 +2,8 @@
  * Created by yjh on 15/12/19.
  */
     ///<reference path='../Resource/ResourceItem.ts'/>
-namespace Core{
 
+import * as Base from '../Base'
     export class AudioCtl extends Base.EventBase{
         ctx;
         bgmBuffer;
@@ -25,7 +25,7 @@ namespace Core{
             this.duration=item.bgmDuration;
         }
         playAudioItem(item){
-            var bufferSource=this.ctx.createBufferSource();
+            let bufferSource=this.ctx.createBufferSource();
             bufferSource.buffer=item.audioBuffer;
             bufferSource.connect(this.ctx.destination);
             bufferSource.start(this.ctx.currentTime);
@@ -76,4 +76,3 @@ namespace Core{
             }
         }
     }
-}

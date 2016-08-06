@@ -2,31 +2,34 @@
  * Created by yjh on 15/12/19.
  */
     ///<reference path='ResourceItem.ts'/>
-namespace Resource{
+    import * as Base from '../Base'
+    import {Engine} from '../Engine'
+    import {ResourceItem,AudioItem,ImageItem} from './ResourceItem'
+
     export class ResourceCtl extends Base.EventBase{
         resultDic={};
         loadResources_raw(list:Array<any>,callBack,failCallBack?,progressCallBack?){
             failCallBack=failCallBack||function(){};
             progressCallBack=progressCallBack||function(){};
-            var jobCount=0;
-            var runningJobCount=0;
-            var progress=[];
+            let jobCount=0;
+            let runningJobCount=0;
+            let progress=[];
             for(var i=0;i<list.length;i++){
-                var job=list[i];
-                var name=job['name'];
-                var url=job['url'];
-                var cache=job['cache'];
-                var standAlone=job['standAloneTexture']||false;
+                let job=list[i];
+                let name=job['name'];
+                let url=job['url'];
+                let cache=job['cache'];
+                let standAlone=job['standAloneTexture']||false;
 
                 //todo implement filesystem api cache in chrome
 
-                var newJob=function(name,url,cache,standAlone){
+                let newJob=function(name,url,cache,standAlone){
                     if(/.+\.(jpg|png|jpeg)$/.test(url.toLowerCase())){
                         jobCount++;
                         runningJobCount++;
                         progress[i]=0;
-                        var index=i;
-                        var img=document.createElement('img');
+                        let index=i;
+                        let img=document.createElement('img');
                         img.onload=function(){
                             this.resultDic[name]=new ImageItem(img,this,name);
                             this.resultDic[name].prepare(standAlone);
@@ -49,8 +52,8 @@ namespace Resource{
                         jobCount++;
                         runningJobCount++;
                         progress[i]=0;
-                        var index=i;
-                        var x=new XMLHttpRequest();
+                        let index=i;
+                        let x=new XMLHttpRequest();
                         x.open('GET',url,true);
                         x.responseType='arraybuffer';
                         x.onload=function(){
@@ -73,8 +76,8 @@ namespace Resource{
                         }.bind(this);
                         x.onprogress=function(x){
                             progress[index]=x.loaded/x.total;
-                            var p=0;
-                            for(var j=0;j<jobCount;j++){
+                            let p=0;
+                            for(let j=0;j<jobCount;j++){
                                 p+=progress[j]
                             }
                             progressCallBack(p/jobCount);
@@ -98,4 +101,3 @@ namespace Resource{
             delete this.resultDic[item.name]
         }
     }
-}

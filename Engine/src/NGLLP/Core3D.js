@@ -1,4 +1,4 @@
-System.register(['Engine', '../src/Resource/ResourceCtl'], function(exports_1) {
+System.register(['Core3D'], function(exports_1) {
     function exportStar_1(m) {
         var exports = {};
         for(var n in m) {
@@ -8,12 +8,11 @@ System.register(['Engine', '../src/Resource/ResourceCtl'], function(exports_1) {
     }
     return {
         setters:[
-            function (Engine_1_1) {
-                exportStar_1(Engine_1_1);
-            },
-            function (_1) {}],
+            function (Core3D_1_1) {
+                exportStar_1(Core3D_1_1);
+            }],
         execute: function() {
         }
     }
 });
-//# sourceMappingURL=Engine.js.map
+//# sourceMappingURL=Core3D.js.map

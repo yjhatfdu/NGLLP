@@ -4,10 +4,16 @@
     ///<reference path='../Core/Object3D.ts'/>
     ///<reference path='../Core/Material.ts'/>
     ///<reference path='Geometry.ts'/>
-namespace Core3D{
-    export class Mesh extends Core.Object3D{
-        material:Core.Material;
-        geometry:Core3D.Geometry;
+
+    import {Object3D} from '../Core/Object3D'
+    import {Material} from '../Core/Material'
+import {Geometry} from "./Geometry"
+import {Engine} from '../Engine'
+
+
+    export class Mesh extends Object3D{
+        material:Material;
+        geometry:Geometry;
         drawRange=[0,1];
         gl;
         constructor(material?,geometry?){
@@ -25,10 +31,9 @@ namespace Core3D{
             this.material.bindIBO(this.geometry.IBO);
             this.material.mvpMat=this.mvpMat;
             if(draw){
-                var drawCount=Math.floor((this.drawRange[1]-this.drawRange[0])*this.geometry.elementsCount/3)*3;
-                var drawOffset=Math.floor(this.drawRange[0]*this.geometry.elementsCount/3)*3;
+                let drawCount=Math.floor((this.drawRange[1]-this.drawRange[0])*this.geometry.elementsCount/3)*3;
+                let drawOffset=Math.floor(this.drawRange[0]*this.geometry.elementsCount/3)*3;
                 this.gl.drawElements(this.gl.TRIANGLES,drawCount,this.gl.UNSIGNED_SHORT,drawOffset)
             }
         }
     }
-}

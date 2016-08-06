@@ -3,9 +3,9 @@
  */
     ///<reference path='../Core/Material.ts'/>
     ///<reference path='../Core/GlProgram.ts'/>
-namespace Material{
-    export var createSpriteMaterial=function(){
-        var spriteMaterial=new Core.Material();
+    import {Material} from '../Core/Material'
+    export var CreateSpriteMaterial=function(){
+        let spriteMaterial=new Material();
         spriteMaterial.uniforms=[
             {name:'texture',type:'1i',value:0}
         ];
@@ -18,7 +18,7 @@ namespace Material{
         spriteMaterial.enableBlend=true;
         spriteMaterial.enableDepthTest=true;
         spriteMaterial.enableDepthWrite=false;
-        var vst=`
+        let vst=`
                 attribute vec3 position;
                 attribute vec2 uv;
                 attribute float opacity;
@@ -93,5 +93,5 @@ namespace Material{
     //    }
     //
     //}
-}
+
 

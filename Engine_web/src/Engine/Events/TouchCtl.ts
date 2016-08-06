@@ -2,7 +2,9 @@
  * Created by yjh on 15/12/19.
  */
     ///<reference path='../Base.ts'/>
-namespace Events{
+import * as Base from '../Base'
+import {Engine} from '../Engine'
+
     export var TouchEvents={
         OnTouchStart:'touchstart',
         OnTouchEnd:'touchend',
@@ -28,8 +30,8 @@ namespace Events{
             e.stopPropagation();
             e.preventDefault();
             this.dispatchEvent(TouchEvents.OnTouchStart);
-            for(var i=0;i<e.changedTouches.length;i++){
-                var touch=e.changedTouches[i];
+            for(let i=0;i<e.changedTouches.length;i++){
+                let touch=e.changedTouches[i];
                 //this.figureState[touch.identifier]={x:touch.pageX,y:touch.pageY};
                 this.findAndDispatchEvent(TouchEvents.OnTouchStart,touch.pageX,touch.pageY)
 
@@ -58,7 +60,7 @@ namespace Events{
             this.dispatchEvent("touch")
         }
         addTouchItem(item,event){
-            var level=item.level;
+            let level=item.level;
             if(!this.itemList[event]){
                 this.itemList[event]=[]
             }
@@ -74,12 +76,12 @@ namespace Events{
             }.bind(this))
         }
         removeTouchItem(item,event){
-            var level=item.level;
-            var list=this.itemList[event][level];
+            let level=item.level;
+            let list=this.itemList[event][level];
             if(!list){
                 return
             }
-            var index=list.indexOf(item);
+            let index=list.indexOf(item);
             if(index>=0){
                 list.splice(index,1)
             }
@@ -88,14 +90,14 @@ namespace Events{
             if(!this.itemList[event]){
                 return
             }
-            var x=(2*pageX/Engine.render.width-1)/Engine.render.aspect;
-            var y=2*pageY/Engine.render.height-1;
+            let x=(2*pageX/Engine.render.width-1)/Engine.render.aspect;
+            let y=2*pageY/Engine.render.height-1;
             //handle capture
-            for(var l=0;l<this.itemList[event].length;l++){
-                var list=this.itemList[event][l];
+            for(let l=0;l<this.itemList[event].length;l++){
+                let list=this.itemList[event][l];
                 if(list){
-                    for(var i=0;i<list.length;i++){
-                        var item=list[i];
+                    for(let i=0;i<list.length;i++){
+                        let item=list[i];
                         if(!item){
                             continue
                         }
@@ -121,5 +123,5 @@ namespace Events{
                 }
             }
         }
-    }
+
 }

@@ -128,6 +128,7 @@ declare module 'NGLLP/Resource' {
     export interface ImageItem extends ResourceItem {
         width:number
         height:number
+        texture;
     }
     export interface AudioItem extends ResourceItem {
         bgmDuration:number
@@ -188,10 +189,10 @@ declare module 'NGLLP/Network' {
     export function HTTP()
 }
 declare module 'NGLLP/Engine' {
-    import * as Base from 'Base'
-    import {Render} from 'Core/Render'
-    import {AudioCtl} from 'Core/AudioCtl'
-    import {ResourceCtl} from 'Resource/ResourceCtl'
+    import * as Base from 'NGLLP/Base'
+    import {Render} from 'NGLLP/Core'
+    import {AudioCtl} from 'NGLLP/Core'
+    import {ResourceCtl} from 'NGLLP/Resource'
     export module Engine {
         export var render:Render;
         export var audioCtl:AudioCtl;
@@ -252,7 +253,7 @@ declare module "NGLLP/Core"{
         height:number;
         hiDPI:boolean;
     }
-    import {AudioItem} from 'Resource/ResourceItem'
+    import {AudioItem} from 'Resource'
     /**
      * 使用Engine.audioCtl的实例,不能直接构造
      */
@@ -264,10 +265,27 @@ declare module "NGLLP/Core"{
         seek(time:number)
         getBgmTime():number
     }
+    export class Material{
+        enableBlend;
+        enableDepthTest;
+        enableDepthWrite;
+        IBO;
+        mvpMat;
+        autoBindAttrib;
+        constructor(uniformList?,attributeList?);
+        initProgram(vst,fst,flags?)
+        uniformData(name,data)
+        bindVBO(name,vbo)
+        bindIBO(IBO)
+        bindTexture(texture,index)
+        active(push?)
+
+    }
+
 }
 declare module 'NGLLP/Core2D'{
-    import {Object3D} from 'Core/Object3D'
-    import {TouchItem} from 'Events/TouchItem'
+    import {Object3D} from 'Core'
+    import {TouchItem} from 'Events'
     export class Sprite extends TouchItem {
 
     }
@@ -277,13 +295,14 @@ declare module 'NGLLP/Core2D'{
 
 
 declare module 'NGLLP/Core3D' {
-    import {Object3D} from 'Core/Object3D'
+    import {Object3D} from 'Core'
     class Camera extends Object3D {
 
     }
+    export * from 'Core3D'
 }
 
-declare module 'Events'{
+declare module 'NGLLP/Events'{
     import * as Base from 'Base'
     export class TouchItem extends Base.EventBase {
 
@@ -291,6 +310,14 @@ declare module 'Events'{
     export class TouchCtl extends Base.EventBase {
 
     }
+
+}
+declare module 'MMD/PMDLoader'{
+
+       export class PMDLoader{
+           constructor();
+           load(url)
+       }
 
 }
 

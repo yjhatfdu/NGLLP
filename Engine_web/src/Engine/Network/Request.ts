@@ -1,17 +1,17 @@
 /**
  * Created by yjh on 16/1/29.
  */
-namespace Network{
+
     export class Request{
-        open(url,method='GET',params={},headers={},postObject=null,onload=function(content){},onerror=function(err){},onprogress=function(progress){}){
-            var x=new XMLHttpRequest();
-            var query=[];
+        open(url,method='GET',params={},headers={},postObject=null,type?,onload=function(content){},onerror=function(err){},onprogress=function(progress){}){
+            let x=new XMLHttpRequest();
+            let query=[];
             for(var i in params){
                 if(params.hasOwnProperty(i)){
                     query.push(`${i}=${params[i]}`)
                 }
             }
-            var queryStr='';
+            let queryStr='';
             if(query.length>0){
                 queryStr='?'+query.join('&')
             }
@@ -21,6 +21,9 @@ namespace Network{
                     x.setRequestHeader(i,headers[i])
                 }
             }
+            if(type){
+                x.responseType=type;
+            }
             x.onload=function(){
                 if(x.status>=400){
                     onerror(x.statusText)
@@ -28,7 +31,7 @@ namespace Network{
                     if(x.getResponseHeader('Content-Type')=='application/json'){
                         onload(JSON.parse(x.responseText))
                     }else{
-                        onload(x.responseText)
+                        onload(x.response)
                     }
                 }
             };
@@ -40,5 +43,5 @@ namespace Network{
             };
             x.send(postObject)
         }
-    }
+
 }

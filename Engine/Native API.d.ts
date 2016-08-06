@@ -114,7 +114,7 @@ declare module 'Base' {
 //
 //}
 
-declare module 'Resource/ResourceItem' {
+declare module 'Resource' {
     export interface ResourceItem {
         constructor(controller, name)
         prepare()
@@ -122,27 +122,20 @@ declare module 'Resource/ResourceItem' {
     export interface ImageItem extends ResourceItem {
         width:number
         height:number
+        texture;
     }
     export interface AudioItem extends ResourceItem {
         bgmDuration:number
     }
-}
-
-declare module 'Resource/ResourceCtl' {
     import * as Base from 'Base'
-    import {ResourceItem} from 'Resource/ResourceItem'
-    /**
-     * 不能直接构建,只能从Engine.resourceCtl.getItem(name)获取
-     */
-
-
     /**
      * 使用Engine.resourceCtl的实例,不能直接构造
      */
     export class ResourceCtl extends Base.EventBase {
         /**
          *
-         * @param list 每个item是{name:"foo",url:"bar",cache:"false"} cache表示是否缓存到本地,部分平台可用
+         * @param list 每个item是{name:"foo",url:"bar",cache:false,standAloneTexture:false}
+         * cache表示是否缓存到本地,部分平台可用,standAloneTexture表示是否需要合并纹理
          * @param callBack
          * @param failCallBack
          */
@@ -151,6 +144,7 @@ declare module 'Resource/ResourceCtl' {
         checkCacheState(url:string):boolean
     }
 }
+
 declare module Util {
     //封装系统获取timestamp的API
     function getTime()
@@ -183,14 +177,14 @@ declare module Util {
 
 declare module 'Network/Request' {
     export class Request {
-        open(url, method?, params?, headers?, postObject?, onload?, onerror?, onprogress?)
+        open(url, method?, params?, headers?, postObject?,type?, onload?, onerror?, onprogress?)
     }
 }
+
 declare module 'Engine' {
     import * as Base from 'Base'
-    import {Render} from 'Core/Render'
-    import {AudioCtl} from 'Core/AudioCtl'
-    import {ResourceCtl} from 'Resource/ResourceCtl'
+    import {Render,AudioCtl} from 'Core'
+    import {ResourceCtl} from 'Resource'
     export module Engine {
         export var render:Render;
         export var audioCtl:AudioCtl;
@@ -203,8 +197,7 @@ declare module 'Engine' {
 //module console{
 //    declare function log(message:string)
 //}
-
-declare module 'Core/Object3D'{
+declare module 'Core'{
     import * as Base from 'Base'
     export class Object3D extends Base.NodeBase {
         /**
@@ -240,10 +233,6 @@ declare module 'Core/Object3D'{
          *
          */
     }
-}
-
-declare module 'Core/Render'{
-    import {Object3D} from 'Core/Object3D'
     /**
      * 在创建引擎实例时分平台实现各自的画布初始化
      * 只能使用共享的实例 Engine.render
@@ -255,10 +244,17 @@ declare module 'Core/Render'{
         height:number;
         hiDPI:boolean;
     }
-}
-declare module 'Core/AudioCtl'{
-    import * as Base from 'Base'
-    import {AudioItem} from 'Resource/ResourceItem'
+    export class Material{
+        constructor(uniformList?,attributeList?);
+        initProgram(vst,fst,flags?)
+        uniformData(name,data,rightNow?)
+        bindVBO(name,vbo,type?)
+        bindIBO(IBO)
+        bindTexture(texture,index)
+        active(push?)
+
+    }
+    import {AudioItem} from 'Resource'
     /**
      * 使用Engine.audioCtl的实例,不能直接构造
      */
@@ -272,39 +268,44 @@ declare module 'Core/AudioCtl'{
     }
 }
 
+declare module 'Core3D'{
+    import * as Base from 'Base'
+    import {Object3D} from 'Core'
+    export class Geometry extends Object3D{
+        constructor();
+        bufferVBO(attributeName,array,staticDraw?)
+        createVBO(attributeName)
+        positionArray;
+        elementsIndexArray;
+        uvArray;
+        normalArray;
+    }
+    class Camera extends Object3D {
+
+    }
+}
 
 
-declare module 'Core2D/SpriteBatchNode'{
-    import {Object3D} from 'Core/Object3D'
+
+declare module 'Core2D'{
+    import {TouchItem} from 'Events'
+    export class Sprite extends TouchItem {
+
+    }
+    import {Object3D} from 'Core'
     export class SpriteBatchNode extends Object3D {
         constructor()
     }
 }
 
-declare module 'Core2D/Sprite'{
-    import {TouchItem} from 'Events/TouchItem'
-    export class Sprite extends TouchItem {
 
-    }
-}
-
-declare module 'Core3D/Camera' {
-    import {Object3D} from 'Core/Object3D'
-    class Camera extends Object3D {
-
-    }
-}
-declare module 'Events/TouchItem' {
+declare module 'Events' {
     import * as Base from 'Base'
     export class TouchItem extends Base.EventBase {
 
     }
-
-}
-declare module 'Events/TouchCtl' {
-    import * as Base from 'Base'
-
     export class TouchCtl extends Base.EventBase {
 
     }
+
 }

@@ -2,7 +2,10 @@
  * Created by yjh on 15/12/15.
  */
     ///<reference path='Engine.ts'/>
-namespace Base{
+
+
+
+
     export class ObjectBase{
         uuid:string;
         constructor(){
@@ -23,8 +26,8 @@ namespace Base{
             if (!this.listeners[event]) {
                 return false
             }
-            for (var i in this.listeners[event]) {
-                var l = this.listeners[event][i];
+            for (let i in this.listeners[event]) {
+                let l = this.listeners[event][i];
                 if( l.useCapture==false && captureOnly==true ){
                     continue
                 }
@@ -43,7 +46,7 @@ namespace Base{
             if (!this.listeners[event]) {
                 this.listeners[event] = []
             }
-            var id=Math.random();
+            let id=Math.random();
             this.listeners[event].push({listener: listener, useCapture: useCapture,id:id});
             return id
         }
@@ -51,18 +54,17 @@ namespace Base{
             if (!this.listeners[event]) {
                 this.listeners[event] = []
             }
-            var id=Math.random();
+            let id=Math.random();
             this.listeners[event].push({listener: listener, useCapture: true,id:id,oneTime:true});
             return id
         }
-
 
         private removeAllEventListenersOfEvent(event:string) {
             this.listeners[event] = [];
         }
         removeListenerById(event:string,id:number){
-            var list=this.listeners[event];
-            for(var i=0;i<list.length;i++){
+            let list=this.listeners[event];
+            for(let i=0;i<list.length;i++){
                 if(list[i].id==id){
                     list.splice(i,1);
                     return
@@ -105,14 +107,14 @@ namespace Base{
         }
         setNode(){
             this.level=this.parent.level+1;
-            for(var i=0;i<this.children.length;i++){
+            for(let i=0;i<this.children.length;i++){
                 this.children[i].setNode();
             }
         }
 
         update(flag?){
-            for (var i=0;i<this.children.length;i++){
-                var node=this.children[i];
+            for (let i=0;i<this.children.length;i++){
+                let node=this.children[i];
                 if(node.visible){
                     node.update()
                 }
@@ -142,14 +144,14 @@ namespace Base{
              this.children.splice(this.children.indexOf(child),1)
         }
         getChildrenCount(){
-            var count=this.children.length;
-            for(var i=0,il=count;i<il;i++){
+            let count=this.children.length;
+            for(let i=0,il=count;i<il;i++){
                 count+=this.children[i].getChildrenCount()
             }
             return count
         }
         destroy(){
            delete NodeBase.nodeList[this._id]
+
         }
     }
-}

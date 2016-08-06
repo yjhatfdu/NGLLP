@@ -3,13 +3,14 @@
  */
     ///<reference path='../Core/GlTexture.ts'/>
     ///<reference path='../Base.ts'/>
-namespace Resource{
+import * as Base from '../Base'
+import {GlTexture} from '../Core/GlTexture'
 
     export interface ImageItemProtocol{
         width;
         height;
         name;
-        texture:Core.GlTexture;
+        texture:GlTexture;
         destroy();
     }
 
@@ -54,7 +55,7 @@ namespace Resource{
         img;
         width;
         height;
-        texture:Core.GlTexture;
+        texture:GlTexture;
         constructor(img,controller,name){
             super(controller,name);
             this.img=img;
@@ -63,7 +64,7 @@ namespace Resource{
         }
         prepare(standAlone=false){
             if(!this.prepared){
-                this.texture=Core.GlTexture.getTexture(this.img,standAlone);
+                this.texture=GlTexture.getTexture(this.img,standAlone);
                 this.texture.deleteSource();
                 this.img=null
             }
@@ -73,4 +74,3 @@ namespace Resource{
         }
 
     }
-}
