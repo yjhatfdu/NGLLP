@@ -9,3 +9,4 @@ jspm_packages
 node_modules
 tests
 typings
+app/**/*.js
