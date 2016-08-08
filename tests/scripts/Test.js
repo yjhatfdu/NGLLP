@@ -2,9 +2,7 @@
  * Created by yjh on 16/2/2.
  // */
 ///<reference path='../../Engine/API.d.ts'/>
-System.register(['MMD/PMDLoader'], function(exports_1, context_1) {
-    "use strict";
-    var __moduleName = context_1 && context_1.id;
+System.register(['MMD/PMDLoader'], function(exports_1) {
     var PMDLoader_1;
     var model;
     return {

@@ -1,9 +1,7 @@
 /**
  * Created by yjh on 16/1/29.
  */
-System.register([], function(exports_1, context_1) {
-    "use strict";
-    var __moduleName = context_1 && context_1.id;
+System.register([], function(exports_1) {
     var Request;
     function HTTP(url, method, config, postObject, type, onprogress) {
         if (method === void 0) { method = 'GET'; }
@@ -90,7 +88,7 @@ System.register([], function(exports_1, context_1) {
                     x.send(postObject);
                 };
                 return Request;
-            }());
+            })();
             exports_1("Request", Request);
         }
     }

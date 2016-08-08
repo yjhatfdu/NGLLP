@@ -1,6 +1,4 @@
-System.register(['../Engine', '../../../lib/md5'], function(exports_1, context_1) {
-    "use strict";
-    var __moduleName = context_1 && context_1.id;
+System.register(['../Engine', '../../../lib/md5'], function(exports_1) {
     var Engine, md5;
     var GlProgram;
     return {
@@ -61,7 +59,7 @@ System.register(['../Engine', '../../../lib/md5'], function(exports_1, context_1
                 };
                 GlProgram.programCache = {};
                 return GlProgram;
-            }());
+            })();
             exports_1("GlProgram", GlProgram);
         }
     }

@@ -2,9 +2,7 @@
  * Created by yjh on 16/1/19.
  */
 ///<reference path='../Base.ts'/>
-System.register(['../Base', '../Engine'], function(exports_1, context_1) {
-    "use strict";
-    var __moduleName = context_1 && context_1.id;
+System.register(['../Base', '../Engine'], function(exports_1) {
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
         function __() { this.constructor = d; }
@@ -84,7 +82,7 @@ System.register(['../Base', '../Engine'], function(exports_1, context_1) {
                     configurable: true
                 });
                 return Geometry;
-            }(Base.ObjectBase));
+            })(Base.ObjectBase);
             exports_1("Geometry", Geometry);
         }
     }

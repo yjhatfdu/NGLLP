@@ -1,6 +1,6 @@
 System.config({
   baseURL: "/NGLLP",
-  defaultJSExtensions:true,
+  defaultJSExtensions: true,
   transpiler: "typescript",
   paths: {
     "github:*": "jspm_packages/github/*",

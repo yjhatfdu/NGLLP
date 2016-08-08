@@ -1,6 +1,4 @@
-System.register(['../Base', '../Engine', './ResourceItem', '../Network/Request'], function(exports_1, context_1) {
-    "use strict";
-    var __moduleName = context_1 && context_1.id;
+System.register(['../Base', '../Engine', './ResourceItem', '../Network/Request'], function(exports_1) {
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
         function __() { this.constructor = d; }
@@ -56,13 +54,13 @@ System.register(['../Base', '../Engine', './ResourceItem', '../Network/Request']
                                 jobCount++;
                                 runningJobCount++;
                                 progress[i] = 0;
-                                var index_1 = i;
-                                var img_1 = document.createElement('img');
-                                img_1.onload = function () {
-                                    this.resultDic[name] = new ResourceItem_1.ImageItem(img_1, this, name);
+                                var index = i;
+                                var img = document.createElement('img');
+                                img.onload = function () {
+                                    this.resultDic[name] = new ResourceItem_1.ImageItem(img, this, name);
                                     this.resultDic[name].prepare(standAlone);
                                     runningJobCount--;
-                                    progress[index_1] = 1;
+                                    progress[index] = 1;
                                     var p = 0;
                                     for (var j = 0; j < jobCount; j++) {
                                         p += progress[j];
@@ -72,27 +70,27 @@ System.register(['../Base', '../Engine', './ResourceItem', '../Network/Request']
                                         callBack(this);
                                     }
                                 }.bind(this);
-                                img_1.onerror = function (e) {
+                                img.onerror = function (e) {
                                     failCallBack(e.toString());
                                 };
-                                img_1.src = url;
+                                img.src = url;
                             }
                             else if (/.+\.(mp3|m4a)$/.test(url.toLowerCase())) {
                                 jobCount++;
                                 runningJobCount++;
                                 progress[i] = 0;
-                                var index_2 = i;
-                                var x_1 = new XMLHttpRequest();
-                                x_1.open('GET', url, true);
-                                x_1.responseType = 'arraybuffer';
-                                x_1.onload = function () {
-                                    if (x_1.status >= 400) {
-                                        failCallBack(x_1.statusText);
+                                var index = i;
+                                var x = new XMLHttpRequest();
+                                x.open('GET', url, true);
+                                x.responseType = 'arraybuffer';
+                                x.onload = function () {
+                                    if (x.status >= 400) {
+                                        failCallBack(x.statusText);
                                     }
-                                    Engine.audioCtl.ctx.decodeAudioData(x_1.response, function (buffer) {
+                                    Engine.audioCtl.ctx.decodeAudioData(x.response, function (buffer) {
                                         this.resultDic[name] = new ResourceItem_1.AudioItem(buffer, this, name);
                                         runningJobCount--;
-                                        progress[index_2] = 1;
+                                        progress[index] = 1;
                                         progressCallBack(progress);
                                         if (runningJobCount == 0) {
                                             callBack();
@@ -101,29 +99,29 @@ System.register(['../Base', '../Engine', './ResourceItem', '../Network/Request']
                                         failCallBack('AudioFile Decode Error: Resource name' + name);
                                     });
                                 }.bind(this);
-                                x_1.onprogress = function (x) {
-                                    progress[index_2] = x.loaded / x.total;
+                                x.onprogress = function (x) {
+                                    progress[index] = x.loaded / x.total;
                                     var p = 0;
                                     for (var j = 0; j < jobCount; j++) {
                                         p += progress[j];
                                     }
                                     progressCallBack(p / jobCount);
                                 };
-                                x_1.onerror = function () {
-                                    failCallBack(x_1.statusText);
+                                x.onerror = function () {
+                                    failCallBack(x.statusText);
                                 };
-                                x_1.send();
+                                x.send();
                             }
                             else {
                                 jobCount++;
                                 runningJobCount++;
                                 progress[i] = 0;
-                                var index_3 = i;
+                                var index = i;
                                 Request_1.GET(url, null, null, function (x) {
                                 }).then(function (resp) {
                                     _this.resultDic[name] = new ResourceItem_1.TextItem(resp, _this, name);
                                     runningJobCount--;
-                                    progress[index_3] = 1;
+                                    progress[index] = 1;
                                     progressCallBack(progress);
                                     if (runningJobCount == 0) {
                                         callBack();
@@ -143,7 +141,7 @@ System.register(['../Base', '../Engine', './ResourceItem', '../Network/Request']
                     delete this.resultDic[item.name];
                 };
                 return ResourceCtl;
-            }(Base.EventBase));
+            })(Base.EventBase);
             exports_1("ResourceCtl", ResourceCtl);
         }
     }

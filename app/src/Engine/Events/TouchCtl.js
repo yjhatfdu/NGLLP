@@ -1,6 +1,4 @@
-System.register(['../Base', '../Engine'], function(exports_1, context_1) {
-    "use strict";
-    var __moduleName = context_1 && context_1.id;
+System.register(['../Base', '../Engine'], function(exports_1) {
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
         function __() { this.constructor = d; }
@@ -69,7 +67,8 @@ System.register(['../Base', '../Engine'], function(exports_1, context_1) {
                 TouchCtl.prototype.onMouseUp = function (e) {
                     e.stopPropagation();
                     e.preventDefault();
-                    this.dispatchEvent("touch");
+                    this.findAndDispatchEvent(TouchEvents.touchend, e.pageX, e.pageY);
+                    this.dispatchEvent("touchend");
                 };
                 TouchCtl.prototype.addTouchItem = function (item, event) {
                     var level = item.level;
@@ -136,7 +135,7 @@ System.register(['../Base', '../Engine'], function(exports_1, context_1) {
                     }
                 };
                 return TouchCtl;
-            }(Base.EventBase));
+            })(Base.EventBase);
             exports_1("TouchCtl", TouchCtl);
         }
     }

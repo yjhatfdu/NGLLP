@@ -1,6 +1,4 @@
-System.register(['../Engine/Engine', '../Engine/Core2D/SpriteBatchNode', '../Engine/Core2D/TextSprite', '../Engine/Animation/Tween'], function(exports_1, context_1) {
-    "use strict";
-    var __moduleName = context_1 && context_1.id;
+System.register(['../Engine/Engine', '../Engine/Core2D/SpriteBatchNode', '../Engine/Core2D/TextSprite', '../Engine/Animation/Tween'], function(exports_1) {
     var Engine, SpriteBatchNode_1, TextSprite_1, Tween_1;
     var layer, promotionSprite, ps, shouldStop, promotion;
     function start() {

@@ -3,9 +3,7 @@
  */
 ///<reference path='Sprite.ts'/>
 ///<reference path='../Core/GlTexture.ts'/>
-System.register(['../Core/GlTexture', './Sprite', '../Base'], function(exports_1, context_1) {
-    "use strict";
-    var __moduleName = context_1 && context_1.id;
+System.register(['../Core/GlTexture', './Sprite', '../Base'], function(exports_1) {
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
         function __() { this.constructor = d; }
@@ -41,7 +39,7 @@ System.register(['../Core/GlTexture', './Sprite', '../Base'], function(exports_1
                     this.canvas.height = height;
                 };
                 return CanvasItem;
-            }(Base.ObjectBase));
+            })(Base.ObjectBase);
             //尽可能减少更新次数,每次更新在iOS平台会产生较大性能影响
             TextSprite = (function (_super) {
                 __extends(TextSprite, _super);
@@ -131,7 +129,7 @@ System.register(['../Core/GlTexture', './Sprite', '../Base'], function(exports_1
                     _super.prototype.update.call(this);
                 };
                 return TextSprite;
-            }(Sprite_1.Sprite));
+            })(Sprite_1.Sprite);
             exports_1("TextSprite", TextSprite);
         }
     }

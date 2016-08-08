@@ -1,9 +1,7 @@
 /**
  * Created by yjh on 15/12/15.
  */
-System.register(['./Base', './Core/Render', './Events/TouchCtl', './Resource/ResourceCtl', './Core/AudioCtl'], function(exports_1, context_1) {
-    "use strict";
-    var __moduleName = context_1 && context_1.id;
+System.register(['./Base', './Core/Render', './Events/TouchCtl', './Resource/ResourceCtl', './Core/AudioCtl'], function(exports_1) {
     var Base, Render_1, TouchCtl_1, ResourceCtl_1, AudioCtl_1;
     var settings, audioCtl, resourceCtl, render, touchCtl, eventBus;
     function setEngine(container, pixelRatio) {

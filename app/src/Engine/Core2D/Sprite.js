@@ -1,6 +1,4 @@
-System.register(['../Engine', '../Events/TouchItem'], function(exports_1, context_1) {
-    "use strict";
-    var __moduleName = context_1 && context_1.id;
+System.register(['../Engine', '../Events/TouchItem'], function(exports_1) {
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
         function __() { this.constructor = d; }
@@ -68,9 +66,9 @@ System.register(['../Engine', '../Events/TouchItem'], function(exports_1, contex
                         return;
                     }
                     //纹理不同的话,先绘制buffer
-                    if (this.batchNode.currentTexture != this.texture.bufferTex || this.texture) {
+                    if (this.batchNode.currentTexture != (this.texture.bufferTex || this.texture)) {
                         this.batchNode.drawBuffer();
-                        this.batchNode.currentTexture = this.texture.bufferTex || this.texture;
+                        this.batchNode.currentTexture = (this.texture.bufferTex || this.texture);
                     }
                     //加入绘制缓存
                     var posBuffer = this.batchNode.posBuffer;
@@ -99,8 +97,8 @@ System.register(['../Engine', '../Events/TouchItem'], function(exports_1, contex
                     var uvY = uvH * Math.floor(frame / this.stride);
                     var tw = this.texture.sw;
                     var th = this.texture.sh;
-                    var tx = this.texture.sx;
-                    var ty = this.texture.sy;
+                    var tx = this.texture.sx + this.sx * this.texture.sw;
+                    var ty = this.texture.sy + this.sy * this.texture.sh;
                     var uvCursor = this.batchNode.updateCursor * 2;
                     var posCursor = this.batchNode.updateCursor * 3;
                     var zpos = this.batchNode.enableZPosition ? this.zIndex : 0;
@@ -182,7 +180,7 @@ System.register(['../Engine', '../Events/TouchItem'], function(exports_1, contex
                     }
                 };
                 return Sprite;
-            }(TouchItem_1.TouchItem));
+            })(TouchItem_1.TouchItem);
             exports_1("Sprite", Sprite);
         }
     }

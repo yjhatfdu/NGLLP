@@ -1,6 +1,4 @@
-System.register([], function(exports_1, context_1) {
-    "use strict";
-    var __moduleName = context_1 && context_1.id;
+System.register([], function(exports_1) {
     var digest;
     function t(n, t) {
         var r = (65535 & n) + (65535 & t), e = (n >> 16) + (t >> 16) + (r >> 16);

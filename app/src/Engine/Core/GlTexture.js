@@ -1,9 +1,7 @@
 /**
  * Created by yjh on 15/12/20.
  */
-System.register(['../Base', '../Engine'], function(exports_1, context_1) {
-    "use strict";
-    var __moduleName = context_1 && context_1.id;
+System.register(['../Base', '../Engine'], function(exports_1) {
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
         function __() { this.constructor = d; }
@@ -45,7 +43,7 @@ System.register(['../Base', '../Engine'], function(exports_1, context_1) {
                     this.gl.bindTexture(this.gl.TEXTURE_2D, this.glTexture);
                 };
                 return BufferTexture;
-            }());
+            })();
             GlTexture = (function (_super) {
                 __extends(GlTexture, _super);
                 function GlTexture(source, bufferTexture, x, y, w, h) {
@@ -158,7 +156,7 @@ System.register(['../Base', '../Engine'], function(exports_1, context_1) {
                 GlTexture.textureIndex = {};
                 GlTexture.bufferTexList = [];
                 return GlTexture;
-            }(Base.ObjectBase));
+            })(Base.ObjectBase);
             exports_1("GlTexture", GlTexture);
         }
     }

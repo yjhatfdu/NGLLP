@@ -1,9 +1,7 @@
 /**
  * Created by yjh on 15/3/29.
  */
-System.register([], function(exports_1, context_1) {
-    "use strict";
-    var __moduleName = context_1 && context_1.id;
+System.register([], function(exports_1) {
     var Easing;
     return {
         setters:[],
@@ -178,7 +176,7 @@ System.register([], function(exports_1, context_1) {
                     return b + c / d * t;
                 };
                 return Easing;
-            }());
+            })();
             exports_1("Easing", Easing);
         }
     }

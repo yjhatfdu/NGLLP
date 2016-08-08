@@ -4,9 +4,7 @@
 /**
  * Created by yjh on 15/11/19.
  */
-System.register(['../Base', '../Engine', './GlProgram'], function(exports_1, context_1) {
-    "use strict";
-    var __moduleName = context_1 && context_1.id;
+System.register(['../Base', '../Engine', './GlProgram'], function(exports_1) {
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
         function __() { this.constructor = d; }
@@ -184,7 +182,7 @@ System.register(['../Base', '../Engine', './GlProgram'], function(exports_1, con
                     Engine.render.materialStack[Engine.render.materialStack.length - 1].active();
                 };
                 return Material;
-            }(Base.ObjectBase));
+            })(Base.ObjectBase);
             exports_1("Material", Material);
         }
     }

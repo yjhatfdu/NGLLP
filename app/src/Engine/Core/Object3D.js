@@ -1,9 +1,7 @@
 /**
  * Created by yjh on 15/12/21.
  */
-System.register(['gl-matrix', '../Base', '../Engine'], function(exports_1, context_1) {
-    "use strict";
-    var __moduleName = context_1 && context_1.id;
+System.register(['gl-matrix', '../Base', '../Engine'], function(exports_1) {
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
         function __() { this.constructor = d; }
@@ -113,7 +111,7 @@ System.register(['gl-matrix', '../Base', '../Engine'], function(exports_1, conte
                     this.rotate[2] = z;
                 };
                 return Object3D;
-            }(Base.NodeBase));
+            })(Base.NodeBase);
             exports_1("Object3D", Object3D);
         }
     }

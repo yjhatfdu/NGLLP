@@ -9,8 +9,11 @@ import * as loading from './loading'
 import {Tween} from '../Engine/Animation/Tween'
 import {Easing} from '../Engine/Animation/easing'
 import {TextSprite} from "../Engine/Core2D/TextSprite";
+import {SpriteBatchNode} from "NGLLP/Core2D";
+import * as GameMap from  './map'
 
 export let bgScale = 1;
+export let uiLayer:SpriteBatchNode;
 
 Engine.setEngine(document.body);
 loading.start();
@@ -32,10 +35,10 @@ load('52cRm0eIXbvuNoi9')
     .then(()=>loading.stop())
     .then(()=> {
 
-
+        GameMap.init(Engine.resourceCtl.getItem('map').json());
         let bgLayer = new SpriteBatchNode();
+        uiLayer=new SpriteBatchNode(64);
         let perfect = Engine.resourceCtl.getItem('perfect');
-
 
         let bg = Engine.resourceCtl.getItem('bg');
         let bgObject = new Sprite(bg, 0, 0, bg.width / bg.height * 2, 2);
@@ -61,6 +64,7 @@ load('52cRm0eIXbvuNoi9')
         bgLayer.appendChild(coverSprite);
         bgLayer.appendChild(clickToStart);
         Engine.render.appendChild(bgLayer);
+        Engine.render.appendChild(uiLayer);
         bgObject.opacity = .1;
         bgObject.addOneTimeListener('touchend', ()=> {
             bgLayer.removeChild(coverSprite);
@@ -69,7 +73,8 @@ load('52cRm0eIXbvuNoi9')
             Tween(clickToStart, 'scale').translateTo(2, 300).easing(Easing.easeInQuad).then(()=>bgLayer.removeChild(clickToStart));
             Tween(bgObject, 'opacity').translateTo(1, 1000);
             bgObject.addEventListener('touchstart', ()=> {
-                Engine.audioCtl.playAudioItem(perfect)
+                Engine.audioCtl.playAudioItem(perfect);
+
             })
         });
     });

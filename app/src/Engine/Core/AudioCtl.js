@@ -2,9 +2,7 @@
  * Created by yjh on 15/12/19.
  */
 ///<reference path='../Resource/ResourceItem.ts'/>
-System.register(['../Base'], function(exports_1, context_1) {
-    "use strict";
-    var __moduleName = context_1 && context_1.id;
+System.register(['../Base'], function(exports_1) {
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
         function __() { this.constructor = d; }
@@ -74,7 +72,7 @@ System.register(['../Base'], function(exports_1, context_1) {
                     this.play(0);
                 };
                 AudioCtl.prototype.getBgmTime = function () {
-                    return this.ctx.currentTime - this.startTime;
+                    return this.isPlaying ? this.ctx.currentTime - this.startTime : this.currentTime - this.startTime;
                 };
                 AudioCtl.prototype.update = function () {
                     if (this.isPlaying) {
@@ -85,7 +83,7 @@ System.register(['../Base'], function(exports_1, context_1) {
                     }
                 };
                 return AudioCtl;
-            }(Base.EventBase));
+            })(Base.EventBase);
             exports_1("AudioCtl", AudioCtl);
         }
     }

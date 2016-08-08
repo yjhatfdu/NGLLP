@@ -88,9 +88,9 @@ export class Sprite extends TouchItem implements SpriteProtocol {
             return
         }
         //纹理不同的话,先绘制buffer
-        if (this.batchNode.currentTexture != this.texture.bufferTex||this.texture) {
+        if (this.batchNode.currentTexture != (this.texture.bufferTex||this.texture)) {
             this.batchNode.drawBuffer();
-            this.batchNode.currentTexture = this.texture.bufferTex||this.texture;
+            this.batchNode.currentTexture = (this.texture.bufferTex||this.texture);
         }
         //加入绘制缓存
         let posBuffer = this.batchNode.posBuffer;
@@ -119,8 +119,8 @@ export class Sprite extends TouchItem implements SpriteProtocol {
         let uvY = uvH * Math.floor(frame / this.stride);
         let tw = this.texture.sw;
         let th = this.texture.sh;
-        let tx = this.texture.sx;
-        let ty = this.texture.sy;
+        let tx = this.texture.sx+this.sx*this.texture.sw;
+        let ty = this.texture.sy+this.sy*this.texture.sh;
         let uvCursor = this.batchNode.updateCursor * 2;
         let posCursor = this.batchNode.updateCursor * 3;
         let zpos = this.batchNode.enableZPosition ? this.zIndex : 0;

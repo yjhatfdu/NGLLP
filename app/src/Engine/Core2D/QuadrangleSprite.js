@@ -2,9 +2,7 @@
  * Created by yjh on 15/12/21.
  */
 ///<reference path='Sprite.ts'/>
-System.register([], function(exports_1, context_1) {
-    "use strict";
-    var __moduleName = context_1 && context_1.id;
+System.register([], function(exports_1) {
     return {
         setters:[],
         execute: function() {

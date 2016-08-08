@@ -26,6 +26,7 @@ export class EventBase extends ObjectBase {
         if (!this.listeners[event]) {
             return false
         }
+        let state=false;
         for (let i in this.listeners[event]) {
             let l = this.listeners[event][i];
             if (l.useCapture == false && captureOnly == true) {
@@ -35,11 +36,10 @@ export class EventBase extends ObjectBase {
 
             if (l.oneTime) {
                 delete this.listeners[event][i];
+                state=true
             }
-            return true
-
         }
-        return false
+        return state
     }
 
     addEventListener(event: string, listener: Function, useCapture: boolean = false): number {

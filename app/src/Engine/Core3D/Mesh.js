@@ -1,9 +1,7 @@
 /**
  * Created by yjh on 16/1/19.
  */
-System.register(['../Core/Object3D', '../Engine'], function(exports_1, context_1) {
-    "use strict";
-    var __moduleName = context_1 && context_1.id;
+System.register(['../Core/Object3D', '../Engine'], function(exports_1) {
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
         function __() { this.constructor = d; }
@@ -45,7 +43,7 @@ System.register(['../Core/Object3D', '../Engine'], function(exports_1, context_1
                     }
                 };
                 return Mesh;
-            }(Object3D_1.Object3D));
+            })(Object3D_1.Object3D);
             exports_1("Mesh", Mesh);
         }
     }

@@ -1,6 +1,4 @@
-System.register(['../Engine/Network/Request'], function(exports_1, context_1) {
-    "use strict";
-    var __moduleName = context_1 && context_1.id;
+System.register(['../Engine/Network/Request'], function(exports_1) {
     var Request;
     var uploadPath, resourcePath;
     function load(id) {

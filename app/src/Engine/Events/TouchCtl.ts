@@ -61,13 +61,13 @@ export class TouchCtl extends Base.EventBase {
     }
 
     onMouseMove(e) {
-
     }
 
     onMouseUp(e) {
         e.stopPropagation();
         e.preventDefault();
-        this.dispatchEvent("touch")
+        this.findAndDispatchEvent(TouchEvents.touchend, e.pageX, e.pageY);
+        this.dispatchEvent("touchend")
     }
 
     addTouchItem(item, event) {

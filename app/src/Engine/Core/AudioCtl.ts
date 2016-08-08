@@ -72,7 +72,7 @@ export class AudioCtl extends Base.EventBase {
     }
 
     getBgmTime() {
-        return this.ctx.currentTime - this.startTime
+        return this.isPlaying?this.ctx.currentTime - this.startTime:this.currentTime-this.startTime
     }
 
     update() {

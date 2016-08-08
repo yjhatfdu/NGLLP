@@ -1,9 +1,7 @@
 /**
  * Created by yjh on 15/12/15.
  */
-System.register([], function(exports_1, context_1) {
-    "use strict";
-    var __moduleName = context_1 && context_1.id;
+System.register([], function(exports_1) {
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
         function __() { this.constructor = d; }
@@ -20,7 +18,7 @@ System.register([], function(exports_1, context_1) {
                 ObjectBase.prototype.destroy = function () {
                 };
                 return ObjectBase;
-            }());
+            })();
             exports_1("ObjectBase", ObjectBase);
             EventBase = (function (_super) {
                 __extends(EventBase, _super);
@@ -34,6 +32,7 @@ System.register([], function(exports_1, context_1) {
                     if (!this.listeners[event]) {
                         return false;
                     }
+                    var state = false;
                     for (var i in this.listeners[event]) {
                         var l = this.listeners[event][i];
                         if (l.useCapture == false && captureOnly == true) {
@@ -42,10 +41,10 @@ System.register([], function(exports_1, context_1) {
                         l.listener(args, this);
                         if (l.oneTime) {
                             delete this.listeners[event][i];
+                            state = true;
                         }
-                        return true;
                     }
-                    return false;
+                    return state;
                 };
                 EventBase.prototype.addEventListener = function (event, listener, useCapture) {
                     if (useCapture === void 0) { useCapture = false; }
@@ -80,7 +79,7 @@ System.register([], function(exports_1, context_1) {
                     this.listeners = {};
                 };
                 return EventBase;
-            }(ObjectBase));
+            })(ObjectBase);
             exports_1("EventBase", EventBase);
             NodeBase = (function (_super) {
                 __extends(NodeBase, _super);
@@ -159,7 +158,7 @@ System.register([], function(exports_1, context_1) {
                 };
                 NodeBase.nodeList = {};
                 return NodeBase;
-            }(EventBase));
+            })(EventBase);
             exports_1("NodeBase", NodeBase);
         }
     }

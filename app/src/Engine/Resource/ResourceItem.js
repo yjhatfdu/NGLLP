@@ -1,6 +1,4 @@
-System.register(['../Base', '../Core/GlTexture'], function(exports_1, context_1) {
-    "use strict";
-    var __moduleName = context_1 && context_1.id;
+System.register(['../Base', '../Core/GlTexture'], function(exports_1) {
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
         function __() { this.constructor = d; }
@@ -31,7 +29,7 @@ System.register(['../Base', '../Core/GlTexture'], function(exports_1, context_1)
                     this.controller.destroyItem(this);
                 };
                 return ResourceItem;
-            }(Base.ObjectBase));
+            })(Base.ObjectBase);
             exports_1("ResourceItem", ResourceItem);
             AudioItem = (function (_super) {
                 __extends(AudioItem, _super);
@@ -50,7 +48,7 @@ System.register(['../Base', '../Core/GlTexture'], function(exports_1, context_1)
                     this.audioBuffer = null;
                 };
                 return AudioItem;
-            }(ResourceItem));
+            })(ResourceItem);
             exports_1("AudioItem", AudioItem);
             ImageItem = (function (_super) {
                 __extends(ImageItem, _super);
@@ -72,7 +70,7 @@ System.register(['../Base', '../Core/GlTexture'], function(exports_1, context_1)
                     this.texture.destroy();
                 };
                 return ImageItem;
-            }(ResourceItem));
+            })(ResourceItem);
             exports_1("ImageItem", ImageItem);
             TextItem = (function (_super) {
                 __extends(TextItem, _super);
@@ -91,7 +89,7 @@ System.register(['../Base', '../Core/GlTexture'], function(exports_1, context_1)
                 TextItem.prototype.text = function () {
                 };
                 return TextItem;
-            }(ResourceItem));
+            })(ResourceItem);
             exports_1("TextItem", TextItem);
         }
     }

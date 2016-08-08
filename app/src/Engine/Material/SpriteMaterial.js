@@ -1,6 +1,4 @@
-System.register(['../Core/Material'], function(exports_1, context_1) {
-    "use strict";
-    var __moduleName = context_1 && context_1.id;
+System.register(['../Core/Material'], function(exports_1) {
     var Material_1;
     var CreateSpriteMaterial;
     return {

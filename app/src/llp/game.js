@@ -1,8 +1,6 @@
-System.register(['../Engine/Engine', '../Engine/Core2D/SpriteBatchNode', '../Engine/Core2D/Sprite', './loader', './loading', '../Engine/Animation/Tween', '../Engine/Animation/easing', "../Engine/Core2D/TextSprite"], function(exports_1, context_1) {
-    "use strict";
-    var __moduleName = context_1 && context_1.id;
-    var Engine, SpriteBatchNode_1, Sprite_1, loader_1, loading, Tween_1, easing_1, TextSprite_1;
-    var bgScale;
+System.register(['../Engine/Engine', '../Engine/Core2D/SpriteBatchNode', '../Engine/Core2D/Sprite', './loader', './loading', '../Engine/Animation/Tween', '../Engine/Animation/easing', "../Engine/Core2D/TextSprite", './map'], function(exports_1) {
+    var Engine, SpriteBatchNode_1, Sprite_1, loader_1, loading, Tween_1, easing_1, TextSprite_1, GameMap;
+    var bgScale, uiLayer;
     return {
         setters:[
             function (Engine_1) {
@@ -28,6 +26,9 @@ System.register(['../Engine/Engine', '../Engine/Core2D/SpriteBatchNode', '../Eng
             },
             function (TextSprite_1_1) {
                 TextSprite_1 = TextSprite_1_1;
+            },
+            function (GameMap_1) {
+                GameMap = GameMap_1;
             }],
         execute: function() {
             exports_1("bgScale", bgScale = 1);
@@ -49,7 +50,9 @@ System.register(['../Engine/Engine', '../Engine/Core2D/SpriteBatchNode', '../Eng
             })
                 .then(function () { return loading.stop(); })
                 .then(function () {
+                GameMap.init(Engine.resourceCtl.getItem('map').json());
                 var bgLayer = new SpriteBatchNode_1.SpriteBatchNode();
+                exports_1("uiLayer", uiLayer = new SpriteBatchNode_1.SpriteBatchNode(64));
                 var perfect = Engine.resourceCtl.getItem('perfect');
                 var bg = Engine.resourceCtl.getItem('bg');
                 var bgObject = new Sprite_1.Sprite(bg, 0, 0, bg.width / bg.height * 2, 2);
@@ -74,6 +77,7 @@ System.register(['../Engine/Engine', '../Engine/Core2D/SpriteBatchNode', '../Eng
                 bgLayer.appendChild(coverSprite);
                 bgLayer.appendChild(clickToStart);
                 Engine.render.appendChild(bgLayer);
+                Engine.render.appendChild(uiLayer);
                 bgObject.opacity = .1;
                 bgObject.addOneTimeListener('touchend', function () {
                     bgLayer.removeChild(coverSprite);

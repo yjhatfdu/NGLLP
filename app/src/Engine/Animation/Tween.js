@@ -1,6 +1,4 @@
-System.register(['./easing', '../Engine', '../Util/Util'], function(exports_1, context_1) {
-    "use strict";
-    var __moduleName = context_1 && context_1.id;
+System.register(['./easing', '../Engine', '../Util/Util'], function(exports_1) {
     var easing_1, Engine, Util;
     var TweenAction, TweenItem, _TweenCtl, TweenCtl, Tween;
     return {
@@ -23,7 +21,7 @@ System.register(['./easing', '../Engine', '../Util/Util'], function(exports_1, c
                         this.time = time;
                     }
                     return Translate;
-                }());
+                })();
                 TweenAction.Translate = Translate;
                 var TranslateTo = (function () {
                     function TranslateTo(value, time) {
@@ -32,7 +30,7 @@ System.register(['./easing', '../Engine', '../Util/Util'], function(exports_1, c
                         this.time = time;
                     }
                     return TranslateTo;
-                }());
+                })();
                 TweenAction.TranslateTo = TranslateTo;
                 var Loop = (function () {
                     function Loop(times) {
@@ -46,7 +44,7 @@ System.register(['./easing', '../Engine', '../Util/Util'], function(exports_1, c
                         }
                     }
                     return Loop;
-                }());
+                })();
                 TweenAction.Loop = Loop;
                 var Then = (function () {
                     function Then(callback) {
@@ -54,7 +52,7 @@ System.register(['./easing', '../Engine', '../Util/Util'], function(exports_1, c
                         this.callback = callback;
                     }
                     return Then;
-                }());
+                })();
                 TweenAction.Then = Then;
             })(TweenAction || (TweenAction = {}));
             TweenItem = (function () {
@@ -195,7 +193,7 @@ System.register(['./easing', '../Engine', '../Util/Util'], function(exports_1, c
                     this._loopAfterFinished = flag;
                 };
                 return TweenItem;
-            }());
+            })();
             _TweenCtl = (function () {
                 function _TweenCtl() {
                     this.animationList = {};
@@ -268,7 +266,7 @@ System.register(['./easing', '../Engine', '../Util/Util'], function(exports_1, c
                     }
                 };
                 return _TweenCtl;
-            }());
+            })();
             exports_1("TweenCtl", TweenCtl = new _TweenCtl());
             exports_1("Tween", Tween = TweenCtl.add.bind(TweenCtl));
         }
