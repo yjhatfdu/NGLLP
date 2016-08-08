@@ -3,7 +3,9 @@
  */
 ///<reference path='../../lib/Promise.d.ts'/>
 ///<reference path='../../Native API.d.ts'/>
-System.register(['Resource'], function(exports_1) {
+System.register(['Resource'], function(exports_1, context_1) {
+    "use strict";
+    var __moduleName = context_1 && context_1.id;
     var Resource_1;
     return {
         setters:[

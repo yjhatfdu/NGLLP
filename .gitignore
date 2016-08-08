@@ -4,3 +4,8 @@ Engine_patch/build
 *.map
 .idea
 JS API1.0.js
+dist
+jspm_packages
+node_modules
+tests
+typings

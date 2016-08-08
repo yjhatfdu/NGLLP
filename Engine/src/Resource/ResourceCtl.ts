@@ -7,7 +7,7 @@
 //promise patch for ResourceCtl
 import {ResourceCtl} from 'Resource'
 ResourceCtl.prototype['loadResources']=function(list:Array<any>,progressCallBack?){
-    return new Promise((resolve,reject) =>
-        this.loadResources_raw(list,resolve,reject,progressCallBack)
-    )
+        return new Promise((resolve,reject) =>
+            this.loadResources_raw(list,resolve,reject,progressCallBack)
+        )
 };

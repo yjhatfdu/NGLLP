@@ -3,7 +3,9 @@
  */
 ///<reference path='../../Native API.d.ts'/>
 ///<reference path='../../lib/Promise.d.ts'/>
-System.register(['Network/Request'], function(exports_1) {
+System.register(['Network/Request'], function(exports_1, context_1) {
+    "use strict";
+    var __moduleName = context_1 && context_1.id;
     var Request_1;
     function HTTP(url, method, config, postObject, type, onprogress) {
         if (method === void 0) { method = 'GET'; }
@@ -40,29 +42,4 @@ System.register(['Network/Request'], function(exports_1) {
         }
     }
 });
-//before typescript support partial module, we should patch the module like this
-//Network['HTTP']=HTTP;
-//Network['GET']=GET;
-//Network['POST']=POST;
-//Network.GET('/index.html')
-//    .then(function (res) {
-//        console.log(res);
-//        return Network.GET('/test.json')
-//    }).then(function(res){
-//    console.log(res)
-//})
-//    .catch(function (err) {
-//        console.log(err)
-//    });
-//
-//async function load(){
-//    try{
-//        var res = await Network.GET('index.html');
-//        console.log(res);
-//        var res2 = await Network.GET('test.json');
-//        console.log(res2)
-//    }catch (e){
-//        console.log(e)
-//    }
-//} 
 //# sourceMappingURL=HTTP.js.map

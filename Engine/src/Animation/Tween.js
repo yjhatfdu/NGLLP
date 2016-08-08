@@ -1,4 +1,6 @@
-System.register(['./easing', 'Engine'], function(exports_1) {
+System.register(['./easing', 'Engine'], function(exports_1, context_1) {
+    "use strict";
+    var __moduleName = context_1 && context_1.id;
     var easing_1, Engine_1;
     var TweenAction, TweenItem, TweenCtl;
     return {
@@ -18,7 +20,7 @@ System.register(['./easing', 'Engine'], function(exports_1) {
                         this.time = time;
                     }
                     return Translate;
-                })();
+                }());
                 TweenAction.Translate = Translate;
                 var TranslateTo = (function () {
                     function TranslateTo(value, time) {
@@ -27,7 +29,7 @@ System.register(['./easing', 'Engine'], function(exports_1) {
                         this.time = time;
                     }
                     return TranslateTo;
-                })();
+                }());
                 TweenAction.TranslateTo = TranslateTo;
                 var Loop = (function () {
                     function Loop(times) {
@@ -41,7 +43,7 @@ System.register(['./easing', 'Engine'], function(exports_1) {
                         }
                     }
                     return Loop;
-                })();
+                }());
                 TweenAction.Loop = Loop;
             })(TweenAction || (TweenAction = {}));
             TweenItem = (function () {
@@ -174,7 +176,7 @@ System.register(['./easing', 'Engine'], function(exports_1) {
                     this._loopAfterFinished = flag;
                 };
                 return TweenItem;
-            })();
+            }());
             TweenCtl = (function () {
                 function TweenCtl() {
                     this.animationList = {};
@@ -221,11 +223,10 @@ System.register(['./easing', 'Engine'], function(exports_1) {
                                     actions.translate(oneAct['distance'], oneAct['time']);
                                     break;
                                 }
-                                case 'translateTo':
-                                    {
-                                        actions.translateTo(oneAct['to'], oneAct['time']);
-                                        break;
-                                    }
+                                case 'translateTo': {
+                                    actions.translateTo(oneAct['to'], oneAct['time']);
+                                    break;
+                                }
                                 case 'delay': {
                                     actions.delay(oneAct['time']);
                                     break;
@@ -248,7 +249,7 @@ System.register(['./easing', 'Engine'], function(exports_1) {
                     }
                 };
                 return TweenCtl;
-            })();
+            }());
             exports_1("TweenCtl", TweenCtl);
             window['TweenCtl'] = new TweenCtl();
             window['Tween'] = window['TweenCtl'].add.bind(TweenCtl);

@@ -1,4 +1,6 @@
-System.register(['../Network/HTTP', './sijs'], function(exports_1) {
+System.register(['../Network/HTTP', './sijs'], function(exports_1, context_1) {
+    "use strict";
+    var __moduleName = context_1 && context_1.id;
     var HTTP_1, sijs_1;
     var size_Int8, size_Uint8, size_Uint16, size_Uint32, size_Float32, slice, PMDLoader, Vertex, Material, Bone, IK, Morph, RigidBody, Joint;
     return {
@@ -327,7 +329,7 @@ System.register(['../Network/HTTP', './sijs'], function(exports_1) {
                 };
                 ;
                 return PMDLoader;
-            })();
+            }());
             exports_1("PMDLoader", PMDLoader);
             Vertex = (function () {
                 function Vertex(buffer, view, offset) {
@@ -358,7 +360,7 @@ System.register(['../Network/HTTP', './sijs'], function(exports_1) {
                 }
                 Vertex.size = size_Float32 * 8 + size_Uint16 * 2 + size_Uint8 * 2; //38
                 return Vertex;
-            })();
+            }());
             exports_1("Vertex", Vertex);
             Material = (function () {
                 function Material(buffer, view, offset) {
@@ -406,7 +408,7 @@ System.register(['../Network/HTTP', './sijs'], function(exports_1) {
                 }
                 Material.size = size_Float32 * 11 + size_Uint8 * 2 + size_Uint32 + size_Uint8 * 20;
                 return Material;
-            })();
+            }());
             exports_1("Material", Material);
             Bone = (function () {
                 function Bone(buffer, view, offset) {
@@ -432,7 +434,7 @@ System.register(['../Network/HTTP', './sijs'], function(exports_1) {
                 }
                 Bone.size = size_Uint8 * 21 + size_Uint16 * 3 + size_Float32 * 3;
                 return Bone;
-            })();
+            }());
             exports_1("Bone", Bone);
             IK = (function () {
                 function IK(buffer, view, offset) {
@@ -461,7 +463,7 @@ System.register(['../Network/HTTP', './sijs'], function(exports_1) {
                 };
                 ;
                 return IK;
-            })();
+            }());
             exports_1("IK", IK);
             Morph = (function () {
                 function Morph(buffer, view, offset) {
@@ -495,7 +497,7 @@ System.register(['../Network/HTTP', './sijs'], function(exports_1) {
                 };
                 ;
                 return Morph;
-            })();
+            }());
             exports_1("Morph", Morph);
             RigidBody = (function () {
                 function RigidBody(buffer, view, offset) {
@@ -546,7 +548,7 @@ System.register(['../Network/HTTP', './sijs'], function(exports_1) {
                 }
                 RigidBody.size = size_Uint8 * 23 + size_Uint16 * 2 + size_Float32 * 14;
                 return RigidBody;
-            })();
+            }());
             exports_1("RigidBody", RigidBody);
             Joint = (function () {
                 function Joint(buffer, view, offset) {
@@ -617,7 +619,7 @@ System.register(['../Network/HTTP', './sijs'], function(exports_1) {
                 }
                 Joint.size = size_Int8 * 20 + size_Uint32 * 2 + size_Float32 * 24;
                 return Joint;
-            })();
+            }());
             exports_1("Joint", Joint);
         }
     }

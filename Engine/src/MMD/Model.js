@@ -1,4 +1,6 @@
-System.register(['NGLLP/Core3D', "NGLLP/Engine", "./MMDMaterial"], function(exports_1) {
+System.register(['NGLLP/Core3D', "NGLLP/Engine", "./MMDMaterial"], function(exports_1, context_1) {
+    "use strict";
+    var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
         function __() { this.constructor = d; }
@@ -99,7 +101,7 @@ System.register(['NGLLP/Core3D', "NGLLP/Engine", "./MMDMaterial"], function(expo
                     });
                 };
                 return Model;
-            })(Core3D_1.Geometry);
+            }(Core3D_1.Geometry));
             exports_1("Model", Model);
         }
     }
