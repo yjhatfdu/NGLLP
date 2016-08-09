@@ -4,7 +4,7 @@
 ///<reference path='easing.ts'/>
 import {Easing} from './easing'
 import * as Engine from '../Engine'
-import * as Base from './Base'
+import * as Base from '../Base'
 import * as Util from '../Util/Util'
 
 namespace TweenAction {

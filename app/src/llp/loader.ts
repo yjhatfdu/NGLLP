@@ -4,8 +4,19 @@
 import * as Request from '../Engine/Network/Request'
 const uploadPath = '/upload/';
 const resourcePath = '/llplayer/assets/';
+
+function getId(id) {
+    if (id) {
+        return Promise.resolve(id)
+    } else {
+        return Request.GET('/API/getRandomLive')
+            .then(resp=>resp['content']['live_id'])
+    }
+}
 export function load(id) {
-    return Request.GET('/API/getlive?live_id=' + id)
+
+    return getId(id)
+        .then(id=>Request.GET('/API/getlive?live_id=' + id))
         .then(resp=> {
             return {
                 bgimg: uploadPath + resp['content']['bgimg_path'],

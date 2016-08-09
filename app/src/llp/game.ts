@@ -9,7 +9,6 @@ import * as loading from './loading'
 import {Tween} from '../Engine/Animation/Tween'
 import {Easing} from '../Engine/Animation/easing'
 import {TextSprite} from "../Engine/Core2D/TextSprite";
-import {SpriteBatchNode} from "NGLLP/Core2D";
 import * as GameMap from  './map'
 
 export let bgScale = 1;
@@ -17,8 +16,16 @@ export let uiLayer:SpriteBatchNode;
 
 Engine.setEngine(document.body);
 loading.start();
-load('52cRm0eIXbvuNoi9')
+
+let live_id;
+try{
+    live_id=location.href.match(/live_id=(.+)/)[1]
+}catch (e){
+    live_id=null;
+}
+load(live_id)
     .then(liveinfo=> {
+        document.title=liveinfo.title;
         return Engine.resourceCtl.loadResources([
             {'name': 'bg', 'url': liveinfo.bgimg, standAloneTexture: true},
             {'name': 'perfect', 'url': liveinfo.perfect},
@@ -64,12 +71,16 @@ load('52cRm0eIXbvuNoi9')
         bgLayer.appendChild(coverSprite);
         bgLayer.appendChild(clickToStart);
         Engine.render.appendChild(bgLayer);
-        Engine.render.appendChild(uiLayer);
+
         bgObject.opacity = .1;
         bgObject.addOneTimeListener('touchend', ()=> {
-            bgLayer.removeChild(coverSprite);
+
             Engine.audioCtl.play(1);
-            Tween(clickToStart, 'opacity').translateTo(0, 200);
+            Tween(clickToStart, 'opacity').translateTo(0, 200)
+                .then(()=>Engine.render.appendChild(uiLayer));
+            Tween(coverSprite,'opacity').translateTo(0,200)
+                .then(()=>bgLayer.removeChild(coverSprite));
+            Tween(coverSprite,'scale').translateTo(2,300).easing(Easing.easeInQuad);
             Tween(clickToStart, 'scale').translateTo(2, 300).easing(Easing.easeInQuad).then(()=>bgLayer.removeChild(clickToStart));
             Tween(bgObject, 'opacity').translateTo(1, 1000);
             bgObject.addEventListener('touchstart', ()=> {

@@ -64,6 +64,7 @@
         return o
     }
 
+    declare function unescape(any):any
     function v(n) {
         return unescape(encodeURIComponent(n))
     }

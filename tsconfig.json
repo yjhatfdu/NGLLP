@@ -6,6 +6,8 @@
     "experimentalDecorators": true
   },
   "exclude": [
-    "Engine"
+    "Engine",
+    "node_modules",
+    "jspm_packages"
   ]
 }
