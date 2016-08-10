@@ -48,7 +48,7 @@ export class Request {
     }
 
 }
-export function HTTP(url, method = 'GET', config = {headers: {}, params: {}}, postObject = null, type, onprogress?) {
+export function HTTP(url, method = 'GET', config = {headers: {}, params: {}}, postObject = null, type, onprogress?):Promise<any> {
     return new Promise(function (resolve, reject) {
         config = config || {headers: {}, params: {}};
         var request = new Request();
@@ -62,10 +62,10 @@ export function HTTP(url, method = 'GET', config = {headers: {}, params: {}}, po
     });
 }
 
-export function GET(url, config = {headers: {}, params: {}}, type?, onprogress?) {
+export function GET(url, config = {headers: {}, params: {}}, type?, onprogress?):Promise<any> {
     return HTTP(url, 'GET', config, null, type, onprogress)
 }
 
-export function POST(url, config = {headers: {}, params: {}}, postObject = null, onprogress?) {
+export function POST(url, config = {headers: {}, params: {}}, postObject = null, onprogress?):Promise<any> {
     return HTTP(url, 'POST', config, postObject, onprogress)
 }
