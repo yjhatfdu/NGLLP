@@ -10,3 +10,4 @@ node_modules
 tests
 typings
 app/**/*.js
+app/**/*.map
