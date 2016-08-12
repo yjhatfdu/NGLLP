@@ -17,7 +17,10 @@ public class EventBase extends Base {
      * @interface IEventListener
      * represents a function being called on dispatching the event
      * */
-
+    public EventBase()
+    {
+        super();
+    }
 
     public boolean checkId(Integer id)
     {
@@ -66,7 +69,7 @@ public class EventBase extends Base {
         ls.put("Listener",Listener);
         ls.put("once", true);
         ls.put("Capture", Capture);
-        Integer id;
+        int id;
         do{
             id = mrandom.nextInt(End);
         }
@@ -88,11 +91,12 @@ public class EventBase extends Base {
      *@param args   args passed to listener
      *@param CaptureOnly Should be the event be dispatched to sub nodes
      */
-    public void dispatchEvent(String EventKey, Object[] args, boolean CaptureOnly)
+    public boolean dispatchEvent(String EventKey, Object[] args, boolean CaptureOnly)
     {
+        boolean state = false;
         if(!listeners.keySet().contains(EventKey))
         {
-            return;
+            return false;
         }
         LinkedHashMap<Integer, HashMap<String, Object>> collection = listeners.get(EventKey);
         for(Integer key : collection.keySet())
@@ -106,8 +110,10 @@ public class EventBase extends Base {
             if(event.get("once") != null)
             {
                 collection.remove(key);
+                state = true;
             }
         }
+        return  state;
     }
     /**
      *@param  EventKey Name tag of event
