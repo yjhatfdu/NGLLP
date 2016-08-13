@@ -2,6 +2,7 @@
  * Created by yjh on 16/8/6.
  */
 import * as Engine from '../Engine/Engine'
+
 import {SpriteBatchNode} from '../Engine/Core2D/SpriteBatchNode'
 import {Sprite} from '../Engine/Core2D/Sprite'
 import {load} from './loader'
@@ -9,12 +10,14 @@ import * as loading from './loading'
 import {Tween} from '../Engine/Animation/Tween'
 import {Easing} from '../Engine/Animation/easing'
 import {TextSprite} from "../Engine/Core2D/TextSprite";
+
 import * as GameMap from  './map'
 
 export let bgScale = 1;
 export let uiLayer:SpriteBatchNode;
-
 Engine.setEngine(document.body);
+
+
 loading.start();
 
 let live_id;
@@ -73,6 +76,8 @@ load(live_id)
         Engine.render.appendChild(bgLayer);
 
         bgObject.opacity = .1;
+        bgLayer.opacity=0;
+        Tween(bgLayer,'opacity').translateTo(1,500);
         bgObject.addOneTimeListener('touchend', ()=> {
 
             Engine.audioCtl.play(1);
@@ -85,7 +90,6 @@ load(live_id)
             Tween(bgObject, 'opacity').translateTo(1, 1000);
             bgObject.addEventListener('touchstart', ()=> {
                 Engine.audioCtl.playAudioItem(perfect);
-
             })
         });
     });

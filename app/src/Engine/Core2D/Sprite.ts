@@ -71,7 +71,7 @@ export class Sprite extends TouchItem implements SpriteProtocol {
             this.rh = this.h;
             this.rScale = this.scale;
             this.rRotation = this.rotation;
-            this.rOpacity = this.opacity;
+            this.rOpacity = this.opacity*this.batchNode.opacity;
         } else {
             var parent = this.parent as Sprite;
             this.rx = this.x + parent.rx;
@@ -84,7 +84,7 @@ export class Sprite extends TouchItem implements SpriteProtocol {
         }
         super.update(null);
         //没有纹理的化为虚拟sprite,直接跳过
-        if (!this.texture) {
+        if (!this.texture||!this.opacity) {
             return
         }
         //纹理不同的话,先绘制buffer

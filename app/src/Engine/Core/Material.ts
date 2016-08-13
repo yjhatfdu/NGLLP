@@ -36,7 +36,11 @@ export class Material extends Base.ObjectBase {
     initProgram(vst, fst, flags?) {
         this.program = GlProgram.getProgram(vst, fst, flags);
         this.gl.useProgram(this.program);
-        this.bindUniform('mvpMat', 'Matrix4fv');
+        try{
+            this.bindUniform('mvpMat', 'Matrix4fv');
+        }catch (e){
+
+        }
         this.bindUniforms(this.uniforms);
         this.bindAttributes(this.attributes);
     }
@@ -60,7 +64,7 @@ export class Material extends Base.ObjectBase {
     uniformData(name, data, rightNow = false) {
         this.uniformList[name].value = data;
         if (rightNow) {
-            var uniform = this.uniformList[name];
+            let uniform = this.uniformList[name];
             if (uniform.ismat) {
                 uniform.func(uniform.location, false, data)
             } else {
@@ -107,7 +111,7 @@ export class Material extends Base.ObjectBase {
         }
     }
 
-    bufferData(name, data, dynamic = false) {
+    bufferData(name, data:Uint8Array|Int16Array|Int32Array|Float32Array, dynamic = false) {
         let attrib = this.attributeList[name];
         if (!attrib.vbo) {
             attrib.vbo = this.gl.createBuffer();
@@ -135,7 +139,8 @@ export class Material extends Base.ObjectBase {
             this.gl.disable(this.gl.BLEND)
         }
         if (this.enableDepthTest) {
-            this.gl.enable(this.gl.DEPTH_TEST)
+            this.gl.enable(this.gl.DEPTH_TEST);
+            this.gl.depthFunc(this.gl.LEQUAL)
         } else {
             this.gl.disable(this.gl.DEPTH_TEST)
         }
@@ -143,10 +148,15 @@ export class Material extends Base.ObjectBase {
         //bind uniforms
         for (var i in this.uniformList) {
             var uniform = this.uniformList[i];
+            let localValue=this[uniform.name];
+            let value= (localValue==null||localValue==undefined)? uniform.value:localValue;
             if (uniform.ismat) {
-                uniform.func(uniform.location, false, uniform.value || this[uniform.name] || 0)
+                if(!value){
+                    continue
+                }
+                uniform.func(uniform.location, false, value)
             } else {
-                uniform.func(uniform.location, uniform.value || this[uniform.name] || 0)
+                uniform.func(uniform.location, value)
             }
 
         }
@@ -172,7 +182,12 @@ export class Material extends Base.ObjectBase {
         for (let k = 0; k < this.textures.length; k++) {
             if (this.textures[k]) {
                 this.gl.activeTexture(this.gl.TEXTURE0 + k);
-                this.gl.bindTexture(this.gl.TEXTURE_2D, this.textures[k].active(k))
+                if (this.textures[k].active) {
+                    this.gl.bindTexture(this.gl.TEXTURE_2D, this.textures[k].active(k))
+                } else {
+                    this.gl.bindTexture(this.gl.TEXTURE_2D, this.textures[k])
+                }
+
             }
         }
 

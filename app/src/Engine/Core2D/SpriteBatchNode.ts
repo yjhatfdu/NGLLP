@@ -19,7 +19,7 @@ export class SpriteBatchNode extends Object3D {
     protected posBuffer: Float32Array;
     protected uvBuffer: Float32Array;
     protected opacityBuffer: Float32Array;
-    opacity;
+    opacity=1;
     protected updateCursor = 0;
     protected size;
     protected currentTexture;

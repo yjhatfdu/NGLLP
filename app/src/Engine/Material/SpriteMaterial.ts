@@ -17,7 +17,7 @@ export var CreateSpriteMaterial = function () {
     spriteMaterial.autoBindAttrib = false;
     spriteMaterial.enableBlend = true;
     spriteMaterial.enableDepthTest = true;
-    spriteMaterial.enableDepthWrite = false;
+    spriteMaterial.enableDepthWrite = true;
     let vst = `
                 attribute vec3 position;
                 attribute vec2 uv;
