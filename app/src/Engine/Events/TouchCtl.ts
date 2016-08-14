@@ -34,7 +34,10 @@ export class TouchCtl extends Base.EventBase {
         for (let i = 0; i < e.changedTouches.length; i++) {
             let touch = e.changedTouches[i];
             this.findAndDispatchEvent(TouchEvents.touchstart, touch.pageX, touch.pageY);
-            this.dispatchEvent("touchstart", touch)
+            this.dispatchEvent("touchstart", {
+                x: (2 * touch.pageX / Engine.render.width - 1) / Engine.render.aspect,
+                y: 1 - 2 * touch.pageY / Engine.render.height
+            })
         }
     }
 
@@ -48,7 +51,10 @@ export class TouchCtl extends Base.EventBase {
         for (let i = 0; i < e.changedTouches.length; i++) {
             let touch = e.changedTouches[i];
             this.findAndDispatchEvent(TouchEvents.touchend, touch.pageX, touch.pageY);
-            this.dispatchEvent("touchend", touch)
+            this.dispatchEvent("touchend", {
+                x: (2 * touch.pageX / Engine.render.width - 1) / Engine.render.aspect,
+                y: 1 - 2 * touch.pageY / Engine.render.height
+            })
         }
 
     }
@@ -56,8 +62,11 @@ export class TouchCtl extends Base.EventBase {
     onMouseDown(e) {
         e.stopPropagation();
         e.preventDefault();
-        this.findAndDispatchEvent(TouchEvents.touchstart, e.pageX, e.pageY);
-        this.dispatchEvent("touchstart")
+        this.findAndDispatchEvent(TouchEvents.touchstart, e.offsetX, e.offsetY);
+        this.dispatchEvent("touchstart", {
+            x: (2 * e.offsetX / Engine.render.width - 1) / Engine.render.aspect,
+            y: 1 - 2 * e.offsetY / Engine.render.height
+        })
     }
 
     onMouseMove(e) {
@@ -66,8 +75,11 @@ export class TouchCtl extends Base.EventBase {
     onMouseUp(e) {
         e.stopPropagation();
         e.preventDefault();
-        this.findAndDispatchEvent(TouchEvents.touchend, e.pageX, e.pageY);
-        this.dispatchEvent("touchend")
+        this.findAndDispatchEvent(TouchEvents.touchend, e.offsetX, e.offsetY);
+        this.dispatchEvent("touchend", {
+            x: (2 * e.offsetX / Engine.render.width - 1) / Engine.render.aspect,
+            y: 1 - 2 * e.offsetY / Engine.render.height
+        })
     }
 
     addTouchItem(item, event) {
@@ -104,7 +116,7 @@ export class TouchCtl extends Base.EventBase {
             return
         }
         let x = (2 * pageX / Engine.render.width - 1) / Engine.render.aspect;
-        let y = 2 * pageY / Engine.render.height - 1;
+        let y = 1 - 2 * pageY / Engine.render.height;
         //handle capture
         for (let l = 0; l < this.itemList[event].length; l++) {
             let list = this.itemList[event][l];

@@ -4,6 +4,9 @@
 import * as Engine from '../Engine/Engine'
 import {noteSpriteFactory} from './sprites'
 import {bgScale} from './game'
+import {rankTiming,rank} from './ranking'
+import * as ranking from './ranking'
+import {Tween} from '../Engine/Animation/Tween'
 let channels = [];
 let speed = 160;
 let initialized = false;
@@ -11,15 +14,17 @@ let currentNotes;
 
 const centerY = 0.501466;
 const channelLength = 1.246334;
-const rankTiming = {
-    miss: 200
-};
+
 
 export function init(map) {
     speed = parseInt(localStorage.getItem('userSpeed') || '0') || map['speed'];
     channels = map['lane'];
     currentNotes = channels.map(x=>[]);
+    ranking.init();
     initialized = true;
+    Engine.touchCtl.addEventListener('touchstart', onTouch);
+    Engine.touchCtl.addEventListener('touchend', onTouchEnd);
+
     Engine.eventBus.addEventListener('beforeupdate', ()=> {
         if (!initialized) {
             return
@@ -47,11 +52,24 @@ export function init(map) {
                 if (currentChannel.length == 0) {
                     break
                 }
-                if (currentChannel[0].starttime > (currentTime - rankTiming.miss)) {
+                let firstNote=currentChannel[0];
+                if (firstNote.starttime > (currentTime - rankTiming.miss)) {
                     break
                 }
-                currentChannel.shift().sprite.destroy();
-                //todo miss and longnote
+                if(firstNote.longnote&&firstNote.hold){
+                    if(firstNote.endtime < (currentTime-rankTiming.miss)){
+                        currentChannel.shift().sprite.clearLongNoteAnimation().destroy();
+                        rank(null);
+                    }else{
+                        break
+                    }
+                }else{
+                    if(firstNote.longnote){
+                        rank(null)
+                    }
+                    currentChannel.shift().sprite.destroy();
+                    rank(null)
+                }
             }
             for (let note of currentChannel) {
                 let currentSpr = note.sprite;
@@ -64,12 +82,22 @@ export function init(map) {
                 currentSpr.y = (centerY - length * sa) / bgScale;
                 currentSpr.x = -length * ca / bgScale;
                 if (note.longnote) {
+                    let headPercentage=1;
                     let tailPercentage = Math.max(1 - (note.endtime - currentTime) / 128000 * speed, 0);
                     let longSpr = note.sprite.longNoteSpr;
-                    longSpr.p0[0] = currentSpr.x + noteWidth * percentage * sa * 0.5;
-                    longSpr.p0[1] = currentSpr.y - noteWidth * percentage * ca * 0.5;
-                    longSpr.p2[0] = currentSpr.x - noteWidth * percentage * sa * 0.5;
-                    longSpr.p2[1] = currentSpr.y + noteWidth * percentage * ca * 0.5;
+                    let headX=0,headY=0;
+                    if(note.hold){
+                        headX=-channelLength*ca/bgScale;
+                        headY=(centerY-channelLength*sa)/bgScale
+                    }else{
+                        headPercentage=percentage;
+                        headX=currentSpr.x;
+                        headY=currentSpr.y
+                    }
+                    longSpr.p0[0] = headX + noteWidth * headPercentage * sa * 0.5;
+                    longSpr.p0[1] = headY- noteWidth * headPercentage * ca * 0.5;
+                    longSpr.p2[0] = headX - noteWidth * headPercentage * sa * 0.5;
+                    longSpr.p2[1] = headY + noteWidth * headPercentage * ca * 0.5;
 
                     let tailY = (centerY - channelLength * tailPercentage * sa) / bgScale;
                     let tailX = -channelLength * tailPercentage * ca / bgScale;
@@ -79,12 +107,12 @@ export function init(map) {
                     longSpr.p3[0] = tailX + noteWidth * tailPercentage * sa * 0.5;
                     longSpr.p3[1] = tailY - noteWidth * tailPercentage * ca * 0.5;
 
-                    if(tailPercentage>0){
-                        let tailSpr=currentSpr.tailSprite;
-                        currentSpr.tail=true;
-                        tailSpr.x=tailX;
-                        tailSpr.y=tailY;
-                        tailSpr.w=tailSpr.h=noteWidth*tailPercentage
+                    if (tailPercentage > 0) {
+                        let tailSpr = currentSpr.tailSprite;
+                        currentSpr.tail = true;
+                        tailSpr.x = tailX;
+                        tailSpr.y = tailY;
+                        tailSpr.w = tailSpr.h = noteWidth * tailPercentage
                     }
                 }
             }
@@ -93,5 +121,74 @@ export function init(map) {
     });
 }
 
+export let running = false;
+
+export function enableTouch() {
+    running = true;
+}
+
+export function disableTouch() {
+    running = false;
+}
+
+function onTouch(e) {
+    if (!running) {
+        return
+    }
+    let x = e.x, y = e.y;
+    if (y > (centerY + 0.5 * 0.37537) / bgScale) {
+        return
+    }
+    let r = Math.sqrt(x * x + (centerY - y) * (centerY - y));
+    let alpha = Math.acos(-x / r);
+    let channel = Math.round(alpha / Math.PI * 8);
+    touchChannel(channel)
+}
+function onTouchEnd(e) {
+    if (!running) {
+        return
+    }
+    let x = e.x, y = e.y;
+    if (y > (centerY + 0.5 * 0.37537) / bgScale) {
+        return
+    }
+    let r = Math.sqrt(x * x + (centerY - y) * (centerY - y));
+    let alpha = Math.acos(-x / r);
+    let channel = Math.round(alpha / Math.PI * 8);
+    releaseChannel(channel)
+}
+
+function touchChannel(ch){
+    let note=currentNotes[ch][0];
+    if (!note){
+        return
+    }
+    let currentTime=Engine.audioCtl.getBgmTime()*1000;
+    let offset=currentTime-note.starttime;
+    if(Math.abs(offset)>rankTiming.miss){
+        return
+    }
+    rank(offset,ch);
+    if(note.longnote){
+        note.sprite.note=false;
+        Tween(note.sprite.longNoteSpr,'opacity').translateTo(0.2,1000).translateTo(0.5,1000).loop();
+        note.hold=true;
+    }else{
+        currentNotes[ch].shift().sprite.destroy();
+    }
+}
+
+function releaseChannel(ch){
+    let note=currentNotes[ch][0];
+    if (!note){
+        return
+    }
+    let currentTime=Engine.audioCtl.getBgmTime()*1000;
+    let offset=currentTime-note.endtime;
+    if(note.longnote&&note.hold){
+        rank(offset,ch);
+        currentNotes[ch].shift().sprite.destroy().clearLongNoteAnimation()
+    }
+}
 
 

@@ -79,7 +79,7 @@ load(live_id)
         bgLayer.opacity=0;
         Tween(bgLayer,'opacity').translateTo(1,500);
         bgObject.addOneTimeListener('touchend', ()=> {
-
+            GameMap.enableTouch();
             Engine.audioCtl.play(1);
             Tween(clickToStart, 'opacity').translateTo(0, 200)
                 .then(()=>Engine.render.appendChild(uiLayer));
@@ -88,8 +88,5 @@ load(live_id)
             Tween(coverSprite,'scale').translateTo(2,300).easing(Easing.easeInQuad);
             Tween(clickToStart, 'scale').translateTo(2, 300).easing(Easing.easeInQuad).then(()=>bgLayer.removeChild(clickToStart));
             Tween(bgObject, 'opacity').translateTo(1, 1000);
-            bgObject.addEventListener('touchstart', ()=> {
-                Engine.audioCtl.playAudioItem(perfect);
-            })
         });
     });

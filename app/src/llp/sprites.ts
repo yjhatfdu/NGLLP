@@ -4,6 +4,7 @@
 import * as Engine from '../Engine/Engine'
 import {uiLayer} from './game'
 import {Sprite} from '../Engine/Core2D/Sprite'
+import {Tween} from '../Engine/Animation/Tween'
 import {QuadrangleSprite} from "../Engine/Core2D/QuadrangleSprite";
 const noteSprInfo = {
     sx: 396 / 1024, sy: 15 / 1024, sw: 128 / 1024, sh: 128 / 1024
@@ -52,6 +53,11 @@ class Note extends Sprite {
         this.opacity = 0;
         this.tail=false;
         this.long=false;
+        return this
+    }
+    clearLongNoteAnimation(){
+        Tween(this.longNoteSpr,'opacity').end();
+        return this
     }
 
 }
@@ -86,6 +92,4 @@ export function noteSpriteFactory(parallel = false) {
         newNote.tail=false;
         return newNote
     }
-
-
 }
