@@ -30,7 +30,6 @@ export class TouchCtl extends Base.EventBase {
     onTouchStart(e) {
         e.stopPropagation();
         e.preventDefault();
-        this.dispatchEvent(TouchEvents.touchstart);
         for (let i = 0; i < e.changedTouches.length; i++) {
             let touch = e.changedTouches[i];
             this.findAndDispatchEvent(TouchEvents.touchstart, touch.pageX, touch.pageY);
