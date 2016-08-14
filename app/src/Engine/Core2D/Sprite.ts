@@ -22,7 +22,7 @@ export interface SpriteProtocol extends Base.NodeBase {
 }
 
 export class Sprite extends TouchItem implements SpriteProtocol {
-    texture: GlTexture;
+    texture:GlTexture;
     frameCount;
     stride;
     row;
@@ -46,7 +46,7 @@ export class Sprite extends TouchItem implements SpriteProtocol {
     resourceName;
     resource;
 
-    constructor(imageItem: ImageItemProtocol, x?, y?, w?, h?, sx = 0, sy = 0, sw = 1, sh = 1, frameCount?, stride?, zIndex = 0) {
+    constructor(imageItem:ImageItemProtocol, x, y, w, h, {sx = 0, sy = 0, sw = 1, sh = 1, frameCount=1, stride=1, zIndex = 0}) {
         super(x || 0, y || 0, w || 2 * imageItem.width / Engine.render.designResolution[1],
             h || 2 * imageItem.height / Engine.render.designResolution[1]);
         if (imageItem) {
@@ -64,6 +64,10 @@ export class Sprite extends TouchItem implements SpriteProtocol {
     }
 
     update() {
+        this.rOpacity = this.isRootSprite ? this.opacity * this.batchNode.opacity : this.opacity * this.parent.rOpacity;
+        if (this.rOpacity == 0) {
+            return
+        }
         if (this.isRootSprite) {
             this.rx = this.x;
             this.ry = this.y;
@@ -71,7 +75,6 @@ export class Sprite extends TouchItem implements SpriteProtocol {
             this.rh = this.h;
             this.rScale = this.scale;
             this.rRotation = this.rotation;
-            this.rOpacity = this.opacity*this.batchNode.opacity;
         } else {
             var parent = this.parent as Sprite;
             this.rx = this.x + parent.rx;
@@ -80,23 +83,23 @@ export class Sprite extends TouchItem implements SpriteProtocol {
             this.rh = this.h * parent.rh;
             this.rScale = this.scale * parent.rScale;
             this.rRotation = this.rotation + parent.rRotation;
-            this.rOpacity = this.opacity * parent.rOpacity;
+
         }
         super.update(null);
         //没有纹理的化为虚拟sprite,直接跳过
-        if (!this.texture||!this.opacity) {
+        if (!this.texture) {
             return
         }
         //纹理不同的话,先绘制buffer
-        if (this.batchNode.currentTexture != (this.texture.bufferTex||this.texture)) {
+        if (this.batchNode.currentTexture != (this.texture.bufferTex || this.texture)) {
             this.batchNode.drawBuffer();
-            this.batchNode.currentTexture = (this.texture.bufferTex||this.texture);
+            this.batchNode.currentTexture = (this.texture.bufferTex || this.texture);
         }
         //加入绘制缓存
         let posBuffer = this.batchNode.posBuffer;
         let uvBuffer = this.batchNode.uvBuffer;
         let opacityBuffer = this.batchNode.opacityBuffer;
-        let frame = Math.floor(this.frame % (this.stride*this.row));
+        let frame = Math.floor(this.frame % (this.stride * this.row));
         let sx = this.rw * this.rScale * 0.5;
         let sy = this.rh * this.rScale * 0.5;
         let ca = Math.cos(this.rRotation);
@@ -119,8 +122,8 @@ export class Sprite extends TouchItem implements SpriteProtocol {
         let uvY = uvH * Math.floor(frame / this.stride);
         let tw = this.texture.sw;
         let th = this.texture.sh;
-        let tx = this.texture.sx+this.sx*this.texture.sw;
-        let ty = this.texture.sy+this.sy*this.texture.sh;
+        let tx = this.texture.sx + this.sx * this.texture.sw;
+        let ty = this.texture.sy + this.sy * this.texture.sh;
         let uvCursor = this.batchNode.updateCursor * 2;
         let posCursor = this.batchNode.updateCursor * 3;
         let zpos = this.batchNode.enableZPosition ? this.zIndex : 0;
@@ -192,12 +195,12 @@ export class Sprite extends TouchItem implements SpriteProtocol {
         }
     }
 
-    appendChild(item: Sprite) {
+    appendChild(item:Sprite) {
         this.setNewChild();
         super.appendChild(item)
     }
 
-    insertChild(item: Sprite, index) {
+    insertChild(item:Sprite, index) {
         this.setNewChild();
         super.insertChild(item, index)
     }
@@ -205,8 +208,7 @@ export class Sprite extends TouchItem implements SpriteProtocol {
     static deserialize(object) {
         //todo
         let spr = new Sprite(Engine.resourceCtl.getItem(object.resourceName), object.x, object.y,
-            object.w, object.h, object.sx, object.sy, object.sw, object.sh,
-            object.frameCount, object.stride, object.zIndex);
+            object.w, object.h,object);
         for (let i = 0; i < object.children.length; i++) {
             spr.appendChild(Sprite.deserialize(object[i]))
         }

@@ -9,6 +9,8 @@ let speed = 160;
 let initialized = false;
 let currentNotes;
 
+const centerY = 0.501466;
+const channelLength = 1.246334;
 const rankTiming = {
     miss: 200
 };
@@ -23,6 +25,7 @@ export function init(map) {
             return
         }
         let currentTime = Engine.audioCtl.getBgmTime() * 1000;
+        let noteWidth = 0.37537 / bgScale;
         for (let i = 0; i < channels.length; i++) {
             let channel = channels[i];
             let currentChannel = currentNotes[i];
@@ -35,6 +38,9 @@ export function init(map) {
                 }
                 let theNote = channel.shift();
                 theNote.sprite = noteSpriteFactory(theNote.parallel);
+                if (theNote.longnote) {
+                    theNote.sprite.long = true;
+                }
                 currentChannel.push(theNote)
             }
             while (true) {
@@ -50,10 +56,37 @@ export function init(map) {
             for (let note of currentChannel) {
                 let currentSpr = note.sprite;
                 let percentage = 1 - (note.starttime - currentTime) / 128000 * speed;
-                currentSpr.w = currentSpr.h = 0.37537 * percentage / bgScale;//2*128px/768px
-                let length = 1.246334 * percentage;
-                currentSpr.y = (0.501466 - length * Math.sin(note.lane * 0.125 * Math.PI)) / bgScale;
-                currentSpr.x = -length * Math.cos(note.lane * 0.125 * Math.PI) / bgScale;
+                currentSpr.w = currentSpr.h = noteWidth * percentage;//2*128px/768px
+                let length = channelLength * percentage;
+                let alpha = note.lane * 0.125 * Math.PI;
+                let ca = Math.cos(alpha);
+                let sa = Math.sin(alpha);
+                currentSpr.y = (centerY - length * sa) / bgScale;
+                currentSpr.x = -length * ca / bgScale;
+                if (note.longnote) {
+                    let tailPercentage = Math.max(1 - (note.endtime - currentTime) / 128000 * speed, 0);
+                    let longSpr = note.sprite.longNoteSpr;
+                    longSpr.p0[0] = currentSpr.x + noteWidth * percentage * sa * 0.5;
+                    longSpr.p0[1] = currentSpr.y - noteWidth * percentage * ca * 0.5;
+                    longSpr.p2[0] = currentSpr.x - noteWidth * percentage * sa * 0.5;
+                    longSpr.p2[1] = currentSpr.y + noteWidth * percentage * ca * 0.5;
+
+                    let tailY = (centerY - channelLength * tailPercentage * sa) / bgScale;
+                    let tailX = -channelLength * tailPercentage * ca / bgScale;
+
+                    longSpr.p1[0] = tailX - noteWidth * tailPercentage * sa * 0.5;
+                    longSpr.p1[1] = tailY + noteWidth * tailPercentage * ca * 0.5;
+                    longSpr.p3[0] = tailX + noteWidth * tailPercentage * sa * 0.5;
+                    longSpr.p3[1] = tailY - noteWidth * tailPercentage * ca * 0.5;
+
+                    if(tailPercentage>0){
+                        let tailSpr=currentSpr.tailSprite;
+                        currentSpr.tail=true;
+                        tailSpr.x=tailX;
+                        tailSpr.y=tailY;
+                        tailSpr.w=tailSpr.h=noteWidth*tailPercentage
+                    }
+                }
             }
 
         }

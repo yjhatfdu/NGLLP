@@ -39,7 +39,7 @@ export class TextSprite extends Sprite {
     needUpdate = true;
 
     constructor(width, height, text?,fontSize=15) {
-        super(new CanvasItem(width, height));
+        super(new CanvasItem(width, height),0,0,null,null,{});
         this.canvasItem = this.resource;
         this.canvas = this.canvasItem.canvas.getContext('2d');
         this.canvas.textAlign = 'center';

@@ -46,8 +46,9 @@ export class SpriteBatchNode extends Object3D {
     }
 
 
-    appendChild(item: Sprite) {
+    appendChild(item: SpriteProtocol) {
         item.batchNode = this;
+        item.parent=this;
         item.setNewChild();
         item.isRootSprite = true;
         super.appendChild(item);

@@ -51,7 +51,7 @@ load(live_id)
         let perfect = Engine.resourceCtl.getItem('perfect');
 
         let bg = Engine.resourceCtl.getItem('bg');
-        let bgObject = new Sprite(bg, 0, 0, bg.width / bg.height * 2, 2);
+        let bgObject = new Sprite(bg, 0, 0, bg.width / bg.height * 2, 2,{});
 
         function resizeBg() {
             if (Engine.render.aspect > bg.height / bg.width) {
@@ -68,7 +68,7 @@ load(live_id)
         bgLayer.appendChild(bgObject);
         Engine.audioCtl.loadBgm(Engine.resourceCtl.getItem('bgm'));
         let cover = Engine.resourceCtl.getItem('coverImg');
-        let coverSprite = new Sprite(cover, 0, 0.3, cover.width / cover.height, 1);
+        let coverSprite = new Sprite(cover, 0, 0.3, cover.width / cover.height, 1,{});
         let clickToStart = new TextSprite(400, 100, 'Touch To Start', 40);
         clickToStart.y = -0.4;
         bgLayer.appendChild(coverSprite);

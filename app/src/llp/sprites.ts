@@ -4,55 +4,88 @@
 import * as Engine from '../Engine/Engine'
 import {uiLayer} from './game'
 import {Sprite} from '../Engine/Core2D/Sprite'
+import {QuadrangleSprite} from "../Engine/Core2D/QuadrangleSprite";
 const noteSprInfo = {
-    tx: 396 / 1024, ty: 15 / 1024, tw: 128 / 1024, th: 128 / 1024
+    sx: 396 / 1024, sy: 15 / 1024, sw: 128 / 1024, sh: 128 / 1024
 };
 
 const parallelSprInfo = {
-    tx: 242 / 1024, ty: 417 / 1024, tw: 128 / 1024, th: 24 / 1024
+    sx: 242 / 1024, sy: 417 / 1024, sw: 128 / 1024, sh: 24 / 1024
+};
+
+const tailSprInfo = {
+    sx: 255 / 1024, sy: 275 / 1024, sw: 128 / 1024, sh: 128 / 1024
+};
+const longNoteSprInfo = {
+    sx: 36 / 1024, sy: 560 / 1024, sw: 500 / 1024, sh: 10 / 1024
 };
 
 
-let noteSpritePool = [];
+let noteSpritePool:Array<Note> = [];
 
 function init() {
-
 }
 
-class NoteSprite extends Sprite {
-    parallelSpr: Sprite;
+class Note extends Sprite {
+    parallelSpr:Sprite;
+    noteSpr:Sprite;
+    longNoteSpr:QuadrangleSprite;
+    tailSprite:Sprite;
 
     set parallel(v) {
-        if (v == true) {
-            this.parallelSpr.opacity = 1;
-        } else {
-            this.parallelSpr.opacity = 0;
-        }
+        this.parallelSpr.opacity = v ? 1 : 0;
+    }
+
+    set tail(v) {
+        this.tailSprite.opacity = v ? 1 : 0;
+    }
+
+    set long(v) {
+        this.longNoteSpr.opacity = v ? 0.5 : 0
+    }
+    set note(v){
+        this.noteSpr.opacity=v?1:0;
     }
 
     destroy() {
         noteSpritePool.push(this);
         this.opacity = 0;
+        this.tail=false;
+        this.long=false;
     }
 
 }
-export function noteSpriteFactory(parallel = false, long = false) {
-    let newSpr;
-    let parallelSpr;
+export function noteSpriteFactory(parallel = false) {
     if (noteSpritePool.length > 0) {
-        let spr = noteSpritePool.pop();
-        spr.opacity = 1;
-        spr.parallel=parallel;
-        return spr
+        let note = noteSpritePool.pop();
+        note.opacity = 1;
+        note.parallel = parallel;
+        note.long=false;
+        note.tail=false;
+        note.note=true;
+        return note
     } else {
-        newSpr = new NoteSprite(Engine.resourceCtl.getItem('uiAssets'), 0, 0, 1, 1, noteSprInfo.tx, noteSprInfo.ty, noteSprInfo.tw, noteSprInfo.th);
-        parallelSpr = new Sprite(Engine.resourceCtl.getItem('uiAssets'), 0, 0, 1, parallelSprInfo.th / parallelSprInfo.tw, parallelSprInfo.tx, parallelSprInfo.ty, parallelSprInfo.tw, parallelSprInfo.th)
+        let uiTexture = Engine.resourceCtl.getItem('uiAssets');
+        let newNote = new Note(null, 0, 0, 1, 1, {});
+        let noteSpr = new Sprite(uiTexture, 0, 0, 1, 1, noteSprInfo);
+        let parallelSpr = new Sprite(uiTexture, 0, 0, 1, parallelSprInfo.sh / parallelSprInfo.sw, parallelSprInfo);
+        let tailSpr = new Sprite(uiTexture, 0, 0, 1, 1, tailSprInfo);
+        let longNoteSpr = new QuadrangleSprite(uiTexture,longNoteSprInfo.sx,longNoteSprInfo.sy,longNoteSprInfo.sw,longNoteSprInfo.sh);
+        newNote.appendChild(parallelSpr);
+        newNote.appendChild(noteSpr);
+        newNote.noteSpr = noteSpr;
+        newNote.parallelSpr = parallelSpr;
+        newNote.tailSprite=tailSpr;
+        newNote.longNoteSpr=longNoteSpr;
+        newNote.parallel = parallel;
+        newNote.opacity = 1;
+        uiLayer.appendChild(longNoteSpr);
+        uiLayer.appendChild(tailSpr);
+        uiLayer.appendChild(newNote);
+        newNote.long=false;
+        newNote.tail=false;
+        return newNote
     }
-    newSpr.appendChild(parallelSpr);
-    newSpr.parallelSpr = parallelSpr;
-    newSpr.parallel = parallel;
-    newSpr.opacity = 1;
-    uiLayer.appendChild(newSpr);
-    return newSpr
+
 
 }
