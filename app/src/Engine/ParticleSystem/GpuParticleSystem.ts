@@ -97,6 +97,7 @@ export class GpuParticleSystem extends Object3D {
         this.pointScale = pointScale;
         this.fade = fade;
         this.init();
+        this.resistance=resistance;
     }
 
     init() {

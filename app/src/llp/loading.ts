@@ -10,7 +10,7 @@ import * as Motion from '../Engine/Events/Motion'
 
 let layer;
 let promotionSprite
-    ,ps;
+    , ps;
 let shouldStop = false;
 let promotion = [
     '加载中..',
@@ -29,29 +29,30 @@ let promotion = [
     '正在发现女装少年..',
     '少女祈祷中..',
     '正在吞谱..',
-    '正在卡loding..',
+    '正在卡loading..',
     '正在准备面基..',
     '正在收扶老二..',
     '正在为您接通妖妖灵..',
     '正在调戏日日日..',
     '正在擦洗note..',
     '正在爆破手机..',
-    '正在捕食二刺螈..'
+    '正在捕食二刺螈..',
+    '正在播撒头皮屑..'
 ];
 
 export function start() {
     particle.init();
     layer = new SpriteBatchNode();
     promotionSprite = new TextSprite(500, 200, '加载中..', 50);
-    ps=new TextSprite(100,50,'0%',30);
-    ps.y=-0.2;
+    ps = new TextSprite(100, 50, '0%', 30);
+    ps.y = -0.2;
     promotionSprite.opacity = 0;
     Tween(promotionSprite, 'opacity').translateTo(1, 500).translateTo(0, 500).then(changePromotion);
     layer.appendChild(promotionSprite);
     layer.appendChild(ps);
     Engine.render.appendChild(layer);
     Motion.start();
-    particle.particleSystem.gravity=Motion.gravity;
+    particle.particleSystem.gravity = Motion.gravity;
     Engine.render.appendChild(particle.particleSystem);
 }
 
@@ -62,11 +63,11 @@ function changePromotion() {
     }
 }
 
-export function progress(p){
-    if(isNaN(p)){
+export function progress(p) {
+    if (isNaN(p)) {
         return
     }
-    ps.text=''+Math.floor(p*100)+'%'
+    ps.text = '' + Math.floor(p * 100) + '%'
 }
 
 export function stop() {
@@ -75,7 +76,7 @@ export function stop() {
     promotionSprite.text = '即将开始';
     return new Promise((resolve)=> {
         Tween(promotionSprite, 'opacity').end();
-        Tween(particle.particleSystem,'opacity').delay(1500).translateTo(0,500);
+        Tween(particle.particleSystem, 'opacity').delay(1500).translateTo(0, 500);
         Tween(promotionSprite, 'opacity').translateTo(1, 500).delay(1000).translateTo(0, 500).then(()=> {
             layer.destroy();
             Engine.render.removeChild(layer);

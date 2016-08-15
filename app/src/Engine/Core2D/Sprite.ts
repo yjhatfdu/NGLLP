@@ -46,9 +46,9 @@ export class Sprite extends TouchItem implements SpriteProtocol {
     resourceName;
     resource;
 
-    constructor(imageItem:ImageItemProtocol, x, y, w, h, {sx = 0, sy = 0, sw = 1, sh = 1, frameCount=1, stride=1, zIndex = 0}) {
-        super(x || 0, y || 0, w || 2 * imageItem.width / Engine.render.designResolution[1],
-            h || 2 * imageItem.height / Engine.render.designResolution[1]);
+    constructor(imageItem:ImageItemProtocol, x, y, w, h, {sx = 0, sy = 0, sw = 1, sh = 1, frameCount=1, stride=1, zIndex = 0,opacity=1}) {
+        super(x || 0, y || 0, w || 2 * imageItem.width * sw / Engine.render.designResolution[1],
+            h || 2 * imageItem.height * sh / Engine.render.designResolution[1]);
         if (imageItem) {
             this.texture = imageItem.texture;
             this.resourceName = imageItem.name;
@@ -59,7 +59,7 @@ export class Sprite extends TouchItem implements SpriteProtocol {
         this.frameCount = frameCount || 1;
         this.stride = stride || 1;
         this.row = Math.floor(this.frameCount / this.stride);
-        [this.sx, this.sy, this.sw, this.sh, this.zIndex] = [sx, sy, sw, sh, zIndex];
+        [this.sx, this.sy, this.sw, this.sh, this.zIndex, this.opacity] = [sx, sy, sw, sh, zIndex, opacity];
 
     }
 
@@ -208,7 +208,7 @@ export class Sprite extends TouchItem implements SpriteProtocol {
     static deserialize(object) {
         //todo
         let spr = new Sprite(Engine.resourceCtl.getItem(object.resourceName), object.x, object.y,
-            object.w, object.h,object);
+            object.w, object.h, object);
         for (let i = 0; i < object.children.length; i++) {
             spr.appendChild(Sprite.deserialize(object[i]))
         }

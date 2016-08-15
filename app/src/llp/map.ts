@@ -171,6 +171,7 @@ function touchChannel(ch){
     rank(offset,ch);
     if(note.longnote){
         note.sprite.note=false;
+        note.sprite.parallel=false;
         Tween(note.sprite.longNoteSpr,'opacity').translateTo(0.2,1000).translateTo(0.5,1000).loop();
         note.hold=true;
     }else{

@@ -130,15 +130,20 @@ export class NodeBase extends EventBase {
     appendChild(child: NodeBase) {
         child.root = this.root;
         child.parent = this;
-        child.setNode();
+        //child.setNode();
         this.children.push(child);
         child.setNode();
+    }
+    appendChildren(children:Array<NodeBase>){
+        for(let c of children){
+            this.appendChild(c)
+        }
     }
 
     insertChild(child: NodeBase, index = 0) {
         child.root = this.root;
         child.parent = this;
-        child.setNode();
+        //child.setNode();
         this.children.splice(index, 0, child);
         child.setNode();
 

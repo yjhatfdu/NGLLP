@@ -51,13 +51,29 @@ namespace TweenAction {
         }
     }
 }
+
+let TweenItemPool = [];
+
+function TweenItemFactory(object:Base.ObjectBase, field, controller) {
+    if (TweenItemPool.length == 0) {
+        return new TweenItem(object, field, controller)
+    } else {
+        let newItem = TweenItemPool.shift();
+        newItem.object=object;
+        newItem.field=field;
+        newItem.controller=controller;
+        newItem.start();
+        return newItem;
+    }
+}
+
 class TweenItem {
     object;
     field;
     initialValue;
     tweenActList = [];
-    startTime = 0;
-    lastActionTime = 0;
+    startTime;
+    lastActionTime;
     lastActionValue;
     currentActionIndex = 0;
     loopStart = 0;
@@ -69,7 +85,7 @@ class TweenItem {
     _loopAfterFinished = false;
     active = true;
 
-    constructor(object: Base.ObjectBase, field, controller) {
+    constructor(object:Base.ObjectBase, field, controller) {
 
         this.object = object;
         this.field = field;
@@ -101,7 +117,16 @@ class TweenItem {
         if (this._resetAfterFinished) {
             this.object[this.field] = this.initialValue;
         }
-        this.controller.remove(this.object, this.field)
+        this.controller.remove(this.object, this.field);
+        this._loopAfterFinished = false;
+        this._resetAfterFinished = false;
+        this.object = null;
+        this.currentLoop = 0;
+        this.loopStart = 0;
+        this.currentActionIndex = 0;
+        this.tweenActList = [];
+        this.lastAct = null;
+        TweenItemPool.push(this);
     }
 
     update(now) {
@@ -176,7 +201,7 @@ class TweenItem {
         return this
     }
 
-    easing(func: Function) {
+    easing(func:Function) {
         this.lastAct.easing = func;
         return this
     }
@@ -222,7 +247,7 @@ class _TweenCtl {
         }
         var key = object.uuid + field;
         if (!this.animationList[key]) {
-            this.animationList[key] = new TweenItem(object, field, this);
+            this.animationList[key] = TweenItemFactory(object, field, this);
         }
         return this.animationList[key];
     }
@@ -252,19 +277,23 @@ class _TweenCtl {
             for (var j; j < list.length; j++) {
                 var oneAct = list[j];
                 switch (oneAct['type']) {
-                    case 'translate': {
+                    case 'translate':
+                    {
                         actions.translate(oneAct['distance'], oneAct['time']);
                         break
                     }
-                    case 'translateTo': {
+                    case 'translateTo':
+                    {
                         actions.translateTo(oneAct['to'], oneAct['time']);
                         break
                     }
-                    case 'delay': {
+                    case 'delay':
+                    {
                         actions.delay(oneAct['time']);
                         break
                     }
-                    case 'loop': {
+                    case 'loop':
+                    {
                         actions.loop(oneAct['times']);
                         break
                     }

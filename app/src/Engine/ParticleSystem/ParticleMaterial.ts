@@ -2,6 +2,7 @@
  * Created by yjh on 16/8/13.
  */
 import {Material} from "../Core/Material";
+import * as Engine from '../Engine'
 
 export class ParticleMaterial extends Material {
 
@@ -72,10 +73,10 @@ export class ParticleMaterial extends Material {
             gl_Position=mvpMat*position;
             #if (PARTICLE_TYPE==0)
                 #if (SIMPLE_PARTICLE==0)
-                     gl_PointSize=clamp(staticInfo.x/(gl_Position.z)*pointScale,1.0,50.0);
+                     gl_PointSize=clamp(staticInfo.x/(gl_Position.z)*pointScale,1.0,50.0)*P;
                      //gl_PointSize=sqrt(staticInfo.x/gl_Position.z);
                 #else
-                     gl_PointSize=1.0;
+                     gl_PointSize=1.0*P;
                 #endif
             #else
 
@@ -190,7 +191,8 @@ export class ParticleMaterial extends Material {
             totalTime: this.totalTime,
             PARTICLE_TYPE: this.particleType,
             SIMPLE_PARTICLE: this._simpleParticle?1:0,
-            USE_TEXTURE: this._useTexture
+            USE_TEXTURE: this._useTexture,
+            P:Engine.render.p.toPrecision(5)
         });
         this.needUpdate=false;
     }
