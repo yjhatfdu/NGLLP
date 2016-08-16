@@ -85,15 +85,24 @@ export class GlTexture extends Base.ObjectBase {
                 let subTex = bufferTexture.subTextures[j];
                 let x1 = subTex.x + subTex.w + 2, y1 = subTex.y + 2;
                 let x2 = subTex.x + 2, y2 = subTex.y + subTex.h + 2;
+                let conflict1=false;
+                let conflict2=false;
                 for (let k = bufferTexture.subTextures.length - 1; k >= 0; k--) {
                     let tmpSubTex = bufferTexture.subTextures[k];
                     let tx = tmpSubTex.x, ty = tmpSubTex.y, tw = tmpSubTex.w, th = tmpSubTex.h;
-                    if ((x1 > tx + tw || y1 > ty + th || x1 + w < tx || y1 + h < ty) && x1 + w < bufferTexture.size && y1 + h < bufferTexture.size) {
-                        return new GlTexture(src, bufferTexture, x1, y1, w, h);
+                    if (!(x1 > tx + tw || y1 > ty + th || x1 + w < tx || y1 + h < ty) && x1 + w < bufferTexture.size && y1 + h < bufferTexture.size) {
+                        conflict1=true;
+                        //return new GlTexture(src, bufferTexture, x1, y1, w, h);
                     }
                     if ((x2 > tx + tw || y2 > ty + th || x2 + w < tx || y2 + h < ty) && x2 + w < bufferTexture.size && y2 + h < bufferTexture.size) {
-                        return new GlTexture(src, bufferTexture, x2, y2, w, h);
+                        conflict2=true;
+                        //return new GlTexture(src, bufferTexture, x2, y2, w, h);
                     }
+                }
+                if(!conflict1){
+                    return new GlTexture(src, bufferTexture, x1, y1, w, h);
+                }else if(!conflict2){
+                    return new GlTexture(src, bufferTexture, x2, y2, w, h);
                 }
             }
         }

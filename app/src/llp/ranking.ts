@@ -56,14 +56,14 @@ function showRanking(spr:Sprite) {
     if (currentRankSprite) {
         Tween(currentRankSprite, 'opacity').end();
         currentRankSprite.opacity = 0;
-        currentRankSprite.scale = 0.7;
+        currentRankSprite.scale = 0.6;
         Tween(currentRankSprite, 'opacity').end();
         Tween(currentRankSprite, 'scale').end();
     }
     currentRankSprite = spr;
     spr.opacity = 1;
     Tween(spr, 'opacity').delay(100).translateTo(0, 500);
-    Tween(spr, 'scale').translateTo(1.0, 200).easing(Easing.easeOutElastic);
+    Tween(spr, 'scale').translateTo(1.1, 200).easing(Easing.easeOutElastic);
 }
 
 export function rank(offset, ch?) {

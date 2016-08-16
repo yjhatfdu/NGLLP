@@ -39,7 +39,6 @@ load(live_id)
             {'name': 'bgm', 'url': liveinfo.bgm},
             {'name': 'map', 'url': liveinfo.map},
             {'name': 'coverImg', 'url': liveinfo.coverImg},
-
         ], p=>loading.progress(p))
     })
     .then(()=>loading.stop())
