@@ -77,11 +77,11 @@ export class Sprite extends TouchItem implements SpriteProtocol {
             this.rRotation = this.rotation;
         } else {
             var parent = this.parent as Sprite;
-            this.rx = this.x + parent.rx;
-            this.ry = this.y + parent.ry;
+            this.rScale = this.scale * parent.rScale;
+            this.rx = this.x*this.parent.rScale + parent.rx;
+            this.ry = this.y*this.parent.rScale + parent.ry;
             this.rw = this.w * parent.rw;
             this.rh = this.h * parent.rh;
-            this.rScale = this.scale * parent.rScale;
             this.rRotation = this.rotation + parent.rRotation;
 
         }
@@ -118,7 +118,7 @@ export class Sprite extends TouchItem implements SpriteProtocol {
         let y3 = y2 - sasx - sasx;
         let uvW = this.sw / this.stride;
         let uvH = this.sh / this.row;
-        let uvX = uvW * frame % this.stride;
+        let uvX = uvW * (frame % this.stride);
         let uvY = uvH * Math.floor(frame / this.stride);
         let tw = this.texture.sw;
         let th = this.texture.sh;
@@ -196,13 +196,13 @@ export class Sprite extends TouchItem implements SpriteProtocol {
     }
 
     appendChild(item:Sprite) {
+        super.appendChild(item);
         this.setNewChild();
-        super.appendChild(item)
     }
 
     insertChild(item:Sprite, index) {
+        super.insertChild(item, index);
         this.setNewChild();
-        super.insertChild(item, index)
     }
 
     static deserialize(object) {

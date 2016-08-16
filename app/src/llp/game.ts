@@ -12,6 +12,7 @@ import {Easing} from '../Engine/Animation/easing'
 import {TextSprite} from "../Engine/Core2D/TextSprite";
 
 import * as GameMap from  './map'
+import * as Ranking from './ranking'
 
 export let bgScale = 1;
 export let uiLayer:SpriteBatchNode;
@@ -30,7 +31,7 @@ load(live_id)
     .then(liveinfo=> {
         document.title = liveinfo.title;
         return Engine.resourceCtl.loadResources([
-            {'name': 'bg', 'url': liveinfo.bgimg},
+            {'name': 'bg', 'url': liveinfo.bgimg, standAloneTexture: true},
             {'name': 'perfect', 'url': liveinfo.perfect},
             {'name': 'great', 'url': liveinfo.great},
             {'name': 'good', 'url': liveinfo.good},
@@ -38,7 +39,7 @@ load(live_id)
             {'name': 'uiAssets', 'url': liveinfo.uiAssets},
             {'name': 'bgm', 'url': liveinfo.bgm},
             {'name': 'map', 'url': liveinfo.map},
-            {'name': 'coverImg', 'url': liveinfo.coverImg},
+            {'name': 'coverImg', 'url': liveinfo.coverImg, standAloneTexture: true},
         ], p=>loading.progress(p))
     })
     .then(()=>loading.stop())
@@ -77,13 +78,16 @@ load(live_id)
         GameMap.init(Engine.resourceCtl.getItem('map').json());
         bgObject.addOneTimeListener('touchend', ()=> {
             GameMap.enableTouch();
-            Engine.audioCtl.play(1);
+            Engine.audioCtl.play(1.5);
             Tween(clickToStart, 'opacity').translateTo(0, 200)
                 .then(()=>Engine.render.appendChild(uiLayer));
             Tween(coverSprite, 'opacity').translateTo(0, 200)
                 .then(()=>bgLayer.removeChild(coverSprite));
             Tween(coverSprite, 'scale').translateTo(2, 300).easing(Easing.easeInQuad);
-            Tween(clickToStart, 'scale').translateTo(2, 300).easing(Easing.easeInQuad).then(()=>bgLayer.removeChild(clickToStart));
+            Tween(clickToStart, 'scale').translateTo(2, 300).easing(Easing.easeInQuad).then(()=> {
+                bgLayer.removeChild(clickToStart);
+                Ranking.showScore();
+            });
             Tween(bgObject, 'opacity').translateTo(1, 1000);
         });
     });

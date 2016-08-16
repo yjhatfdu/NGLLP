@@ -5,6 +5,7 @@ import {Object3D} from './Object3D'
 import * as Engine from '../Engine'
 import {PerspectiveCamera, Camera} from '../Core3D/Camera'
 import {mat4, vec3} from 'gl-matrix'
+import {Sprite} from "../Core2D/Sprite";
 
 export class Render extends Object3D {
 

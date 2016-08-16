@@ -20,7 +20,7 @@ export function init(map) {
     speed = parseInt(localStorage.getItem('userSpeed') || '0') || map['speed'];
     channels = map['lane'];
     currentNotes = channels.map(x=>[]);
-    ranking.init();
+    ranking.init(channels.reduce((c,x)=>c+x.length,0));
     initialized = true;
     Engine.touchCtl.addEventListener('touchstart', onTouch);
     Engine.touchCtl.addEventListener('touchend', onTouchEnd);
