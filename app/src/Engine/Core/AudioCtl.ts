@@ -46,15 +46,15 @@ export class AudioCtl extends Base.EventBase {
                 setTimeout(this.playNow.bind(this), delay * 1000);
             }
             this.ctx.resume();
-        }
-        {
+        } else {
             if (delay > 0) {
                 this.bgmSource.start(this.ctx.currentTime + delay, this.currentTime, this.duration);
-                this.startTime = this.ctx.currentTime - this.currentTime+delay;
+
                 this.isPlaying = true;
             }
         }
-
+        this.startTime = this.ctx.currentTime - this.currentTime + delay;
+        this.isPlaying=true;
         if (delay == 0) {
             this.playNow()
         }

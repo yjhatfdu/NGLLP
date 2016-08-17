@@ -14,12 +14,12 @@ export var settings = {
     pixelRatio: 1
 };
 
-export function setEngine(container, pixelRatio = window.devicePixelRatio) {
+export function setEngine(container,designRes=[1024,768],pixelRatio = window.devicePixelRatio) {
     settings.container = container;
     settings.pixelRatio = pixelRatio;
     audioCtl = new AudioCtl();
     resourceCtl = new ResourceCtl();
-    render = new Render();
+    render = new Render(designRes);
     touchCtl = new TouchCtl();
 }
 

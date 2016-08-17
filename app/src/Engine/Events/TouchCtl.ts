@@ -27,16 +27,24 @@ export class TouchCtl extends Base.EventBase {
         }
     }
 
+    getPos(x, y) {
+        if (Engine.render.landscape) {
+            return [(2 * x / Engine.render.width - 1) / Engine.render.aspect, 1 - 2 * y / Engine.render.height]
+        } else {
+            return [(2 * x / Engine.render.width - 1)/Engine.render.designAspect, Engine.render.aspect / Engine.render.designAspect *(1- 2 * y / Engine.render.height)];
+
+
+        }
+    }
+
     onTouchStart(e) {
         e.stopPropagation();
         e.preventDefault();
         for (let i = 0; i < e.changedTouches.length; i++) {
             let touch = e.changedTouches[i];
-            this.findAndDispatchEvent(TouchEvents.touchstart, touch.pageX, touch.pageY);
-            this.dispatchEvent("touchstart", {
-                x: (2 * touch.pageX / Engine.render.width - 1) / Engine.render.aspect,
-                y: 1 - 2 * touch.pageY / Engine.render.height
-            })
+            let [x,y]=this.getPos(touch.pageX, touch.pageY);
+            this.findAndDispatchEvent(TouchEvents.touchstart, x, y);
+            this.dispatchEvent("touchstart", {x, y})
         }
     }
 
@@ -49,11 +57,9 @@ export class TouchCtl extends Base.EventBase {
         e.preventDefault();
         for (let i = 0; i < e.changedTouches.length; i++) {
             let touch = e.changedTouches[i];
-            this.findAndDispatchEvent(TouchEvents.touchend, touch.pageX, touch.pageY);
-            this.dispatchEvent("touchend", {
-                x: (2 * touch.pageX / Engine.render.width - 1) / Engine.render.aspect,
-                y: 1 - 2 * touch.pageY / Engine.render.height
-            })
+            let [x,y]=this.getPos(touch.pageX, touch.pageY);
+            this.findAndDispatchEvent(TouchEvents.touchend, x, y);
+            this.dispatchEvent("touchend", {x, y});
         }
 
     }
@@ -61,11 +67,9 @@ export class TouchCtl extends Base.EventBase {
     onMouseDown(e) {
         e.stopPropagation();
         e.preventDefault();
-        this.findAndDispatchEvent(TouchEvents.touchstart, e.offsetX, e.offsetY);
-        this.dispatchEvent("touchstart", {
-            x: (2 * e.offsetX / Engine.render.width - 1) / Engine.render.aspect,
-            y: 1 - 2 * e.offsetY / Engine.render.height
-        })
+        let [x,y]=this.getPos(e.offsetX, e.offsetY);
+        this.findAndDispatchEvent(TouchEvents.touchstart, x, y);
+        this.dispatchEvent("touchstart", {x, y});
     }
 
     onMouseMove(e) {
@@ -74,11 +78,9 @@ export class TouchCtl extends Base.EventBase {
     onMouseUp(e) {
         e.stopPropagation();
         e.preventDefault();
-        this.findAndDispatchEvent(TouchEvents.touchend, e.offsetX, e.offsetY);
-        this.dispatchEvent("touchend", {
-            x: (2 * e.offsetX / Engine.render.width - 1) / Engine.render.aspect,
-            y: 1 - 2 * e.offsetY / Engine.render.height
-        })
+        let [x,y]=this.getPos(e.offsetX, e.offsetY);
+        this.findAndDispatchEvent(TouchEvents.touchend, x, y);
+        this.dispatchEvent("touchend", {x, y});
     }
 
     addTouchItem(item, event) {
@@ -110,12 +112,10 @@ export class TouchCtl extends Base.EventBase {
         }
     }
 
-    findAndDispatchEvent(event, pageX, pageY) {
+    findAndDispatchEvent(event, x, y) {
         if (!this.itemList[event]) {
             return
         }
-        let x = (2 * pageX / Engine.render.width - 1) / Engine.render.aspect;
-        let y = 1 - 2 * pageY / Engine.render.height;
         //handle capture
         for (let l = 0; l < this.itemList[event].length; l++) {
             let list = this.itemList[event][l];

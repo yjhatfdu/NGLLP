@@ -3,7 +3,7 @@
  */
 import * as Engine from '../Engine/Engine'
 import {noteSpriteFactory} from './sprites'
-import {bgScale} from './game'
+
 import {rankTiming,rank} from './ranking'
 import * as ranking from './ranking'
 import {Tween} from '../Engine/Animation/Tween'
@@ -30,7 +30,7 @@ export function init(map) {
             return
         }
         let currentTime = Engine.audioCtl.getBgmTime() * 1000;
-        let noteWidth = 0.37537 / bgScale;
+        let noteWidth = 0.37537 ;
         for (let i = 0; i < channels.length; i++) {
             let channel = channels[i];
             let currentChannel = currentNotes[i];
@@ -73,22 +73,22 @@ export function init(map) {
             }
             for (let note of currentChannel) {
                 let currentSpr = note.sprite;
-                let percentage = 1 - (note.starttime - currentTime) / 128000 * speed;
+                let percentage = Math.max(0,1 - (note.starttime - currentTime) / 128000 * speed);
                 currentSpr.w = currentSpr.h = noteWidth * percentage;//2*128px/768px
                 let length = channelLength * percentage;
                 let alpha = note.lane * 0.125 * Math.PI;
                 let ca = Math.cos(alpha);
                 let sa = Math.sin(alpha);
-                currentSpr.y = (centerY - length * sa) / bgScale;
-                currentSpr.x = -length * ca / bgScale;
+                currentSpr.y = (centerY - length * sa) ;
+                currentSpr.x = -length * ca ;
                 if (note.longnote) {
                     let headPercentage=1;
                     let tailPercentage = Math.max(1 - (note.endtime - currentTime) / 128000 * speed, 0);
                     let longSpr = note.sprite.longNoteSpr;
                     let headX=0,headY=0;
                     if(note.hold){
-                        headX=-channelLength*ca/bgScale;
-                        headY=(centerY-channelLength*sa)/bgScale
+                        headX=-channelLength*ca;
+                        headY=(centerY-channelLength*sa)
                     }else{
                         headPercentage=percentage;
                         headX=currentSpr.x;
@@ -99,8 +99,8 @@ export function init(map) {
                     longSpr.p2[0] = headX - noteWidth * headPercentage * sa * 0.5;
                     longSpr.p2[1] = headY + noteWidth * headPercentage * ca * 0.5;
 
-                    let tailY = (centerY - channelLength * tailPercentage * sa) / bgScale;
-                    let tailX = -channelLength * tailPercentage * ca / bgScale;
+                    let tailY = (centerY - channelLength * tailPercentage * sa) ;
+                    let tailX = -channelLength * tailPercentage * ca ;
 
                     longSpr.p1[0] = tailX - noteWidth * tailPercentage * sa * 0.5;
                     longSpr.p1[1] = tailY + noteWidth * tailPercentage * ca * 0.5;
@@ -136,7 +136,7 @@ function onTouch(e) {
         return
     }
     let x = e.x, y = e.y;
-    if (y > (centerY + 0.5 * 0.37537) / bgScale) {
+    if (y > (centerY + 0.5 * 0.37537) ) {
         return
     }
     let r = Math.sqrt(x * x + (centerY - y) * (centerY - y));
@@ -149,7 +149,7 @@ function onTouchEnd(e) {
         return
     }
     let x = e.x, y = e.y;
-    if (y > (centerY + 0.5 * 0.37537) / bgScale) {
+    if (y > (centerY + 0.5 * 0.37537) ) {
         return
     }
     let r = Math.sqrt(x * x + (centerY - y) * (centerY - y));

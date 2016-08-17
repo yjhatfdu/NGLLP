@@ -9,7 +9,7 @@ import {Sprite} from "../Core2D/Sprite";
 
 export class Render extends Object3D {
 
-    designResolution: Array<number> = [1024, 768];
+    designAspect:number=1;
     width: number = 0;
     height: number = 0;
     landscape:boolean=true;
@@ -28,10 +28,11 @@ export class Render extends Object3D {
     currentGlProgram;
 
 
-    constructor() {
+    constructor(public designResolution=[1024,768]) {
         super();
         this.root = this;
         this.isRoot = true;
+        this.designAspect=this.designResolution[1]/this.designResolution[0];
         this.p = Engine.settings.pixelRatio;
         this.container = Engine.settings.container;
         this.canvas = document.createElement('canvas');
@@ -74,7 +75,7 @@ export class Render extends Object3D {
         this.canvas.height = (this.height = this.canvas.offsetHeight) * this.p;
         this.aspect = this.height / this.width;
         this.gl.viewport(0, 0, this.width * this.p, this.height * this.p);
-        this.landscape=(this.designResolution[1]/this.designResolution[0]<this.aspect);
+        this.landscape=(this.designResolution[1]/this.designResolution[0]>this.aspect);
         this.dispatchEvent('resize')
     }
 

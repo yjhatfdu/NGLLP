@@ -16,7 +16,7 @@ export class Object3D extends Base.NodeBase {
     modelMat = mat4.create();
     mvpMat = mat4.create();
     material;
-    parent: Object3D;
+    parent:Object3D;
     enablePerspective = true;
 
     update() {
@@ -34,8 +34,10 @@ export class Object3D extends Base.NodeBase {
                 //mat4.scale(this.mvpMat,this.mvpMat,new Float32Array([Engine.render.aspect,1,1]))
                 if (Engine.render.landscape) {
                     this.mvpMat[0] = Engine.render.aspect;
-                }else{
-                    this.mvpMat[5]=1/Engine.render.aspect;
+                    this.mvpMat[5] = 1;
+                } else {
+                    this.mvpMat[0] =  Engine.render.designAspect;
+                    this.mvpMat[5] = 1 / Engine.render.aspect * Engine.render.designAspect;
                 }
             }
 

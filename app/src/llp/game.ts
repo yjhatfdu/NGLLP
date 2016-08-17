@@ -14,9 +14,9 @@ import {TextSprite} from "../Engine/Core2D/TextSprite";
 import * as GameMap from  './map'
 import * as Ranking from './ranking'
 
-export let bgScale = 1;
+
 export let uiLayer:SpriteBatchNode;
-Engine.setEngine(document.body);
+Engine.setEngine(document.body,[1024,682]);
 
 
 loading.start();
@@ -52,13 +52,7 @@ load(live_id)
         let bgObject = new Sprite(bg, 0, 0, bg.width / bg.height * 2, 2, {});
 
         function resizeBg() {
-            if (Engine.render.aspect > bg.height / bg.width) {
-                bgScale = Engine.render.aspect * bg.width / bg.height
-            } else {
-                bgScale = 1;
-            }
-            bgObject.w = bg.width / bg.height * 2 / bgScale;
-            bgObject.h = 2 / bgScale;
+
         }
 
         Engine.render.addEventListener('resize', resizeBg);

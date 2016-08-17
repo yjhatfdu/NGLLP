@@ -7,7 +7,7 @@ import {Tween} from '../Engine/Animation/Tween'
 import {SpriteBatchNode} from "../Engine/Core2D/SpriteBatchNode";
 import {Easing} from "../Engine/Animation/easing";
 import {Digits} from "../Engine/Components/Digits";
-import {bgScale} from './game'
+import {Digits} from "../Engine/Components/Digits";
 
 
 class Stat {
@@ -73,7 +73,7 @@ let perfectSe, greatSe, goodSe;
 let perfectSpr, greatSpr, goodSpr, badSpr, missSpr;
 let currentRankSprite:Sprite;
 let seLayer:SpriteBatchNode;
-let score:Digits;
+let score:Digits, combo:Digits;
 export function init(totalNotes) {
     stat = new Stat(totalNotes);
     perfectSe = Engine.resourceCtl.getItem('perfect');
@@ -88,18 +88,24 @@ export function init(totalNotes) {
     seLayer = new SpriteBatchNode();
     seLayer.appendChildren([perfectSpr, greatSpr, goodSpr, badSpr, missSpr]);
     score = new Digits(Engine.resourceCtl.getItem('digits'), 5, 2, 0, RankSprInfo.digits);
+    combo = new Digits(Engine.resourceCtl.getItem('digits'), 5, 2, 0, RankSprInfo.digits);
     score.y = 0.75;
     score.h = 0.15;
+    combo.y = 0.3;
+    combo.h = 0.2;
+    combo.opacity = 0;
     score.opacity = 0;
-    seLayer.appendChild(score);
+    seLayer.appendChildren([score, combo]);
     Engine.render.appendChild(seLayer);
 }
 
 export function showScore() {
     Tween(score, 'opacity').translateTo(1, 300);
+    Tween(combo, 'opacity').translateTo(1, 300);
 }
 export function hideScore() {
     Tween(score, 'opacity').translateTo(0, 300);
+    Tween(combo, 'opacity').translateTo(0, 300);
 }
 
 
@@ -112,15 +118,21 @@ function showRanking(spr:Sprite) {
         Tween(currentRankSprite, 'scale').end();
     }
     currentRankSprite = spr;
-    spr.scale = 0.6 * bgScale;
+    spr.scale = 0.5;
     spr.opacity = 1;
     Tween(spr, 'opacity').delay(100).translateTo(0, 500);
-    Tween(spr, 'scale').translateTo(1.1 * bgScale, 200).easing(Easing.easeOutElastic);
+    Tween(spr, 'scale').translateTo(0.8, 200).easing(Easing.easeOutElastic);
+    Tween(combo,'scale').end();
+    combo.scale=1;
+    combo.number=stat.currentCombo?stat.currentCombo:null;
+    Tween(combo,'scale').translateTo(1.4,60).translateTo(1,100);
+
 }
 
 export function rank(offset, ch?) {
     if (offset == null) {
         showRanking(missSpr);
+        stat.breakCombo();
         return
     }
     let offsetTime = Math.abs(offset);
@@ -152,7 +164,6 @@ export function rank(offset, ch?) {
         stat.breakCombo();
         showRanking(missSpr);
     }
-    score.scale = bgScale;
     Tween(score, 'number').end();
     Tween(score, 'number').translateTo(stat.score, 300);
 }

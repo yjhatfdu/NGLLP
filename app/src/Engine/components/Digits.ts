@@ -4,13 +4,13 @@ import {Sprite} from "../Core2D/Sprite";
  */
 export class Digits extends Sprite {
     private aspect = 1;
-    private _number = 0;
+    private _number = null;
     alignCenter = true;
     private needUpdate = true;
     private numberSprs = [];
     private imgItem;
     private _h=1;
-    constructor(imgItem, public stride, public row, number = 0, {
+    constructor(imgItem, public stride, public row, number = null, {
         sw=1,sh=1,sx=0,sy=0,alignCenter=true,x=0,y=0,h=1
         }) {
         super(null, 0, 0, 1, 1, {});
@@ -33,6 +33,13 @@ export class Digits extends Sprite {
     }
 
     updateNumber() {
+        if(this.number==null){
+            for (let i of this.children){
+                i.opacity=0
+            }
+            this.needUpdate=false;
+            return
+        }
         let num = Math.round(this.number) + '';
         let length = num.length;
         for (let i = this.numberSprs.length; i < length; i++) {
