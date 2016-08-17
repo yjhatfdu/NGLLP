@@ -12,7 +12,7 @@ export class Render extends Object3D {
     designResolution: Array<number> = [1024, 768];
     width: number = 0;
     height: number = 0;
-
+    landscape:boolean=true;
     p: number = 1;
     container: HTMLElement;
     canvas: HTMLCanvasElement;
@@ -74,6 +74,7 @@ export class Render extends Object3D {
         this.canvas.height = (this.height = this.canvas.offsetHeight) * this.p;
         this.aspect = this.height / this.width;
         this.gl.viewport(0, 0, this.width * this.p, this.height * this.p);
+        this.landscape=(this.designResolution[1]/this.designResolution[0]<this.aspect);
         this.dispatchEvent('resize')
     }
 

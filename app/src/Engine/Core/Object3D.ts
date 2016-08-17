@@ -2,7 +2,7 @@
  * Created by yjh on 15/12/21.
  */
 
-import {vec3,mat4} from 'gl-matrix'
+import {vec3, mat4} from 'gl-matrix'
 
 import * as Base from '../Base'
 import * as Engine from '../Engine'
@@ -29,9 +29,14 @@ export class Object3D extends Base.NodeBase {
                 mat4.mul(this.worldMat, this.modelMat, this.parent.worldMat);
                 mat4.mul(this.mvpMat, this.root.vpMat, this.worldMat);
             } else {
+                //2d
                 //mat4.identity(this.mvpMat);
                 //mat4.scale(this.mvpMat,this.mvpMat,new Float32Array([Engine.render.aspect,1,1]))
-                this.mvpMat[0] = Engine.render.aspect;
+                if (Engine.render.landscape) {
+                    this.mvpMat[0] = Engine.render.aspect;
+                }else{
+                    this.mvpMat[5]=1/Engine.render.aspect;
+                }
             }
 
         }

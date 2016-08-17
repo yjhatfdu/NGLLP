@@ -34,17 +34,27 @@ export class AudioCtl extends Base.EventBase {
         bufferSource.start(this.ctx.currentTime);
     }
 
-    play(delay=0) {
+    play(delay = 0) {
         if (!this.bgmBuffer || this.isPlaying) {
             return
         }
-        if (delay > 0) {
-            setTimeout(this.playNow.bind(this), delay * 1000);
-        }
-        this.ctx.resume();
         this.bgmSource = this.ctx.createBufferSource();
         this.bgmSource.buffer = this.bgmBuffer;
         this.bgmSource.connect(this.ctx.destination);
+        if (this.ctx.resume) {
+            if (delay > 0) {
+                setTimeout(this.playNow.bind(this), delay * 1000);
+            }
+            this.ctx.resume();
+        }
+        {
+            if (delay > 0) {
+                this.bgmSource.start(this.ctx.currentTime + delay, this.currentTime, this.duration);
+                this.startTime = this.ctx.currentTime - this.currentTime+delay;
+                this.isPlaying = true;
+            }
+        }
+
         if (delay == 0) {
             this.playNow()
         }
@@ -72,7 +82,7 @@ export class AudioCtl extends Base.EventBase {
     }
 
     getBgmTime() {
-        return this.isPlaying?this.ctx.currentTime - this.startTime:this.currentTime-this.startTime
+        return this.isPlaying ? this.ctx.currentTime - this.startTime : this.currentTime - this.startTime
     }
 
     update() {
