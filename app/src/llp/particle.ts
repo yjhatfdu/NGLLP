@@ -3,16 +3,10 @@
  */
 
 import {GpuParticleSystem,EmitterType} from '../Engine/ParticleSystem/GpuParticleSystem'
+import {Settings} from './settings'
 export let particleSystem:GpuParticleSystem;
 
 export function init() {
-    particleSystem = new GpuParticleSystem(200, {
-        size: 6,
-        simpleParticle: false,
-        emitterType: EmitterType.volume_cube,
-        pointScale: 10,
-        emitSpeed: 1,
-        fade: 5
-    });
+    particleSystem = new GpuParticleSystem(200, Settings.loadingParticleSystem);
     particleSystem.resistance = 0.05;
 }

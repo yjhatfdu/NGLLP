@@ -7,6 +7,7 @@ import {noteSpriteFactory} from './sprites'
 import {rankTiming,rank} from './ranking'
 import * as ranking from './ranking'
 import {Tween} from '../Engine/Animation/Tween'
+import {Settings} from './settings'
 let channels = [];
 let speed = 160;
 let initialized = false;
@@ -20,7 +21,7 @@ export function init(map) {
     speed = parseInt(localStorage.getItem('userSpeed') || '0') || map['speed'];
     channels = map['lane'];
     currentNotes = channels.map(x=>[]);
-    ranking.init(channels.reduce((c,x)=>c+x.reduce((cc,xx)=>cc+(xx.longnote?2:1),0),0));
+    ranking.init(channels.reduce((c,x)=>c+x.reduce((cc,xx)=>cc+(xx['longnote']?2:1),0),0));
     initialized = true;
     Engine.touchCtl.addEventListener('touchstart', onTouch);
     Engine.touchCtl.addEventListener('touchend', onTouchEnd);
@@ -136,7 +137,7 @@ function onTouch(e) {
         return
     }
     let x = e.x, y = e.y;
-    if (y > (centerY + 0.5 * 0.37537) ) {
+    if (y > (centerY +  0.37537) ) {
         return
     }
     let r = Math.sqrt(x * x + (centerY - y) * (centerY - y));
@@ -149,7 +150,7 @@ function onTouchEnd(e) {
         return
     }
     let x = e.x, y = e.y;
-    if (y > (centerY + 0.5 * 0.37537) ) {
+    if (y > (centerY +  0.37537) ) {
         return
     }
     let r = Math.sqrt(x * x + (centerY - y) * (centerY - y));
@@ -159,8 +160,12 @@ function onTouchEnd(e) {
 }
 
 function touchChannel(ch){
+
     let note=currentNotes[ch][0];
     if (!note){
+        return
+    }
+    if(note.hold){
         return
     }
     let currentTime=Engine.audioCtl.getBgmTime()*1000;
@@ -172,7 +177,7 @@ function touchChannel(ch){
     if(note.longnote){
         note.sprite.note=false;
         note.sprite.parallel=false;
-        Tween(note.sprite.longNoteSpr,'opacity').translateTo(0.2,1000).translateTo(0.5,1000).loop();
+        Tween(note.sprite.longNoteSpr).playAction(Settings.longNotePressAction);
         note.hold=true;
     }else{
         currentNotes[ch].shift().sprite.destroy();

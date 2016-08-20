@@ -23,7 +23,7 @@ export class Render extends Object3D {
     materialStack = [];
     defaultCamera: Camera;
     aspect;
-
+    pointScale=1;
     currentGlTexture = [];
     currentGlProgram;
 
@@ -76,6 +76,11 @@ export class Render extends Object3D {
         this.aspect = this.height / this.width;
         this.gl.viewport(0, 0, this.width * this.p, this.height * this.p);
         this.landscape=(this.designResolution[1]/this.designResolution[0]>this.aspect);
+        if(this.landscape){
+            this.pointScale=this.height/this.designResolution[1]*this.p
+        }else{
+            this.pointScale=this.width/this.designResolution[1]*this.p
+        }
         this.dispatchEvent('resize')
     }
 

@@ -4,6 +4,7 @@
 ///<reference path='../Resource/ResourceItem.ts'/>
 
 import * as Base from '../Base'
+import * as Engine from '../Engine'
 export class AudioCtl extends Base.EventBase {
     ctx;
     bgmBuffer;
@@ -12,14 +13,20 @@ export class AudioCtl extends Base.EventBase {
     currentTime = 0;
     startTime = 0;
     bgmSource;
+    useDate = true;
 
     constructor() {
         super();
         this.ctx = new (window['AudioContext'] || window['webkitAudioContext'])();
+        Engine.eventBus.addEventListener('beforeupdate',this.update.bind(this))
     }
 
     startSession() {
         this.ctx.resume();
+    }
+
+    getTime() {
+        return this.useDate ? Date.now() * 0.001 : this.ctx.currentTime
     }
 
     loadBgm(item) {
@@ -53,8 +60,8 @@ export class AudioCtl extends Base.EventBase {
                 this.isPlaying = true;
             }
         }
-        this.startTime = this.ctx.currentTime - this.currentTime + delay;
-        this.isPlaying=true;
+        this.startTime = this.getTime()- this.currentTime + delay;
+        this.isPlaying = true;
         if (delay == 0) {
             this.playNow()
         }
@@ -62,7 +69,7 @@ export class AudioCtl extends Base.EventBase {
 
     playNow() {
         this.bgmSource.start(this.ctx.currentTime, this.currentTime, this.duration);
-        this.startTime = this.ctx.currentTime - this.currentTime;
+        this.startTime = this.getTime() - this.currentTime;
         this.isPlaying = true;
     }
 
@@ -71,7 +78,7 @@ export class AudioCtl extends Base.EventBase {
             return
         }
         this.bgmSource.stop();
-        this.currentTime = this.ctx.currentTime - this.startTime;
+        this.currentTime = this.getTime() - this.startTime;
         this.isPlaying = false;
 
     }
@@ -82,14 +89,15 @@ export class AudioCtl extends Base.EventBase {
     }
 
     getBgmTime() {
-        return this.isPlaying ? this.ctx.currentTime - this.startTime : this.currentTime - this.startTime
+        return this.isPlaying ? this.getTime() - this.startTime : this.currentTime - this.startTime
     }
 
     update() {
         if (this.isPlaying) {
-            if (this.ctx.currentTime - this.startTime > this.duration) {
+            if (this.getBgmTime() > this.duration) {
                 this.pause();
-                this.dispatchEvent("BgmEnd")
+                Engine.eventBus.dispatchEvent("BgmEnd");
+                console.log('end')
             }
         }
     }

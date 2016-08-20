@@ -36,9 +36,9 @@ export class Material extends Base.ObjectBase {
     initProgram(vst, fst, flags?) {
         this.program = GlProgram.getProgram(vst, fst, flags);
         this.gl.useProgram(this.program);
-        try{
+        try {
             this.bindUniform('mvpMat', 'Matrix4fv');
-        }catch (e){
+        } catch (e) {
 
         }
         this.bindUniforms(this.uniforms);
@@ -148,10 +148,10 @@ export class Material extends Base.ObjectBase {
         //bind uniforms
         for (var i in this.uniformList) {
             var uniform = this.uniformList[i];
-            let localValue=this[uniform.name];
-            let value= (localValue==null||localValue==undefined)? uniform.value:localValue;
+            let localValue = this[uniform.name];
+            let value = (localValue == null || localValue == undefined) ? uniform.value : localValue;
             if (uniform.ismat) {
-                if(!value){
+                if (!value) {
                     continue
                 }
                 uniform.func(uniform.location, false, value)
@@ -183,7 +183,7 @@ export class Material extends Base.ObjectBase {
             if (this.textures[k]) {
                 this.gl.activeTexture(this.gl.TEXTURE0 + k);
                 if (this.textures[k].active) {
-                    this.gl.bindTexture(this.gl.TEXTURE_2D, this.textures[k].active(k))
+                    this.textures[k].active(k)
                 } else {
                     this.gl.bindTexture(this.gl.TEXTURE_2D, this.textures[k])
                 }

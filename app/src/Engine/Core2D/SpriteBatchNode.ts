@@ -75,6 +75,7 @@ export class SpriteBatchNode extends Object3D {
             this.updateChildren();
         }
         super.update();
+        this.material.active();
         this.drawBuffer();
     }
 

@@ -34,7 +34,7 @@ export class ParticleMaterial extends Material {
         uniform float fade;
 
         #if (USE_TEXTURE==0)
-            varying vec4 color;
+            varying vec4 vcolor;
         #endif
 
         #if (PARTICLE_TYPE==0)
@@ -88,7 +88,7 @@ export class ParticleMaterial extends Material {
             #endif
 
             #if (USE_TEXTURE==0)
-                color=vec4(1.0,1.0,1.0,1.0);
+                vcolor=vec4(1.0,1.0,1.0,1.0);
             #endif
             float timeRatio=particleTime/staticInfo.w;
             opacity=mix(pow(timeRatio,0.1*fade),pow(1.0-timeRatio,0.1*fade),timeRatio);
@@ -102,6 +102,7 @@ export class ParticleMaterial extends Material {
         varying float opacity;
         uniform float feather;
         uniform float alpha;
+        uniform vec3 color;
         #if (PARTICLE_TYPE==0)
 
         #else
@@ -109,7 +110,7 @@ export class ParticleMaterial extends Material {
         #endif
 
         #if (USE_TEXTURE==0)
-            varying vec4 color;
+            varying vec4 vcolor;
         #else
             uniform sampler2D particleTexture;
         #endif
@@ -122,17 +123,18 @@ export class ParticleMaterial extends Material {
         #endif
 
         #if (USE_TEXTURE==0)
-
+            vec4 out_color=vcolor;
         #else
-            vec4 color=texture2D(particleTexture,vUvCoord);
+            vec4 out_color=texture2D(particleTexture,vUvCoord);
         #endif
         #if (SIMPLE_PARTICLE==0)
             float fopacity=1.0-2.0*distance(uv,vec2(0.5,0.5));
             //float fopacity=1.0-step(0.5,distance(uv,vec2(0.5,0.5)));
-            gl_FragColor=vec4(color.xyz,fopacity*opacity*color[3]*fopacity*alpha);
+            gl_FragColor=vec4(out_color.xyz,fopacity*opacity*out_color[3]*fopacity*alpha);
         #else
-            gl_FragColor=color;
+            gl_FragColor=out_color;
         #endif
+            gl_FragColor.xyz=gl_FragColor.xyz*color;
         }
     `;
 
@@ -156,23 +158,23 @@ export class ParticleMaterial extends Material {
 
     currentTime:number;
     feather:number;
-    pointScale=1;
-    fade=1;
-    alpha=1;
-
+    pointScale = 1;
+    fade = 1;
+    alpha = 1;
+    color;
     constructor(totalTime, vertexUvData, private particleType = 0, simpleParticle = 0, useTexture = 0, textureUvData = null) {
         super();
-        this.enableBlend=true;
-        this.enableDepthTest=false;
-        this.enableDepthWrite=false;
+        this.enableBlend = true;
+        this.enableDepthTest = false;
+        this.enableDepthWrite = false;
         this.totalTime = totalTime;
         this.simpleParticle = simpleParticle;
         this.useTexture = useTexture;
         this.attributes = [
             {name: 'uv', size: 2}
         ];
-        if (this.particleType>0){
-            this.attributes.push({'name':'uvCoord',size:2})
+        if (this.particleType > 0) {
+            this.attributes.push({'name': 'uvCoord', size: 2})
         }
         this.uniforms = [
             {name: 'currentTime', type: '1f', value: 0},
@@ -182,6 +184,7 @@ export class ParticleMaterial extends Material {
             {name: 'pointScale', type: '1f', value: 1},
             {name: 'fade', type: '1f', value: 8},
             {name: 'alpha', type: '1f', value: 8},
+            {name: 'color', type: '3fv', value: [1, 1, 1]}
         ];
         this.init();
     }
@@ -190,14 +193,15 @@ export class ParticleMaterial extends Material {
         super.initProgram(this.vst, this.fst, {
             totalTime: this.totalTime,
             PARTICLE_TYPE: this.particleType,
-            SIMPLE_PARTICLE: this._simpleParticle?1:0,
+            SIMPLE_PARTICLE: this._simpleParticle ? 1 : 0,
             USE_TEXTURE: this._useTexture,
-            P:Engine.render.p.toPrecision(5)
+            P: Engine.render.pointScale.toPrecision(5)
         });
-        this.needUpdate=false;
+        this.needUpdate = false;
     }
-    active(push?){
-        if(this.needUpdate){
+
+    active(push?) {
+        if (this.needUpdate) {
             this.init()
         }
         super.active(push)

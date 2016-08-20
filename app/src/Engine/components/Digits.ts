@@ -11,7 +11,7 @@ export class Digits extends Sprite {
     private imgItem;
     private _h=1;
     constructor(imgItem, public stride, public row, number = null, {
-        sw=1,sh=1,sx=0,sy=0,alignCenter=true,x=0,y=0,h=1
+        sw=0,sh=0,sx=0,sy=0,alignCenter=true,x=0,y=0,h=1
         }) {
         super(null, 0, 0, 1, 1, {});
         if (row * stride != 10) {
@@ -20,10 +20,10 @@ export class Digits extends Sprite {
         this.imgItem = imgItem;
         this.aspect = sw / stride / sh * row;
         this._number = number;
-        this.sw = sw;
-        this.sh = sh;
-        this.sx = sx;
-        this.sy = sy;
+        this.sx = sx / imgItem.width;
+        this.sy = sy / imgItem.height;
+        this.sw = sw ? sw / imgItem.width : 1;
+        this.sh = sh ? sh / imgItem.height : 1;
         this.x = x;
         this.y = y;
         this.w = this.h = h;
@@ -44,10 +44,10 @@ export class Digits extends Sprite {
         let length = num.length;
         for (let i = this.numberSprs.length; i < length; i++) {
             let newSpr = new Sprite(this.imgItem, 0, 0, this.aspect, 1, {
-                sh: this.sh,
-                sw: this.sw,
-                sx: this.sx,
-                sy: this.sy,
+                sh: this.sh*this.imgItem.height,
+                sw: this.sw*this.imgItem.width,
+                sx: this.sx*this.imgItem.width,
+                sy: this.sy*this.imgItem.height,
                 frameCount:10,
                 stride: this.stride
             });

@@ -7,6 +7,7 @@ import * as Engine from '../Engine'
 import * as Base from '../Base'
 import * as Util from '../Util/Util'
 
+
 namespace TweenAction {
     export class Translate {
         easing;
@@ -50,18 +51,26 @@ namespace TweenAction {
             this.callback = callback
         }
     }
+    export class Set {
+        value;
+        type = 4;
+
+        constructor(value) {
+            this.value = value
+        }
+    }
 }
 
-let TweenItemPool = [];
+let TweenItemPool:Array<TweenItem> = [];
 
 function TweenItemFactory(object:Base.ObjectBase, field, controller) {
     if (TweenItemPool.length == 0) {
         return new TweenItem(object, field, controller)
     } else {
         let newItem = TweenItemPool.shift();
-        newItem.object=object;
-        newItem.field=field;
-        newItem.controller=controller;
+        newItem.object = object;
+        newItem.field = field;
+        newItem.controller = controller;
         newItem.start();
         return newItem;
     }
@@ -107,6 +116,10 @@ class TweenItem {
         this.currentLoop = 0;
         this.loopStartValue = this.lastActionValue = this.initialValue;
         this.lastActionTime = this.startTime = Util.getTime()
+    }
+
+    endAll() {
+        this.controller.removeAllAnimations(this.object)
     }
 
     end() {
@@ -164,6 +177,9 @@ class TweenItem {
             } else if (tweenAct.type == 3) {
                 this.currentActionIndex++;
                 tweenAct.callback()
+            } else if (tweenAct.type == 4) {
+                this.currentActionIndex++;
+                this.object[this.field] = tweenAct.value
             }
             if (this.currentActionIndex >= this.tweenActList.length) {
                 this.end();
@@ -221,6 +237,10 @@ class TweenItem {
         return this;
     }
 
+    set(value) {
+        this.addTweenAction( new TweenAction.TranslateTo(value, 0));
+    }
+
     resetAfterFinished(flag = true) {
         this._resetAfterFinished = flag;
     }
@@ -228,6 +248,7 @@ class TweenItem {
     loopAfterFinished(flag = true) {
         this._loopAfterFinished = flag;
     }
+
 }
 class _TweenCtl {
     animationList = {};
@@ -237,13 +258,13 @@ class _TweenCtl {
         Engine.eventBus.addEventListener('beforeupdate', this.update.bind(this))
     }
 
-    add(object, field):TweenItem {
+    add(object, field):TweenItem|_TweenCtl {
         if (!object.uuid) {
             object.uuid = Math.random() + '';
         }
         if (!field) {
             this.selectObject = object;
-            return null;
+            return this;
         }
         var key = object.uuid + field;
         if (!this.animationList[key]) {
@@ -256,9 +277,14 @@ class _TweenCtl {
         return this.add(object, field);
     }
 
+    endAll() {
+        this.removeAllAnimations(this.selectObject)
+    }
+
     removeAllAnimations(object) {
         for (var i in this.animationList) {
             if (this.animationList[i].object == object) {
+                this.animationList[i].end();
                 delete this.animationList[i]
             }
         }
@@ -268,41 +294,53 @@ class _TweenCtl {
         delete this.animationList[object.uuid + field]
     }
 
-    playAction(action) {
+    playAction(actions) {
         this.removeAllAnimations(this.selectObject);
-        for (var i = 0; i < action.length; i++) {
-            var actlist = action[i];
-            var actions = this.add(this.selectObject, actlist['field']);
-            var list = actlist['list'];
-            for (var j; j < list.length; j++) {
-                var oneAct = list[j];
+        let lastAction;
+        let defaultAction;
+        for (let field of Object.keys(actions)) {
+            let actList = actions[field];
+            var action:any = this.add(this.selectObject, field);
+            defaultAction = action;
+            for (let j = 0; j < actList.length; j++) {
+                var oneAct = actList[j];
                 switch (oneAct['type']) {
                     case 'translate':
                     {
-                        actions.translate(oneAct['distance'], oneAct['time']);
+                        action.translate(oneAct['value'], oneAct['time']);
                         break
                     }
                     case 'translateTo':
                     {
-                        actions.translateTo(oneAct['to'], oneAct['time']);
+                        action.translateTo(oneAct['value'], oneAct['time']);
                         break
                     }
                     case 'delay':
                     {
-                        actions.delay(oneAct['time']);
+                        action.delay(oneAct['time']);
                         break
                     }
                     case 'loop':
                     {
-                        actions.loop(oneAct['times']);
+                        action.loop(oneAct['times']);
                         break
+                    }
+                    case 'set':
+                    {
+                        action.set(oneAct['value']);
+                        break
+                    }
+                    case'end':
+                    {
+                        lastAction = action;
                     }
                 }
                 if (oneAct['easing']) {
-                    actions.easing(Easing[oneAct['easing']])
+                    action.easing(Easing[oneAct['easing']])
                 }
             }
         }
+        return lastAction || defaultAction;
     }
 
     update() {

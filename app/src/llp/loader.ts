@@ -25,8 +25,7 @@ export function load(id) {
                 perfect: resourcePath + 'fx/perfect.mp3',
                 great: resourcePath + 'fx/great.mp3',
                 good: resourcePath + 'fx/good.mp3',
-                uiAssets: resourcePath + 'llpui.png',
-                digits: resourcePath + 'lldigits.png',
+                uiAssets: 'assets/uiAssets.png',
                 title: resp['content']['live_name'],
                 coverImg: uploadPath + resp['content']['cover_path']
             }
