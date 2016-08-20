@@ -14,6 +14,7 @@ export class Object3D extends Base.NodeBase {
     scaleV = vec3.clone(new Float32Array([1, 1, 1]));
     worldMat = mat4.create();
     modelMat = mat4.create();
+    aspectMat=mat4.create();
     mvpMat = mat4.create();
     material;
     parent:Object3D;
@@ -32,19 +33,25 @@ export class Object3D extends Base.NodeBase {
                 //2d
                 //mat4.identity(this.mvpMat);
                 //mat4.scale(this.mvpMat,this.mvpMat,new Float32Array([Engine.render.aspect,1,1]))
+                mat4.identity(this.modelMat);
+                mat4.rotate(this.modelMat, this.modelMat, 1, this.rotate);
+                mat4.translate(this.modelMat, this.modelMat, this.position);
+                mat4.scale(this.modelMat, this.modelMat, this.scaleV);
+                mat4.mul(this.worldMat, this.modelMat, this.parent.worldMat);
                 if (Engine.render.landscape) {
-                    this.mvpMat[0] = Engine.render.aspect;
-                    this.mvpMat[5] = 1;
+                    this.aspectMat[0] = Engine.render.aspect;
+                    this.aspectMat[5] = 1;
                 } else {
-                    this.mvpMat[0] =  Engine.render.designAspect;
-                    this.mvpMat[5] = 1 / Engine.render.aspect * Engine.render.designAspect;
+                    this.aspectMat[0] =  Engine.render.designAspect;
+                    this.aspectMat[5] = 1 / Engine.render.aspect * Engine.render.designAspect;
                 }
+                mat4.mul(this.mvpMat,this.aspectMat, this.worldMat);
             }
 
         }
         if (this.material) {
             this.material.mvpMat = this.mvpMat;
-            this.material.active();
+            //this.material.active();
         }
         super.update()
     }

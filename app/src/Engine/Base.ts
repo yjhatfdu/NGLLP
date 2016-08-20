@@ -10,6 +10,11 @@ export class ObjectBase {
         this.uuid = Math.random() + ''
     }
 
+    resetState(state){
+        for(let field in state){
+            this[field]=state[field]
+        }
+    }
     destroy() {
 
     }

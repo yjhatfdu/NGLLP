@@ -40,7 +40,6 @@ export class GpuParticleSystem extends Object3D {
     private velocityBufferedFB:FrameBuffer;
 
     private particleMaterial:ParticleMaterial;
-
     emitColor = [1, 1, 1, 1];
 
     particleType = 0;
@@ -70,9 +69,14 @@ export class GpuParticleSystem extends Object3D {
     emitterSize = [2, 2, 2];
     fade = 1;
     opacity = 1;
+    color;
 
-    constructor(maxParticlePerSec, {emitSpeed=1, size=10, life=10,lifeVary = 0.1, sizeVary = 0.1, sizeLevel:number = 8, particleType = ParticleType.point, useTexture = false, emitterType = EmitterType.point, useWind = false, gravity = [0, -1, 0], speedVary = 10,simpleParticle=false,feather=0,resistance=0,pointScale=1,fade=1}) {
+    constructor(maxParticlePerSec, {emitSpeed=1, size=10, life=10,lifeVary = 0.1, sizeVary = 0.1, sizeLevel:number = 8, particleType = ParticleType.point, useTexture = false, emitterType = EmitterType.point, useWind = false, gravity = [0, -1, 0], speedVary = 10,simpleParticle=false,feather=0,resistance=0,pointScale=1,fade=1,enabled=true,color=[1,1,1]}) {
         super();
+        this.enabled = enabled;
+        if (!enabled) {
+            return
+        }
         this.gl = Engine.render.gl;
         if (this.gl['HALF_FLOAT']) {
             this.support = true
@@ -97,7 +101,8 @@ export class GpuParticleSystem extends Object3D {
         this.pointScale = pointScale;
         this.fade = fade;
         this.init();
-        this.resistance=resistance;
+        this.resistance = resistance;
+        this.color=color;
     }
 
     init() {
@@ -219,7 +224,8 @@ export class GpuParticleSystem extends Object3D {
         this.particleMaterial.feather = this.feather;
         this.particleMaterial.pointScale = this.pointScale;
         this.particleMaterial.fade = this.fade;
-        this.particleMaterial.alpha=this.opacity;
+        this.particleMaterial.alpha = this.opacity;
+        this.particleMaterial.color=this.color;
         this.particleMaterial.active();
         this.gl.drawElements(this.gl.POINTS, this.maxCount, this.gl.UNSIGNED_SHORT, 0);
     }

@@ -18,9 +18,13 @@ export class QuadrangleSprite extends NodeBase implements SpriteProtocol {
     private rp2 = vec2.create();
     private rp3 = vec2.create();
 
-    constructor(imgItem, public sx = 0, public sy = 0, public sw = 1, public sh = 1, public p0 = vec2.create(), public p1 = vec2.create(), public p2 = vec2.create(), public p3 = vec2.create()) {
+    constructor(imgItem, public sx = 0, public sy = 0, public sw = 0, public sh = 0, public p0 = vec2.create(), public p1 = vec2.create(), public p2 = vec2.create(), public p3 = vec2.create()) {
         super();
         this.texture = imgItem.texture;
+        this.sx = this.sx / imgItem.width;
+        this.sy = this.sy / imgItem.height;
+        this.sw = this.sw ? this.sw / imgItem.width : 1;
+        this.sh = this.sh ? this.sh / imgItem.height : 1
     }
 
     setNewChild() {

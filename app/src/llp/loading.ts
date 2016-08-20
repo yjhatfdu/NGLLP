@@ -7,41 +7,17 @@ import {TextSprite} from '../Engine/Core2D/TextSprite'
 import {Tween} from '../Engine/Animation/Tween'
 import * as particle from './particle'
 import * as Motion from '../Engine/Events/Motion'
+import {Settings} from './settings'
 
 let layer;
 let promotionSprite
     , ps;
 let shouldStop = false;
-let promotion = [
-    '加载中..',
-    '正在同步神经接口..',
-    '正在和长者谈笑风生..',
-    '正在前往花村..',
-    '正在丢雷姆..',
-    '正在召集lo娘..',
-    '正在打call..',
-    '正在潜入音乃木坂学院..',
-    '正在鄙视bog..',
-    '正在和小学生对喷..',
-    '正在pr穹妹..',
-    '正在重构LLP..',
-    '正在给LLP续命..',
-    '正在发现女装少年..',
-    '少女祈祷中..',
-    '正在吞谱..',
-    '正在卡loading..',
-    '正在准备面基..',
-    '正在收扶老二..',
-    '正在为您接通妖妖灵..',
-    '正在调戏日日日..',
-    '正在擦洗note..',
-    '正在爆破手机..',
-    '正在捕食二刺螈..',
-    '正在播撒头皮屑..'
-];
+let promotion = null;
 
 export function start() {
     particle.init();
+    promotion=Settings.loadingPromotion;
     layer = new SpriteBatchNode();
     promotionSprite = new TextSprite(500, 200, '加载中..', 50);
     ps = new TextSprite(100, 50, '0%', 30);

@@ -11,6 +11,7 @@ import * as Engine from '../Engine'
 import {TouchItem} from '../Events/TouchItem'
 import {ImageItemProtocol} from '../Resource/ResourceItem'
 import * as Base from '../Base'
+import {Tween} from "../Animation/Tween";
 
 
 export interface SpriteProtocol extends Base.NodeBase {
@@ -46,13 +47,17 @@ export class Sprite extends TouchItem implements SpriteProtocol {
     resourceName;
     resource;
 
-    constructor(imageItem:ImageItemProtocol, x, y, w, h, {sx = 0, sy = 0, sw = 1, sh = 1, frameCount=1, stride=1, zIndex = 0,opacity=1}) {
-        super(x || 0, y || 0, w || 2 * imageItem.width * sw / Engine.render.designResolution[1],
-            h || 2 * imageItem.height * sh / Engine.render.designResolution[1]);
+    constructor(imageItem:ImageItemProtocol, xx, yy, ww, hh, {x=0,y=0,w=null,h=null,sx = 0, sy = 0, sw = 0, sh = 0, frameCount=1, stride=1, zIndex = 0,opacity=1,action=null}) {
+        super(xx || x || 0, yy || y || 0, ww || w || 2 * (sw || imageItem.width) / Engine.render.designResolution[1],
+            hh || h || 2 * (sh || imageItem.height) / Engine.render.designResolution[1]);
         if (imageItem) {
             this.texture = imageItem.texture;
             this.resourceName = imageItem.name;
             this.resource = imageItem;
+            sx = sx / imageItem.width;
+            sy = sy / imageItem.height;
+            sw = sw ? sw / imageItem.width : 1;
+            sh = sh ? sh / imageItem.height : 1
         }
 
 
@@ -60,7 +65,9 @@ export class Sprite extends TouchItem implements SpriteProtocol {
         this.stride = stride || 1;
         this.row = Math.floor(this.frameCount / this.stride);
         [this.sx, this.sy, this.sw, this.sh, this.zIndex, this.opacity] = [sx, sy, sw, sh, zIndex, opacity];
-
+        if (action) {
+            Tween(this).playAction(action)
+        }
     }
 
     update() {
@@ -78,8 +85,8 @@ export class Sprite extends TouchItem implements SpriteProtocol {
         } else {
             var parent = this.parent as Sprite;
             this.rScale = this.scale * parent.rScale;
-            this.rx = this.x*this.parent.rScale + parent.rx;
-            this.ry = this.y*this.parent.rScale + parent.ry;
+            this.rx = this.x * this.parent.rScale + parent.rx;
+            this.ry = this.y * this.parent.rScale + parent.ry;
             this.rw = this.w * parent.rw;
             this.rh = this.h * parent.rh;
             this.rRotation = this.rotation + parent.rRotation;
