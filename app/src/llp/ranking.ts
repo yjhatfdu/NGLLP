@@ -7,7 +7,6 @@ import {Tween} from '../Engine/Animation/Tween'
 import {SpriteBatchNode} from "../Engine/Core2D/SpriteBatchNode";
 import {Easing} from "../Engine/Animation/easing";
 import {Digits} from "../Engine/Components/Digits";
-import {Digits} from "../Engine/Components/Digits";
 
 
 class Stat {
@@ -37,7 +36,7 @@ class Stat {
     }
 }
 
-export let stat:Stat;
+export let stat: Stat;
 
 export const rankTiming = {
     miss: 320,
@@ -71,9 +70,9 @@ const RankSprInfo = {
 
 let perfectSe, greatSe, goodSe;
 let perfectSpr, greatSpr, goodSpr, badSpr, missSpr;
-let currentRankSprite:Sprite;
-let seLayer:SpriteBatchNode;
-let score:Digits, combo:Digits;
+let currentRankSprite: Sprite;
+let seLayer: SpriteBatchNode;
+let score: Digits, combo: Digits;
 export function init(totalNotes) {
     stat = new Stat(totalNotes);
     perfectSe = Engine.resourceCtl.getItem('perfect');
@@ -88,11 +87,11 @@ export function init(totalNotes) {
     seLayer = new SpriteBatchNode();
     seLayer.appendChildren([perfectSpr, greatSpr, goodSpr, badSpr, missSpr]);
     score = new Digits(Engine.resourceCtl.getItem('digits'), 5, 2, 0, RankSprInfo.digits);
-    combo = new Digits(Engine.resourceCtl.getItem('digits'), 5, 2, 0, RankSprInfo.digits);
+    combo = new Digits(Engine.resourceCtl.getItem('digits'), 5, 2, null, RankSprInfo.digits);
     score.y = 0.75;
     score.h = 0.15;
     combo.y = 0.3;
-    combo.h = 0.2;
+    combo.h = 0.23;
     combo.opacity = 0;
     score.opacity = 0;
     seLayer.appendChildren([score, combo]);
@@ -109,7 +108,7 @@ export function hideScore() {
 }
 
 
-function showRanking(spr:Sprite) {
+function showRanking(spr: Sprite) {
     if (currentRankSprite) {
         Tween(currentRankSprite, 'opacity').end();
         currentRankSprite.opacity = 0;
@@ -122,10 +121,10 @@ function showRanking(spr:Sprite) {
     spr.opacity = 1;
     Tween(spr, 'opacity').delay(100).translateTo(0, 500);
     Tween(spr, 'scale').translateTo(0.8, 200).easing(Easing.easeOutElastic);
-    Tween(combo,'scale').end();
-    combo.scale=1;
-    combo.number=stat.currentCombo?stat.currentCombo:null;
-    Tween(combo,'scale').translateTo(1.4,60).translateTo(1,100);
+    Tween(combo, 'scale').end();
+    combo.scale = 1;
+    combo.number = stat.currentCombo ? stat.currentCombo : null;
+    Tween(combo, 'scale').translateTo(1.4, 40).translateTo(1, 100);
 
 }
 
