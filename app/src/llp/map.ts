@@ -47,6 +47,7 @@ export function init(map) {
                 if (theNote.longnote) {
                     theNote.sprite.long = true;
                 }
+                theNote.holdCount=0;
                 currentChannel.push(theNote)
             }
             while (true) {
@@ -143,7 +144,7 @@ function onTouch(e) {
     let r = Math.sqrt(x * x + (centerY - y) * (centerY - y));
     let alpha = Math.acos(-x / r);
     let channel = Math.round(alpha / Math.PI * 8);
-    touchChannel(channel)
+    touchChannel(channel);
 }
 function onTouchEnd(e) {
     if (!running) {
@@ -156,7 +157,7 @@ function onTouchEnd(e) {
     let r = Math.sqrt(x * x + (centerY - y) * (centerY - y));
     let alpha = Math.acos(-x / r);
     let channel = Math.round(alpha / Math.PI * 8);
-    releaseChannel(channel)
+    releaseChannel(channel);
 }
 
 function touchChannel(ch){
@@ -166,6 +167,7 @@ function touchChannel(ch){
         return
     }
     if(note.hold){
+        note.holdCount++;
         return
     }
     let currentTime=Engine.audioCtl.getBgmTime()*1000;
@@ -179,6 +181,7 @@ function touchChannel(ch){
         note.sprite.parallel=false;
         Tween(note.sprite.longNoteSpr).playAction(Settings.longNotePressAction);
         note.hold=true;
+        note.holdCount++;
     }else{
         currentNotes[ch].shift().sprite.destroy();
     }
@@ -192,8 +195,13 @@ function releaseChannel(ch){
     let currentTime=Engine.audioCtl.getBgmTime()*1000;
     let offset=currentTime-note.endtime;
     if(note.longnote&&note.hold){
-        rank(offset,ch);
-        currentNotes[ch].shift().sprite.destroy().clearLongNoteAnimation()
+        if(note.holdCount==1){
+            rank(offset,ch);
+            currentNotes[ch].shift().sprite.destroy().clearLongNoteAnimation()
+        }else{
+            note.holdCount--;
+        }
+
     }
 }
 
