@@ -10,6 +10,7 @@ import {Digits} from "../Engine/Components/Digits";
 import {Settings} from "./settings"
 import * as rankingFX from './rankingFx'
 
+
 class Stat {
     public perfect = 0;
     public great = 0;
@@ -54,7 +55,7 @@ class Stat {
     }
 }
 
-export let stat:Stat;
+export let stat: Stat;
 
 export const rankTiming = {
     miss: 320,
@@ -67,9 +68,9 @@ export const rankTiming = {
 
 let perfectSe, greatSe, goodSe;
 let perfectSpr, greatSpr, goodSpr, badSpr, missSpr;
-let currentRankSprite:Sprite;
-let seLayer:SpriteBatchNode;
-let score:Digits, combo:Digits;
+let currentRankSprite: Sprite;
+let seLayer: SpriteBatchNode;
+let score: Digits, combo: Digits;
 export function init(totalNotes) {
     rankingFX.init();
     stat = new Stat(totalNotes);
@@ -107,7 +108,7 @@ export function hideScore() {
 }
 
 
-function showRanking(spr:Sprite) {
+function showRanking(spr: Sprite) {
     if (currentRankSprite) {
         Tween(currentRankSprite).endAll();
         currentRankSprite.opacity = 0;
