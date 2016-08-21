@@ -4,6 +4,7 @@
 import * as Request from '../Engine/Network/Request'
 const uploadPath = '/upload/';
 const resourcePath = '/llplayer/assets/';
+import {sign} from './sign'
 
 function getId(id) {
     if (id) {
@@ -16,7 +17,12 @@ function getId(id) {
 export function load(id) {
 
     return getId(id)
-        .then(id=>Request.GET('/API/getlive?live_id=' + id))
+        .then(id=> {
+            let url = `/API/getlive?live_id=${id}`;
+            let sig;
+            [url, sig] = sign(url);
+            return Request.GET(url, {headers: {"X-sign": sig}, params: {}})
+        })
         .then(resp=> {
             return {
                 bgimg: uploadPath + resp['content']['bgimg_path'],
