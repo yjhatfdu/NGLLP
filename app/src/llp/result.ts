@@ -57,8 +57,8 @@ export function showResult(){
     let resultLayer=new SpriteBatchNode();
     resultLayer.appendChildren([perfect,great,good,bad,miss]);
     Engine.render.appendChild(resultLayer);
-    Tween(Ranking.score,'number').translateTo(finalScore,1000);
     Tween(Ranking.score).playAction(Settings.resultScoreAction);
+    Tween(Ranking.score,'number').translateTo(finalScore,1000);
     Tween(perfect).playAction(Settings.resultRankCountActions.perfect);
     Tween(great).playAction(Settings.resultRankCountActions.great);
     Tween(good).playAction(Settings.resultRankCountActions.good);

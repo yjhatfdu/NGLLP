@@ -12,7 +12,8 @@ let channels = [];
 let speed = 160;
 let initialized = false;
 let currentNotes;
-
+let touchState=[];
+let releaseState=[];
 const centerY = 0.501466;
 const channelLength = 1.246334;
 
@@ -21,6 +22,9 @@ export function init(map) {
     speed = parseInt(localStorage.getItem('userSpeed') || '0') || map['speed'];
     channels = map['lane'];
     currentNotes = channels.map(x=>[]);
+    for (let i=0;i<channels.length;i++){
+        releaseState[i]=touchState[i]=0
+    }
     ranking.init(channels.reduce((c,x)=>c+x.reduce((cc,xx)=>cc+(xx['longnote']?2:1),0),0));
     initialized = true;
     Engine.touchCtl.addEventListener('touchstart', onTouch);
@@ -48,7 +52,8 @@ export function init(map) {
                     theNote.sprite.long = true;
                 }
                 theNote.holdCount=0;
-                currentChannel.push(theNote)
+                currentChannel.push(theNote);
+                touchState[i]=0;
             }
             while (true) {
                 if (currentChannel.length == 0) {
@@ -161,7 +166,10 @@ function onTouchEnd(e) {
 }
 
 function touchChannel(ch){
-
+    touchState[ch]++;
+    if(touchState[ch]>1){
+        return
+    }
     let note=currentNotes[ch][0];
     if (!note){
         return
@@ -188,6 +196,12 @@ function touchChannel(ch){
 }
 
 function releaseChannel(ch){
+    touchState[ch]--;
+    touchState[ch]=Math.max(0,touchState[ch]);
+    if(touchState[ch]>=1){
+        return
+    }
+
     let note=currentNotes[ch][0];
     if (!note){
         return

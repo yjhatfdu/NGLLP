@@ -13,12 +13,15 @@ export class AudioCtl extends Base.EventBase {
     currentTime = 0;
     startTime = 0;
     bgmSource;
-    useDate = true;
+    useDate = false;
 
     constructor() {
         super();
         this.ctx = new (window['AudioContext'] || window['webkitAudioContext'])();
-        Engine.eventBus.addEventListener('beforeupdate',this.update.bind(this))
+        Engine.eventBus.addEventListener('beforeupdate',this.update.bind(this));
+        if(/android/i.test(navigator.userAgent)){
+            this.useDate=true
+        }
     }
 
     startSession() {

@@ -34,10 +34,11 @@ class Stat {
     }
 
     breakCombo() {
-        this.currentCombo = 0
+        this.currentCombo = 0;
+        debugger
     }
     getFinalResult(){
-        return Math.min(1000000,Math.round(this.score+this.maxCombo/this.totalNotes*100000))
+        return Math.min(1000000,Math.round(this.score+Math.min(this.maxCombo/this.totalNotes*100000*2,100000)))
     }
     getOffsetStat(){
         let sum=0;
