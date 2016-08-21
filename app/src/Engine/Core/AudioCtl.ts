@@ -94,7 +94,7 @@ export class AudioCtl extends Base.EventBase {
 
     update() {
         if (this.isPlaying) {
-            if (this.getBgmTime() > 5) {
+            if (this.getBgmTime() > (this.duration+1)) {
                 this.pause();
                 Engine.eventBus.dispatchEvent("bgmEnd");
 
