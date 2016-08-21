@@ -94,10 +94,10 @@ export class AudioCtl extends Base.EventBase {
 
     update() {
         if (this.isPlaying) {
-            if (this.getBgmTime() > this.duration) {
+            if (this.getBgmTime() > 5) {
                 this.pause();
-                Engine.eventBus.dispatchEvent("BgmEnd");
-                console.log('end')
+                Engine.eventBus.dispatchEvent("bgmEnd");
+
             }
         }
     }

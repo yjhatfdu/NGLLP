@@ -128,7 +128,7 @@ export class ParticleMaterial extends Material {
             vec4 out_color=texture2D(particleTexture,vUvCoord);
         #endif
         #if (SIMPLE_PARTICLE==0)
-            float fopacity=1.0-2.0*distance(uv,vec2(0.5,0.5));
+            float fopacity=max(0.0,1.0-2.0*distance(uv,vec2(0.5,0.5)));
             //float fopacity=1.0-step(0.5,distance(uv,vec2(0.5,0.5)));
             gl_FragColor=vec4(out_color.xyz,fopacity*opacity*out_color[3]*fopacity*alpha);
         #else
@@ -195,7 +195,7 @@ export class ParticleMaterial extends Material {
             PARTICLE_TYPE: this.particleType,
             SIMPLE_PARTICLE: this._simpleParticle ? 1 : 0,
             USE_TEXTURE: this._useTexture,
-            P: Engine.render.pointScale.toPrecision(5)
+            P: Engine.render.p.toPrecision(5)
         });
         this.needUpdate = false;
     }

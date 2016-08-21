@@ -1,9 +1,6 @@
 /**
  * Created by yjh on 15/12/21.
  */
-///<reference path='../Material/SpriteMaterial.ts'/>
-///<reference path='../Core/Object3D.ts'/>
-///<reference path='Sprite.ts'/>
 import {Object3D} from '../Core/Object3D'
 import {Sprite, SpriteProtocol} from './Sprite'
 import {CreateSpriteMaterial} from '../Material/SpriteMaterial'
@@ -81,9 +78,6 @@ export class SpriteBatchNode extends Object3D {
 
     private updateChildren() {
         this.needUpdate = false;
-        this.children.sort(function (x: Sprite, y: Sprite) {
-            return x.zIndex - y.zIndex
-        });
         var count = this.getChildrenCount();
         if (count < this.size * 0.5) {
             this.size = Math.max(Math.pow(2, Math.ceil(Math.log(count) / Math.log(2))), 16);

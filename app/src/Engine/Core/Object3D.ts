@@ -19,8 +19,14 @@ export class Object3D extends Base.NodeBase {
     material;
     parent:Object3D;
     enablePerspective = true;
+    zIndex=0;
+    needUpdate=false;
 
     update() {
+        if(this.needUpdate){
+            this.children.sort((x,y)=>x.zIndex-y.zIndex);
+            this.needUpdate=false
+        }
         if (!this.isRoot) {
             if (this.enablePerspective) {
                 mat4.identity(this.modelMat);
@@ -54,6 +60,11 @@ export class Object3D extends Base.NodeBase {
             //this.material.active();
         }
         super.update()
+    }
+
+    appendChild(item){
+        super.appendChild(item);
+        this.needUpdate=true;
     }
 
     set posX(v) {

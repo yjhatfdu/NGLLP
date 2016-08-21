@@ -67,10 +67,10 @@ export const rankTiming = {
 
 
 let perfectSe, greatSe, goodSe;
-let perfectSpr, greatSpr, goodSpr, badSpr, missSpr;
+export let perfectSpr, greatSpr, goodSpr, badSpr, missSpr;
 let currentRankSprite: Sprite;
 let seLayer: SpriteBatchNode;
-let score: Digits, combo: Digits;
+export let score: Digits, combo: Digits;
 export function init(totalNotes) {
     rankingFX.init();
     stat = new Stat(totalNotes);
@@ -164,8 +164,8 @@ export function rank(offset, ch?) {
         showRanking(missSpr);
         stat.count--
     }
-    stat.offsetData[stat.count]=
+    stat.offsetData[stat.count]=offset;
     stat.count++;
-    Tween(score, 'number').end(offset);
+    Tween(score, 'number').end();
     Tween(score, 'number').translateTo(stat.score, 300);
 }
