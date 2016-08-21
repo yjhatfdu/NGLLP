@@ -2,7 +2,7 @@
  * Created by yjh on 16/8/19.
  */
 export let Settings = {
-    "settingVersion":1,
+    "settingVersion": 1,
     "loadingPromotion": [
         "加载中..",
         "正在同步神经接口..",
@@ -34,7 +34,7 @@ export let Settings = {
         "size": 6,
         "simpleParticle": false,
         "emitterType": 3,
-        "pointScale": 10,
+        "pointScale": 5,
         "emitSpeed": 1,
         "fade": 5,
         "enabled": true,
@@ -74,16 +74,16 @@ export let Settings = {
             "sh": 200,
             "sx": 600,
             "sy": 200,
-            "row":2,
-            "stride":5
+            "row": 2,
+            "stride": 5
         },
         "scoreDigits": {
             "sw": 250,
             "sh": 200,
             "sx": 600,
             "sy": 200,
-            "row":2,
-            "stride":5
+            "row": 2,
+            "stride": 5
         },
     },
 
@@ -127,30 +127,123 @@ export let Settings = {
     },
     "backgroundSprites": [],
 
-    "rankParticleSystem":{
+    "rankParticleSystem": {
         "sw": 128,
         "sh": 128,
         "sx": 600,
         "sy": 400,
-        "stride":2,
-        "row":2,
-        "size":35,
-        "speed":3,
-        "scale":0.1,
-        "randomize":1,
-        "fade":2
+        "stride": 2,
+        "row": 2,
+        "size": 35,
+        "speed": 3,
+        "scale": 0.1,
+        "randomize": 1,
+        "fade": 2
     },
-    "rankParticleColor":{
-        perfect:[1.0,1.0,0.76,1.0],
-        great:[0.7,0.7,1.0,1.0],
-        good:[0.8,0.6,0.6,1.0],
-        bad:[0.6,0.6,0.6,1.0]
+    "rankParticleColor": {
+        perfect: [1.0, 1.0, 0.76, 1.0],
+        great: [0.7, 0.7, 1.0, 1.0],
+        good: [0.8, 0.6, 0.6, 1.0],
+        bad: [0.6, 0.6, 0.6, 1.0]
     },
-    "rankParticleAction":{
-        "progress":[
-            {"type":"set","value":0.4,"time":300},
-            {"type":"translateTo","value":1,"time":300}
+    "rankParticleAction": {
+        "progress": [
+            {"type": "set", "value": 0.4, "time": 300},
+            {"type": "translateTo", "value": 1, "time": 300}
         ]
-    }
+    },
+    "resultScoreAction": {
+        "scale": [
+            {"type": "translateTo", "value": 2, "time": 300}
+        ]
+    },
+    "resultRankCountActions": {
+        "great": {
+            "scale": [
+                {"type": "set", "value": 0.6}
+            ],
+            "y": [
+                {"type": "set", "value": 0.3}
+            ],
+            "x": [
+                {"type": "set", "value": 2},
+                {"type": "delay", "time": 200},
+                {"type": "translateTo", "value": -0.6, "time": 400, "easing": "easeOutQuad"},
+            ], "w": [
+                {"type": "set", "value": 1},
+                {"type": "delay", "time": 6000},
+                {"type": "translateTo", "value": -1, "time": 300},
+                {"type": "translateTo", "value": 1, "time": 300},
+                {"type": "loop", "times": null}
+            ]
+        },
+        "perfect": {
+            "scale": [
+                {"type": "set", "value": 0.6},
+                {"type": "delay", "time": 5000},
+                {"type": "translateTo", "value": 0.8, "time": 70},
+                {"type": "translateTo", "value": 0.6, "time": 200},
+                {"type": "loop", "times": null}
+            ],
+            "y": [
+                {"type": "set", "value": 0.3}
+            ],
+            "x": [
+                {"type": "set", "value": 2},
+                {"type": "translateTo", "value": 0, "time": 400, "easing": "easeOutQuad"},
+            ]
+        },
+        "good": {
+            "scale": [
+                {"type": "set", "value": 0.6},
+            ],
+            "y": [
+                {"type": "set", "value": 0.3}
+            ],
+            "x": [
+                {"type": "set", "value": 2},
+                {"type": "delay", "time": 400},
+                {"type": "translateTo", "value": 0.6, "time": 400, "easing": "easeOutQuad"},
+            ],
+            "rotation": [
+                {"type": "delay", "time": 8000},
+                {"type": "translate", "value": 18.849556, "time": 500, "easing": "easeOutQuad"},
+                {"type": "loop", "times": null}
+            ]
+        },
+        "bad": {
+            "scale": [
+                {"type": "set", "value": 0.6}
+            ],
+            "y": [
+                {"type": "set", "value": -0.1}
+            ],
+            "x": [
+                {"type": "set", "value": 2},
+                {"type": "delay", "time": 600},
+                {"type": "translateTo", "value": -0.4, "time": 400, "easing": "easeOutQuad"},
+            ]
 
+        },
+        "miss": {
+            "scale": [
+                {"type": "set", "value": 0.6}
+            ],
+            "y": [
+                {"type": "set", "value": -0.1}
+            ],
+            "x": [
+                {"type": "set", "value": 2},
+                {"type": "delay", "time": 800},
+                {"type": "translateTo", "value": 0.4, "time": 400, "easing": "easeOutQuad"},
+            ]
+        },
+        "technical": {
+            "opacity": [
+                {"type": "set", "value": 0.0},
+                {"type": "delay", "time": 1000},
+                {"type": "translateTo", "value": 1, "time": 300},
+            ]
+        }
+    }
 };

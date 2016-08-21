@@ -1,8 +1,6 @@
 /**
  * Created by yjh on 15/12/25.
  */
-///<reference path='../Core/Material.ts'/>
-///<reference path='../Core/GlProgram.ts'/>
 import {Material} from '../Core/Material'
 export var CreateSpriteMaterial = function () {
     let spriteMaterial = new Material();

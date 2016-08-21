@@ -10,12 +10,13 @@ import * as loading from './loading'
 import {Tween} from '../Engine/Animation/Tween'
 import {Easing} from '../Engine/Animation/easing'
 import {TextSprite} from "../Engine/Core2D/TextSprite";
-
+import * as Result from "./result"
 import * as GameMap from  './map'
 import * as Ranking from './ranking'
 
 
 export let uiLayer:SpriteBatchNode;
+export let bgLayer:SpriteBatchNode;
 Engine.setEngine(document.body,[1024,682]);
 
 
@@ -43,7 +44,7 @@ load(live_id)
     })
     .then(()=>loading.stop())
     .then(()=> {
-        let bgLayer = new SpriteBatchNode();
+        bgLayer = new SpriteBatchNode();
         uiLayer = new SpriteBatchNode(64);
         let perfect = Engine.resourceCtl.getItem('perfect');
 
@@ -83,4 +84,5 @@ load(live_id)
             });
             Tween(bgObject, 'opacity').translateTo(1, 1000);
         });
+        Engine.eventBus.addEventListener('bgmEnd',()=>Result.showResult())
     });

@@ -12,6 +12,7 @@ export function init(){
         let ps=new SimpleParticleSystem(Engine.resourceCtl.getItem('uiAssets'),Settings.rankParticleSystem);
         ps.x=-Math.cos(Math.PI*(i/8))*1.246334;
         ps.y=0.501466-Math.sin(Math.PI*(i/8))*1.246334;
+        ps.zIndex=100;
         rankFXes.push(ps);
         Engine.render.appendChild(ps)
     }

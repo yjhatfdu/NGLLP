@@ -239,6 +239,7 @@ class TweenItem {
 
     set(value) {
         this.addTweenAction( new TweenAction.TranslateTo(value, 0));
+        return this
     }
 
     resetAfterFinished(flag = true) {
