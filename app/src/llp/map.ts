@@ -120,6 +120,8 @@ export function init(map) {
                         tailSpr.x = tailX;
                         tailSpr.y = tailY;
                         tailSpr.w = tailSpr.h = noteWidth * tailPercentage
+                    }else{
+                        currentSpr.tail=false;
                     }
                 }
             }

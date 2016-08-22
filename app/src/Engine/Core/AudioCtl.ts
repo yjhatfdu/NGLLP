@@ -18,9 +18,9 @@ export class AudioCtl extends Base.EventBase {
     constructor() {
         super();
         this.ctx = new (window['AudioContext'] || window['webkitAudioContext'])();
-        Engine.eventBus.addEventListener('beforeupdate',this.update.bind(this));
-        if(/android/i.test(navigator.userAgent)){
-            this.useDate=true
+        Engine.eventBus.addEventListener('beforeupdate', this.update.bind(this));
+        if (/android/i.test(navigator.userAgent)) {
+            this.useDate = true
         }
     }
 
@@ -63,7 +63,7 @@ export class AudioCtl extends Base.EventBase {
                 this.isPlaying = true;
             }
         }
-        this.startTime = this.getTime()- this.currentTime + delay;
+        this.startTime = this.getTime() - this.currentTime + delay;
         this.isPlaying = true;
         if (delay == 0) {
             this.playNow()
@@ -80,7 +80,11 @@ export class AudioCtl extends Base.EventBase {
         if (!this.isPlaying) {
             return
         }
-        this.bgmSource.stop();
+        try {
+            this.bgmSource.stop();
+        } catch (e) {
+
+        }
         this.currentTime = this.getTime() - this.startTime;
         this.isPlaying = false;
 
@@ -97,7 +101,7 @@ export class AudioCtl extends Base.EventBase {
 
     update() {
         if (this.isPlaying) {
-            if (this.getBgmTime() > (this.duration+1)) {
+            if (this.getBgmTime() > (this.duration + 1)) {
                 this.pause();
                 Engine.eventBus.dispatchEvent("bgmEnd");
 

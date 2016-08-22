@@ -71,6 +71,8 @@ export class Render extends Object3D {
     }
 
     resize() {
+        this.canvas.style.width = this.container.offsetWidth+'px';
+        this.canvas.style.height = this.container.offsetHeight+'px';
         this.canvas.width = (this.width = this.canvas.offsetWidth) * this.p;
         this.canvas.height = (this.height = this.canvas.offsetHeight) * this.p;
         this.aspect = this.height / this.width;

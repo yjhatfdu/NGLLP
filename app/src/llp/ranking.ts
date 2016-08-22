@@ -35,43 +35,45 @@ class Stat {
 
     breakCombo() {
         this.currentCombo = 0;
-        debugger
     }
-    getFinalResult(){
-        return Math.min(1000000,Math.round(this.score+Math.min(this.maxCombo/this.totalNotes*100000*2,100000)))
+
+    getFinalResult() {
+        return Math.min(1000000, Math.round(this.score + Math.min(this.maxCombo / this.totalNotes * 100000 * 2, 100000)))
     }
-    getOffsetStat(){
-        let sum=0;
-        for(let i=0;i<this.count;i++){
-            sum+=this.offsetData[i]
+
+    getLatencyStat() {
+        let sum = 0;
+        for (let i = 0; i < this.count; i++) {
+            sum += this.offsetData[i]
         }
-        return sum/this.count
+        return sum / this.count
     }
-    getLatencyStat(){
-        let sum=0;
-        for(let i=0;i<this.count;i++){
-            sum+=Math.abs(this.offsetData[i])
+
+    getOffsetStat() {
+        let sum = 0;
+        for (let i = 0; i < this.count; i++) {
+            sum += Math.abs(this.offsetData[i])
         }
-        return sum/this.count
+        return sum / this.count
     }
 }
 
-export let stat: Stat;
+export let stat:Stat;
 
 export const rankTiming = {
-    miss: 320,
-    bad: 240,
-    good: 160,
-    great: 80,
-    perfect: 40
+    miss: 200,
+    bad: 160,
+    good: 115.2,
+    great: 72,
+    perfect: 34.5
 };
 
 
 let perfectSe, greatSe, goodSe;
 export let perfectSpr, greatSpr, goodSpr, badSpr, missSpr;
-let currentRankSprite: Sprite;
-let seLayer: SpriteBatchNode;
-export let score: Digits, combo: Digits;
+let currentRankSprite:Sprite;
+let seLayer:SpriteBatchNode;
+export let score:Digits, combo:Digits;
 export function init(totalNotes) {
     rankingFX.init();
     stat = new Stat(totalNotes);
@@ -109,7 +111,7 @@ export function hideScore() {
 }
 
 
-function showRanking(spr: Sprite) {
+function showRanking(spr:Sprite) {
     if (currentRankSprite) {
         Tween(currentRankSprite).endAll();
         currentRankSprite.opacity = 0;
@@ -138,34 +140,34 @@ export function rank(offset, ch?) {
         stat.combo();
         stat.score += stat.scorePerNote;
         showRanking(perfectSpr);
-        rankingFX.playFX(ch,'perfect')
+        rankingFX.playFX(ch, 'perfect')
     } else if (offsetTime <= rankTiming.great) {
         Engine.audioCtl.playAudioItem(greatSe);
         stat.great++;
         stat.combo();
         stat.score += stat.scorePerNote * 0.8;
         showRanking(greatSpr);
-        rankingFX.playFX(ch,'great')
+        rankingFX.playFX(ch, 'great')
     } else if (offsetTime <= rankTiming.good) {
         Engine.audioCtl.playAudioItem(goodSe);
         stat.good++;
         stat.breakCombo();
         stat.score += stat.scorePerNote * 0.5;
         showRanking(goodSpr);
-        rankingFX.playFX(ch,'good')
+        rankingFX.playFX(ch, 'good')
     } else if (offsetTime <= rankTiming.bad) {
         stat.bad++;
         stat.breakCombo();
         stat.score += stat.scorePerNote * 0.3;
         showRanking(badSpr);
-        rankingFX.playFX(ch,'bad')
+        rankingFX.playFX(ch, 'bad')
     } else {
         stat.miss++;
         stat.breakCombo();
         showRanking(missSpr);
         stat.count--
     }
-    stat.offsetData[stat.count]=offset;
+    stat.offsetData[stat.count] = offset;
     stat.count++;
     Tween(score, 'number').end();
     Tween(score, 'number').translateTo(stat.score, 300);
