@@ -62,7 +62,7 @@ export class Render extends Object3D {
         }
         this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
         this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
-        var hf = this.gl.getExtension('OES_texture_half_float');
+        let hf = this.gl.getExtension('OES_texture_half_float');
         if(hf){
             this.gl['HALF_FLOAT'] = hf.HALF_FLOAT_OES;
         }

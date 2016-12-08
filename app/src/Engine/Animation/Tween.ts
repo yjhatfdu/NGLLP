@@ -336,7 +336,7 @@ class _TweenCtl {
                         lastAction = action;
                     }
                 }
-                if (oneAct['easing']) {
+                if (oneAct['easing']&&oneAct['easing']!='none') {
                     action.easing(Easing[oneAct['easing']])
                 }
             }

@@ -18,6 +18,7 @@ export class TouchItem extends Base.NodeBase {
     rh;
     listenerCount = {};
     zIndex = 0;
+    rayCastColor=0;
     protected hit = false;
 
     constructor(x, y, w, h) {

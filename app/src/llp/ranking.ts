@@ -58,7 +58,7 @@ class Stat {
     }
 }
 
-export let stat:Stat;
+export let stat: Stat;
 
 export const rankTiming = {
     miss: 200,
@@ -71,9 +71,9 @@ export const rankTiming = {
 
 let perfectSe, greatSe, goodSe;
 export let perfectSpr, greatSpr, goodSpr, badSpr, missSpr;
-let currentRankSprite:Sprite;
-let seLayer:SpriteBatchNode;
-export let score:Digits, combo:Digits;
+let currentRankSprite: Sprite;
+let seLayer: SpriteBatchNode;
+export let score: Digits, combo: Digits;
 export function init(totalNotes) {
     rankingFX.init();
     stat = new Stat(totalNotes);
@@ -90,8 +90,9 @@ export function init(totalNotes) {
     seLayer.appendChildren([perfectSpr, greatSpr, goodSpr, badSpr, missSpr]);
     score = new Digits(Engine.resourceCtl.getItem('uiAssets'), 5, 2, null, Settings.sprites.scoreDigits);
     combo = new Digits(Engine.resourceCtl.getItem('uiAssets'), 5, 2, null, Settings.sprites.comboDigits);
-    score.y = 0.75;
-    score.h = 0.15;
+    score.y = Settings.scoreInitialState.y;
+    score.h = Settings.scoreInitialState.h;
+    score.x = Settings.scoreInitialState.x;
     combo.y = Settings.comboInitialState.y;
     combo.x = Settings.comboInitialState.x;
     combo.h = Settings.comboInitialState.h;
@@ -111,7 +112,7 @@ export function hideScore() {
 }
 
 
-function showRanking(spr:Sprite) {
+function showRanking(spr: Sprite) {
     if (currentRankSprite) {
         Tween(currentRankSprite).endAll();
         currentRankSprite.opacity = 0;
@@ -130,6 +131,7 @@ function showRanking(spr:Sprite) {
 export function rank(offset, ch?) {
     if (offset == null) {
         showRanking(missSpr);
+        stat.miss++;
         stat.breakCombo();
         return
     }

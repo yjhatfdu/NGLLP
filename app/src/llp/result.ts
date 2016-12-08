@@ -8,7 +8,8 @@ import {Settings} from './settings'
 import * as Engine from '../Engine/Engine'
 import {Sprite} from '../Engine/Core2D/Sprite'
 import {SpriteBatchNode} from "../Engine/Core2D/SpriteBatchNode";
-import {bgLayer} from './game'
+import {bgLayer,title} from './game'
+
 
 export function showResult(){
     Ranking.combo.opacity=0;
@@ -77,4 +78,8 @@ export function showResult(){
     Tween(touchToRestart,'opacity').set(0).delay(1500).translateTo(1,500).then(()=>{
         Engine.touchCtl.addEventListener('touchend',()=>location.reload());
     });
+    let titleSpr=new TextSprite(500,50,title,20);
+    titleSpr.x=-0.8;
+    titleSpr.y=0.7;
+    resultLayer.appendChild(titleSpr)
 }

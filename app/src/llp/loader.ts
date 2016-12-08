@@ -5,6 +5,7 @@ import * as Request from '../Engine/Network/Request'
 const uploadPath = '/upload/';
 const resourcePath = '/llplayer/assets/';
 import {sign} from './sign'
+export let liveinfo;
 
 function getId(id) {
     if (id) {
@@ -24,16 +25,18 @@ export function load(id) {
             return Request.GET(url, {headers: {"X-sign": sig}, params: {}})
         })
         .then(resp=> {
-            return {
+            Request.GET('/API/startplay?live_id=' + resp['content']['live_id']);
+            liveinfo = {
                 bgimg: uploadPath + resp['content']['bgimg_path'],
                 bgm: uploadPath + resp['content']['bgm_path'],
                 map: uploadPath + resp['content']['map_path'],
                 perfect: resourcePath + 'fx/perfect.mp3',
                 great: resourcePath + 'fx/great.mp3',
                 good: resourcePath + 'fx/good.mp3',
-                uiAssets: 'assets/uiAssets.png',
+                uiAssets: resp['content']['assets_path']?uploadPath + resp['content']['assets_path'] : 'assets/uiAssets.png',
                 title: resp['content']['live_name'],
-                coverImg: uploadPath + resp['content']['cover_path']
+                coverImg: uploadPath + resp['content']['cover_path'],
+                customize: resp['content']['customize_path']? uploadPath + resp['content']['customize_path']:null
             }
         })
 }

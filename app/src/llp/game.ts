@@ -5,7 +5,7 @@ import * as Engine from '../Engine/Engine'
 
 import {SpriteBatchNode} from '../Engine/Core2D/SpriteBatchNode'
 import {Sprite} from '../Engine/Core2D/Sprite'
-import {load} from './loader'
+import {load,liveinfo} from './loader'
 import * as loading from './loading'
 import {Tween} from '../Engine/Animation/Tween'
 import {Easing} from '../Engine/Animation/easing'
@@ -13,14 +13,16 @@ import {TextSprite} from "../Engine/Core2D/TextSprite";
 import * as Result from "./result"
 import * as GameMap from  './map'
 import * as Ranking from './ranking'
+import {renderPrecision,loadSettings} from './settings'
 
 
-export let uiLayer:SpriteBatchNode;
-export let bgLayer:SpriteBatchNode;
-Engine.setEngine(document.body,[1024,682]);
+export let uiLayer: SpriteBatchNode;
+export let bgLayer: SpriteBatchNode;
+export let title;
+Engine.setEngine(document.body, [1024, 682], window.devicePixelRatio * renderPrecision);
 
 
-loading.start();
+
 
 let live_id;
 try {
@@ -29,14 +31,23 @@ try {
     live_id = null;
 }
 load(live_id)
-    .then(liveinfo=> {
+    .then(_=>{
+        if(liveinfo.customize){
+            return loadSettings(liveinfo.customize)
+        }else{
+            return null
+        }
+    })
+    .then(_=> {
+        loading.start();
         document.title = liveinfo.title;
+        title = liveinfo.title;
         return Engine.resourceCtl.loadResources([
             {'name': 'bg', 'url': liveinfo.bgimg, standAloneTexture: true},
             {'name': 'perfect', 'url': liveinfo.perfect},
             {'name': 'great', 'url': liveinfo.great},
             {'name': 'good', 'url': liveinfo.good},
-            {'name': 'uiAssets', 'url': liveinfo.uiAssets,standAloneTexture: true},
+            {'name': 'uiAssets', 'url': liveinfo.uiAssets, standAloneTexture: true},
             {'name': 'bgm', 'url': liveinfo.bgm},
             {'name': 'map', 'url': liveinfo.map},
             {'name': 'coverImg', 'url': liveinfo.coverImg, standAloneTexture: true},
@@ -84,5 +95,5 @@ load(live_id)
             });
             Tween(bgObject, 'opacity').translateTo(1, 1000);
         });
-        Engine.eventBus.addEventListener('bgmEnd',()=>Result.showResult())
+        Engine.eventBus.addEventListener('bgmEnd', ()=>Result.showResult())
     });

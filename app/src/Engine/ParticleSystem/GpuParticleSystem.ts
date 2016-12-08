@@ -27,19 +27,19 @@ export class GpuParticleSystem extends Object3D {
 
     enabled = true;
     support = false;
-    gl:WebGLRenderingContext;
+    gl: WebGLRenderingContext;
     private maxCountSqrt;
     private maxCount;
     private totalTime;
 
-    private positionMaterial:PositionMaterial;
-    private positionFB:FrameBuffer;
-    private positionBufferedFB:FrameBuffer;
-    private velocityMaterial:VelocityMaterial;
-    private velocityFB:FrameBuffer;
-    private velocityBufferedFB:FrameBuffer;
+    private positionMaterial: PositionMaterial;
+    private positionFB: FrameBuffer;
+    private positionBufferedFB: FrameBuffer;
+    private velocityMaterial: VelocityMaterial;
+    private velocityFB: FrameBuffer;
+    private velocityBufferedFB: FrameBuffer;
 
-    private particleMaterial:ParticleMaterial;
+    private particleMaterial: ParticleMaterial;
     emitColor = [1, 1, 1, 1];
 
     particleType = 0;
@@ -71,7 +71,7 @@ export class GpuParticleSystem extends Object3D {
     opacity = 1;
     color;
 
-    constructor(maxParticlePerSec, {emitSpeed=1, size=10, life=10,lifeVary = 0.1, sizeVary = 0.1, sizeLevel:number = 8, particleType = ParticleType.point, useTexture = false, emitterType = EmitterType.point, useWind = false, gravity = [0, -1, 0], speedVary = 10,simpleParticle=false,feather=0,resistance=0,pointScale=1,fade=1,enabled=true,color=[1,1,1]}) {
+    constructor(maxParticlePerSec, {emitSpeed = 1, size = 10, life = 10, lifeVary = 0.1, sizeVary = 0.1, sizeLevel:number = 8, particleType = ParticleType.point, useTexture = false, emitterType = EmitterType.point, useWind = false, gravity = [0, -1, 0], speedVary = 10, simpleParticle = false, feather = 0, resistance = 0, pointScale = 1, fade = 1, enabled = true, color = [1, 1, 1]}) {
         super();
         this.enabled = enabled;
         if (!enabled) {
@@ -102,16 +102,16 @@ export class GpuParticleSystem extends Object3D {
         this.fade = fade;
         this.init();
         this.resistance = resistance;
-        this.color=color;
+        this.color = color;
     }
 
     init() {
 
         this.gl.activeTexture(this.gl.TEXTURE0);
-        this.positionFB = new FrameBuffer(this.maxCountSqrt, 'HALF_FLOAT');
-        this.positionBufferedFB = new FrameBuffer(this.maxCountSqrt, 'HALF_FLOAT');
-        this.velocityFB = new FrameBuffer(this.maxCountSqrt, 'HALF_FLOAT');
-        this.velocityBufferedFB = new FrameBuffer(this.maxCountSqrt, 'HALF_FLOAT');
+        this.positionFB = new FrameBuffer(this.maxCountSqrt, this.maxCountSqrt, 'HALF_FLOAT');
+        this.positionBufferedFB = new FrameBuffer(this.maxCountSqrt, this.maxCountSqrt, 'HALF_FLOAT');
+        this.velocityFB = new FrameBuffer(this.maxCountSqrt, this.maxCountSqrt, 'HALF_FLOAT');
+        this.velocityBufferedFB = new FrameBuffer(this.maxCountSqrt, this.maxCountSqrt, 'HALF_FLOAT');
         Engine.render.currentGlTexture[0] = null;
         let staticInfo = new Float32Array(this.maxCount * 4);
         let size = this.particleProperty.size * Engine.render.p;
@@ -149,8 +149,7 @@ export class GpuParticleSystem extends Object3D {
         let mul;
         let iboarray;
         switch (this.particleType) {
-            case 0:
-            {
+            case 0: {
                 mul = 2;
                 iboarray = new Uint16Array(this.maxCount);
                 for (var i = 0; i < this.maxCount; i++) {
@@ -158,8 +157,7 @@ export class GpuParticleSystem extends Object3D {
                 }
                 break
             }
-            case 1:
-            {
+            case 1: {
                 mul = 8;
                 //暂未实现rectangle sprite
             }
@@ -225,7 +223,7 @@ export class GpuParticleSystem extends Object3D {
         this.particleMaterial.pointScale = this.pointScale;
         this.particleMaterial.fade = this.fade;
         this.particleMaterial.alpha = this.opacity;
-        this.particleMaterial.color=this.color;
+        this.particleMaterial.color = this.color;
         this.particleMaterial.active();
         this.gl.drawElements(this.gl.POINTS, this.maxCount, this.gl.UNSIGNED_SHORT, 0);
     }

@@ -46,7 +46,7 @@ export class Sprite extends TouchItem implements SpriteProtocol {
     actions = {};
     resourceName;
     resource;
-
+    needUpdate=false;
     constructor(imageItem:ImageItemProtocol, xx, yy, ww, hh, {x=0,y=0,w=null,h=null,sx = 0, sy = 0, sw = 0, sh = 0, frameCount=1, stride=1, zIndex = 0,opacity=1,action=null}) {
         super(xx || x || 0, yy || y || 0, ww || w || 2 * (sw || imageItem.width) / Engine.render.designResolution[1],
             hh || h || 2 * (sh || imageItem.height) / Engine.render.designResolution[1]);
@@ -74,6 +74,10 @@ export class Sprite extends TouchItem implements SpriteProtocol {
         this.rOpacity = this.isRootSprite ? this.opacity * this.batchNode.opacity : this.opacity * this.parent.rOpacity;
         if (this.rOpacity == 0) {
             return
+        }
+        if(this.needUpdate){
+            this.children.sort((x,y)=>x.zIndex-y.zIndex);
+            this.needUpdate=false;
         }
         if (this.isRootSprite) {
             this.rx = this.x;
@@ -203,11 +207,13 @@ export class Sprite extends TouchItem implements SpriteProtocol {
     }
 
     appendChild(item:Sprite) {
+        this.needUpdate=true;
         super.appendChild(item);
         this.setNewChild();
     }
 
     insertChild(item:Sprite, index) {
+        this.needUpdate=true;
         super.insertChild(item, index);
         this.setNewChild();
     }

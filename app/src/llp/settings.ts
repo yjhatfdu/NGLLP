@@ -1,6 +1,8 @@
 /**
  * Created by yjh on 16/8/19.
  */
+import * as Requests from '../Engine/Network/Request'
+import {settings} from "../Engine/Engine";
 export let Settings = {
     "settingVersion": 1,
     "loadingPromotion": [
@@ -153,9 +155,17 @@ export let Settings = {
         ]
     },
     "resultScoreAction": {
+        "x": [
+            {"type": "translateTo", "value": 0.5, "time": 300}
+        ],
         "scale": [
             {"type": "translateTo", "value": 2, "time": 300}
         ]
+    },
+    "scoreInitialState": {
+        "x": 0,
+        "y": 0.75,
+        'h': 0.15
     },
     "resultRankCountActions": {
         "great": {
@@ -247,3 +257,18 @@ export let Settings = {
         }
     }
 };
+
+export let renderPrecision = parseFloat(localStorage.getItem('renderP') || '1') || 1;
+export let delay = parseFloat(localStorage.getItem('delay') || '0') || 0;
+export let userSpeed = parseInt(localStorage.getItem('speed') || '0') || null;
+export function loadSettings(path) {
+    return Requests.GET(path)
+        .then(data=> {
+            for (let i in Settings) {
+                if (!data.hasOwnProperty(i)) {
+                    data[i] = Settings[i]
+                }
+            }
+            Settings = data
+        })
+}

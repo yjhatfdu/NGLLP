@@ -7,7 +7,7 @@ import {noteSpriteFactory} from './sprites'
 import {rankTiming,rank} from './ranking'
 import * as ranking from './ranking'
 import {Tween} from '../Engine/Animation/Tween'
-import {Settings} from './settings'
+import {Settings,delay,userSpeed} from './settings'
 let channels = [];
 let speed = 160;
 let initialized = false;
@@ -19,7 +19,7 @@ const channelLength = 1.246334;
 
 
 export function init(map) {
-    speed = parseInt(localStorage.getItem('userSpeed') || '0') || map['speed'];
+    speed = userSpeed || map['speed'];
     channels = map['lane'];
     currentNotes = channels.map(x=>[]);
     for (let i=0;i<channels.length;i++){
@@ -180,7 +180,7 @@ function touchChannel(ch){
         note.holdCount++;
         return
     }
-    let currentTime=Engine.audioCtl.getBgmTime()*1000;
+    let currentTime=Engine.audioCtl.getBgmTime()*1000+delay;
     let offset=currentTime-note.starttime;
     if(Math.abs(offset)>rankTiming.miss){
         return
@@ -208,7 +208,7 @@ function releaseChannel(ch){
     if (!note){
         return
     }
-    let currentTime=Engine.audioCtl.getBgmTime()*1000;
+    let currentTime=Engine.audioCtl.getBgmTime()*1000+delay;
     let offset=currentTime-note.endtime;
     if(note.longnote&&note.hold){
         if(note.holdCount==1){
@@ -217,7 +217,6 @@ function releaseChannel(ch){
         }else{
             note.holdCount--;
         }
-
     }
 }
 
