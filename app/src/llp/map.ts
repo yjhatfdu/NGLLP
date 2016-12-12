@@ -4,16 +4,16 @@
 import * as Engine from '../Engine/Engine'
 import {noteSpriteFactory} from './sprites'
 
-import {rankTiming,rank} from './ranking'
+import {rankTiming, rank} from './ranking'
 import * as ranking from './ranking'
 import {Tween} from '../Engine/Animation/Tween'
-import {Settings,delay,userSpeed} from './settings'
+import {Settings, delay, userSpeed} from './settings'
 let channels = [];
 let speed = 160;
 let initialized = false;
 let currentNotes;
-let touchState=[];
-let releaseState=[];
+let touchState = [];
+let releaseState = [];
 const centerY = 0.501466;
 const channelLength = 1.246334;
 
@@ -22,20 +22,21 @@ export function init(map) {
     speed = userSpeed || map['speed'];
     channels = map['lane'];
     currentNotes = channels.map(x=>[]);
-    for (let i=0;i<channels.length;i++){
-        releaseState[i]=touchState[i]=0
+    for (let i = 0; i < channels.length; i++) {
+        releaseState[i] = touchState[i] = 0
     }
-    ranking.init(channels.reduce((c,x)=>c+x.reduce((cc,xx)=>cc+(xx['longnote']?2:1),0),0));
+    ranking.init(channels.reduce((c, x)=>c + x.reduce((cc, xx)=>cc + (xx['longnote'] ? 2 : 1), 0), 0));
     initialized = true;
     Engine.touchCtl.addEventListener('touchstart', onTouch);
     Engine.touchCtl.addEventListener('touchend', onTouchEnd);
-
+    Engine.keyboard.addEventListener('keydown', onKeyDown);
+    Engine.keyboard.addEventListener('keyup', onKeyUp);
     Engine.eventBus.addEventListener('beforeupdate', ()=> {
         if (!initialized) {
             return
         }
         let currentTime = Engine.audioCtl.getBgmTime() * 1000;
-        let noteWidth = 0.37537 ;
+        let noteWidth = 0.37537;
         for (let i = 0; i < channels.length; i++) {
             let channel = channels[i];
             let currentChannel = currentNotes[i];
@@ -51,27 +52,27 @@ export function init(map) {
                 if (theNote.longnote) {
                     theNote.sprite.long = true;
                 }
-                theNote.holdCount=0;
+                theNote.holdCount = 0;
                 currentChannel.push(theNote);
-                touchState[i]=0;
+                touchState[i] = 0;
             }
             while (true) {
                 if (currentChannel.length == 0) {
                     break
                 }
-                let firstNote=currentChannel[0];
+                let firstNote = currentChannel[0];
                 if (firstNote.starttime > (currentTime - rankTiming.miss)) {
                     break
                 }
-                if(firstNote.longnote&&firstNote.hold){
-                    if(firstNote.endtime < (currentTime-rankTiming.miss)){
+                if (firstNote.longnote && firstNote.hold) {
+                    if (firstNote.endtime < (currentTime - rankTiming.miss)) {
                         currentChannel.shift().sprite.clearLongNoteAnimation().destroy();
                         rank(null);
-                    }else{
+                    } else {
                         break
                     }
-                }else{
-                    if(firstNote.longnote){
+                } else {
+                    if (firstNote.longnote) {
                         rank(null)
                     }
                     currentChannel.shift().sprite.destroy();
@@ -80,34 +81,34 @@ export function init(map) {
             }
             for (let note of currentChannel) {
                 let currentSpr = note.sprite;
-                let percentage = Math.max(0,1 - (note.starttime - currentTime) / 128000 * speed);
+                let percentage = Math.max(0, 1 - (note.starttime - currentTime) / 128000 * speed);
                 currentSpr.w = currentSpr.h = noteWidth * percentage;//2*128px/768px
                 let length = channelLength * percentage;
                 let alpha = note.lane * 0.125 * Math.PI;
                 let ca = Math.cos(alpha);
                 let sa = Math.sin(alpha);
-                currentSpr.y = (centerY - length * sa) ;
-                currentSpr.x = -length * ca ;
+                currentSpr.y = (centerY - length * sa);
+                currentSpr.x = -length * ca;
                 if (note.longnote) {
-                    let headPercentage=1;
+                    let headPercentage = 1;
                     let tailPercentage = Math.max(1 - (note.endtime - currentTime) / 128000 * speed, 0);
                     let longSpr = note.sprite.longNoteSpr;
-                    let headX=0,headY=0;
-                    if(note.hold){
-                        headX=-channelLength*ca;
-                        headY=(centerY-channelLength*sa)
-                    }else{
-                        headPercentage=percentage;
-                        headX=currentSpr.x;
-                        headY=currentSpr.y
+                    let headX = 0, headY = 0;
+                    if (note.hold) {
+                        headX = -channelLength * ca;
+                        headY = (centerY - channelLength * sa)
+                    } else {
+                        headPercentage = percentage;
+                        headX = currentSpr.x;
+                        headY = currentSpr.y
                     }
                     longSpr.p0[0] = headX + noteWidth * headPercentage * sa * 0.5;
-                    longSpr.p0[1] = headY- noteWidth * headPercentage * ca * 0.5;
+                    longSpr.p0[1] = headY - noteWidth * headPercentage * ca * 0.5;
                     longSpr.p2[0] = headX - noteWidth * headPercentage * sa * 0.5;
                     longSpr.p2[1] = headY + noteWidth * headPercentage * ca * 0.5;
 
-                    let tailY = (centerY - channelLength * tailPercentage * sa) ;
-                    let tailX = -channelLength * tailPercentage * ca ;
+                    let tailY = (centerY - channelLength * tailPercentage * sa);
+                    let tailX = -channelLength * tailPercentage * ca;
 
                     longSpr.p1[0] = tailX - noteWidth * tailPercentage * sa * 0.5;
                     longSpr.p1[1] = tailY + noteWidth * tailPercentage * ca * 0.5;
@@ -120,8 +121,8 @@ export function init(map) {
                         tailSpr.x = tailX;
                         tailSpr.y = tailY;
                         tailSpr.w = tailSpr.h = noteWidth * tailPercentage
-                    }else{
-                        currentSpr.tail=false;
+                    } else {
+                        currentSpr.tail = false;
                     }
                 }
             }
@@ -145,7 +146,7 @@ function onTouch(e) {
         return
     }
     let x = e.x, y = e.y;
-    if (y > (centerY +  0.37537) ) {
+    if (y > (centerY + 0.37537)) {
         return
     }
     let r = Math.sqrt(x * x + (centerY - y) * (centerY - y));
@@ -158,7 +159,7 @@ function onTouchEnd(e) {
         return
     }
     let x = e.x, y = e.y;
-    if (y > (centerY +  0.37537) ) {
+    if (y > (centerY + 0.37537)) {
         return
     }
     let r = Math.sqrt(x * x + (centerY - y) * (centerY - y));
@@ -166,55 +167,75 @@ function onTouchEnd(e) {
     let channel = Math.round(alpha / Math.PI * 8);
     releaseChannel(channel);
 }
-
-function touchChannel(ch){
+let keyCodeMap: any = {
+    'a': 0,
+    's': 1,
+    'd': 2,
+    'f': 3,
+    ' ': 4,
+    'j': 5,
+    'k': 6,
+    'l': 7,
+    ';': 8
+};
+function onKeyDown(key) {
+    if (keyCodeMap[key] > -1) {
+        touchChannel(keyCodeMap[key])
+    }
+}
+function onKeyUp(key) {
+    if (keyCodeMap[key] > -1) {
+        releaseChannel(keyCodeMap[key])
+    }
+}
+function touchChannel(ch) {
     touchState[ch]++;
-    if(touchState[ch]>1){
+    if (touchState[ch] > 1) {
         return
     }
-    let note=currentNotes[ch][0];
-    if (!note){
+    let note = currentNotes[ch][0];
+    if (!note) {
         return
     }
-    if(note.hold){
+    if (note.hold) {
         note.holdCount++;
         return
     }
-    let currentTime=Engine.audioCtl.getBgmTime()*1000+delay;
-    let offset=currentTime-note.starttime;
-    if(Math.abs(offset)>rankTiming.miss){
+    let currentTime = Engine.audioCtl.getBgmTime() * 1000 + delay;
+    let offset = currentTime - note.starttime;
+    if (Math.abs(offset) > rankTiming.miss) {
         return
     }
-    rank(offset,ch);
-    if(note.longnote){
-        note.sprite.note=false;
-        note.sprite.parallel=false;
+    rank(offset, ch);
+    if (note.longnote) {
+        note.sprite.note = false;
+        note.sprite.parallel = false;
         Tween(note.sprite.longNoteSpr).playAction(Settings.longNotePressAction);
-        note.hold=true;
+        note.hold = true;
         note.holdCount++;
-    }else{
+    } else {
         currentNotes[ch].shift().sprite.destroy();
     }
 }
 
-function releaseChannel(ch){
+function releaseChannel(ch) {
     touchState[ch]--;
-    touchState[ch]=Math.max(0,touchState[ch]);
-    if(touchState[ch]>=1){
+    touchState[ch] = Math.max(0, touchState[ch]);
+    if (touchState[ch] >= 1) {
         return
     }
 
-    let note=currentNotes[ch][0];
-    if (!note){
+    let note = currentNotes[ch][0];
+    if (!note) {
         return
     }
-    let currentTime=Engine.audioCtl.getBgmTime()*1000+delay;
-    let offset=currentTime-note.endtime;
-    if(note.longnote&&note.hold){
-        if(note.holdCount==1){
-            rank(offset,ch);
+    let currentTime = Engine.audioCtl.getBgmTime() * 1000 + delay;
+    let offset = currentTime - note.endtime;
+    if (note.longnote && note.hold) {
+        if (note.holdCount == 1) {
+            rank(offset, ch);
             currentNotes[ch].shift().sprite.destroy().clearLongNoteAnimation()
-        }else{
+        } else {
             note.holdCount--;
         }
     }

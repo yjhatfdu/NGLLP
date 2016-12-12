@@ -81,7 +81,12 @@ load(live_id)
         bgLayer.opacity = 0;
         Tween(bgLayer, 'opacity').translateTo(1, 500);
         GameMap.init(Engine.resourceCtl.getItem('map').json());
-        bgObject.addOneTimeListener('touchend', ()=> {
+        let started=false;
+        let startGame=()=> {
+            if (started){
+                return
+            }
+            started=true;
             GameMap.enableTouch();
             Engine.audioCtl.play(1.5);
             Tween(clickToStart, 'opacity').translateTo(0, 200)
@@ -94,6 +99,8 @@ load(live_id)
                 Ranking.showScore();
             });
             Tween(bgObject, 'opacity').translateTo(1, 1000);
-        });
+        };
+        bgObject.addOneTimeListener('touchend', startGame);
+        Engine.keyboard.addOneTimeListener('keyup',startGame);
         Engine.eventBus.addEventListener('bgmEnd', ()=>Result.showResult())
     });

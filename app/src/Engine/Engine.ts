@@ -7,6 +7,7 @@ import {Render} from './Core/Render'
 import {TouchCtl} from './Events/TouchCtl'
 import {ResourceCtl} from './Resource/ResourceCtl'
 import {AudioCtl} from './Core/AudioCtl'
+import {Keyboard} from "./Events/keyboard";
 
 
 export var settings = {
@@ -14,7 +15,7 @@ export var settings = {
     pixelRatio: 1
 };
 
-export function setEngine(container,designRes=[1024,768],pixelRatio = window.devicePixelRatio) {
+export function setEngine(container, designRes = [1024, 768], pixelRatio = window.devicePixelRatio) {
     settings.container = container;
     settings.pixelRatio = pixelRatio;
     audioCtl = new AudioCtl();
@@ -34,3 +35,4 @@ export var resourceCtl: ResourceCtl;
 export var render: Render;
 export var touchCtl: TouchCtl;
 export var eventBus: Base.EventBase = new Base.EventBase();
+export const keyboard: Keyboard = new Keyboard();
