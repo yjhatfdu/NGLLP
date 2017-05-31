@@ -19,6 +19,7 @@ import {renderPrecision,loadSettings} from './settings'
 export let uiLayer: SpriteBatchNode;
 export let bgLayer: SpriteBatchNode;
 export let title;
+const staticHost='https://ll.iia.pw';
 Engine.setEngine(document.body, [1024, 682], window.devicePixelRatio * renderPrecision);
 
 
@@ -43,14 +44,14 @@ load(live_id)
         document.title = liveinfo.title;
         title = liveinfo.title;
         return Engine.resourceCtl.loadResources([
-            {'name': 'bg', 'url': liveinfo.bgimg, standAloneTexture: true},
+            {'name': 'bg', 'url': staticHost+liveinfo.bgimg, standAloneTexture: true},
             {'name': 'perfect', 'url': liveinfo.perfect},
             {'name': 'great', 'url': liveinfo.great},
             {'name': 'good', 'url': liveinfo.good},
-            {'name': 'uiAssets', 'url': liveinfo.uiAssets, standAloneTexture: true},
-            {'name': 'bgm', 'url': liveinfo.bgm},
+            {'name': 'uiAssets', 'url': staticHost+liveinfo.uiAssets, standAloneTexture: true},
+            {'name': 'bgm', 'url': staticHost+liveinfo.bgm},
             {'name': 'map', 'url': liveinfo.map},
-            {'name': 'coverImg', 'url': liveinfo.coverImg, standAloneTexture: true},
+            {'name': 'coverImg', 'url': staticHost+liveinfo.coverImg, standAloneTexture: true},
         ], p=>loading.progress(p))
     })
     .then(()=>loading.stop())
