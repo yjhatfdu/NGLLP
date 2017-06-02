@@ -5,15 +5,41 @@
 import * as Base from '../Base'
 import * as Engine from '../Engine'
 
-export var TouchEvents = {
+let touchStatePool = [];
+
+class TouchState {
+    public x = 0;
+    public y = 0;
+    public id = 0;
+
+    static create(id, x, y) {
+        let touch;
+        if (touchStatePool.length > 0) {
+            touch = touchStatePool.pop()
+        } else {
+            touch = new TouchState()
+        }
+        touch.id = id;
+        touch.x = x;
+        touch.y = y;
+        return touch
+    }
+
+    destroy() {
+        touchStatePool.push(this)
+    }
+}
+
+export const TouchEvents = {
     touchstart: 'touchstart',
     touchend: 'touchend',
 
 };
 export class TouchCtl extends Base.EventBase {
-    canvas;
-    itemList = {};
-    figureState = {};
+    private canvas;
+    private itemList = {};
+
+    public enableTracking = false;
 
     constructor() {
         super();
@@ -27,7 +53,7 @@ export class TouchCtl extends Base.EventBase {
         }
     }
 
-    getPos(x, y) {
+    private getPos(x, y) {
         if (Engine.render.landscape) {
             return [(2 * x / Engine.render.width - 1) / Engine.render.aspect, 1 - 2 * y / Engine.render.height]
         } else {
@@ -37,7 +63,7 @@ export class TouchCtl extends Base.EventBase {
         }
     }
 
-    onTouchStart(e) {
+    private onTouchStart(e) {
         e.stopPropagation();
         e.preventDefault();
         for (let i = 0; i < e.changedTouches.length; i++) {
@@ -48,11 +74,11 @@ export class TouchCtl extends Base.EventBase {
         }
     }
 
-    onTouchMove(e) {
+    private onTouchMove(e) {
 
     }
 
-    onTouchEnd(e) {
+    private onTouchEnd(e) {
         e.stopPropagation();
         e.preventDefault();
         for (let i = 0; i < e.changedTouches.length; i++) {
@@ -64,7 +90,7 @@ export class TouchCtl extends Base.EventBase {
 
     }
 
-    onMouseDown(e) {
+    private onMouseDown(e) {
         e.stopPropagation();
         e.preventDefault();
         let [x,y]=this.getPos(e.offsetX, e.offsetY);
@@ -72,15 +98,19 @@ export class TouchCtl extends Base.EventBase {
         this.dispatchEvent("touchstart", {x, y});
     }
 
-    onMouseMove(e) {
+    private onMouseMove(e) {
     }
 
-    onMouseUp(e) {
+    private onMouseUp(e) {
         e.stopPropagation();
         e.preventDefault();
         let [x,y]=this.getPos(e.offsetX, e.offsetY);
         this.findAndDispatchEvent(TouchEvents.touchend, x, y);
         this.dispatchEvent("touchend", {x, y});
+    }
+
+    private trackTouch(id: number, x: number, y: number, remove: boolean) {
+
     }
 
     addTouchItem(item, event) {
@@ -112,7 +142,7 @@ export class TouchCtl extends Base.EventBase {
         }
     }
 
-    findAndDispatchEvent(event, x, y) {
+    private findAndDispatchEvent(event, x, y) {
         if (!this.itemList[event]) {
             return
         }
@@ -135,10 +165,10 @@ export class TouchCtl extends Base.EventBase {
                 }
             }
         }
-        for (var l = this.itemList[event].length - 1; l >= 0; l--) {
-            var list = this.itemList[event][l];
+        for (let l = this.itemList[event].length - 1; l >= 0; l--) {
+            let list = this.itemList[event][l];
             if (list) {
-                for (var j = list.length - 1; j >= 0; j--) {
+                for (let j = list.length - 1; j >= 0; j--) {
                     if (list[j].hit == true) {
                         list[j].dispatchEvent(event, list[j]);
                         list[j].hit = false

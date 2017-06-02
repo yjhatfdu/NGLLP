@@ -1,4 +1,8 @@
 {
+  "dependencies": {
+    "jspm": "*",
+    "typescript": "*"
+  },
   "jspm": {
     "dependencies": {
       "gl-matrix": "npm:gl-matrix@^2.3.2"
@@ -6,5 +10,9 @@
     "devDependencies": {
       "typescript": "npm:typescript@^1.6.2"
     }
+  },
+  "scripts": {
+    "install": "jspm install",
+    "build": "tsc;jspm bundle-sfx app/src/llp/game.js --minify --minify --skip-source-maps dist/build.js"
   }
 }
