@@ -2,11 +2,10 @@
  * Created by yjh on 16/8/7.
  */
 import * as Request from '../Engine/Network/Request'
-const uploadPath = '/upload/';
-const resourcePath = '/llplayer/assets/';
+const uploadPath = 'https://ll.iia.pw/upload/';
+const resourcePath = 'https://ll.iia.pw/llplayer/assets/';
 import {sign} from './sign'
 export let liveinfo;
-
 function getId(id) {
     if (id) {
         return Promise.resolve(id)
@@ -28,11 +27,11 @@ export function load(id) {
             Request.GET('/API/startplay?live_id=' + resp['content']['live_id']);
             liveinfo = {
                 bgimg: uploadPath + resp['content']['bgimg_path'],
-                bgm: uploadPath + resp['content']['bgm_path'],
+                bgm: uploadPath + resp['content']['bgm_path']+'.js',
                 map: uploadPath + resp['content']['map_path'],
-                perfect: resourcePath + 'fx/perfect.mp3',
-                great: resourcePath + 'fx/great.mp3',
-                good: resourcePath + 'fx/good.mp3',
+                perfect: resourcePath + 'fx/perfect.mp3.js',
+                great: resourcePath + 'fx/great.mp3.js',
+                good: resourcePath + 'fx/good.mp3.js',
                 uiAssets: resp['content']['assets_path']?uploadPath + resp['content']['assets_path'] : 'assets/uiAssets.png',
                 title: resp['content']['live_name'],
                 coverImg: uploadPath + resp['content']['cover_path'],

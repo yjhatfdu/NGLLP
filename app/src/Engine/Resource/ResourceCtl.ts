@@ -24,22 +24,24 @@ export class ResourceCtl extends Base.EventBase {
         let jobCount = 0;
         let runningJobCount = 0;
         let progress = [];
-        for (var i = 0; i < list.length; i++) {
+        for (let i = 0; i < list.length; i++) {
             let job = list[i];
             let name = job['name'];
             let url = job['url'];
             let cache = job['cache'];
             let standAlone = job['standAloneTexture'] || false;
+            let realExt=job['realExt'];
 
             //todo implement filesystem api cache in chrome
 
-            let newJob = function (name, url, cache, standAlone) {
-                if (/.+\.(jpg|png|jpeg)$/.test(url.toLowerCase())) {
+            let newJob = function (name, url, cache, standAlone,realExt?) {
+                if (/.*\.(jpg|png|jpeg)$/.test((realExt||url).toLowerCase())) {
                     jobCount++;
                     runningJobCount++;
                     progress[i] = 0;
                     let index = i;
                     let img = document.createElement('img');
+                    img.crossOrigin='Anonymous';
                     img.onload = function () {
                         this.resultDic[name] = new ImageItem(img, this, name);
                         this.resultDic[name].prepare(standAlone);
@@ -58,7 +60,7 @@ export class ResourceCtl extends Base.EventBase {
                         failCallBack(e.toString())
                     };
                     img.src = url
-                } else if (/.+\.(mp3|m4a)$/.test(url.toLowerCase())) {
+                } else if (/.*\.(mp3|m4a)$/.test((realExt||url).toLowerCase())) {
                     jobCount++;
                     runningJobCount++;
                     progress[i] = 0;
@@ -118,7 +120,7 @@ export class ResourceCtl extends Base.EventBase {
                 }
             }.bind(this);
 
-            newJob(name, url, cache, standAlone)
+            newJob(name, url, cache, standAlone,realExt)
 
         }
     }
