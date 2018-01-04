@@ -98,7 +98,26 @@ export class ResourceCtl extends Base.EventBase {
                         failCallBack(x.statusText)
                     };
                     x.send()
-                } else{
+                } else if (job.arrayBuffer){
+                    jobCount++;
+                    runningJobCount++;
+                    progress[i] = 0;
+                    let index = i;
+                    GET(url,null,'arraybuffer',x=>{
+
+                    }).then(resp=>{
+                        this.resultDic[name]=resp;
+                        runningJobCount--;
+                        progress[index] = 1;
+                        progressCallBack(progress);
+                        if (runningJobCount == 0) {
+                            callBack()
+                        }
+
+                    }).catch(err=>{
+                        failCallBack(err)
+                    })
+                }else{
                     jobCount++;
                     runningJobCount++;
                     progress[i] = 0;

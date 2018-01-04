@@ -20,7 +20,7 @@ Engine.resourceCtl.loadResources([{"name": "pst", url: "../../assets/uiAssets.pn
             scale:0.1,
             randomize:1,
             fade:2
-        });
+        } );
         ps.x=1;
         ps.y=1;
         window['ps']=ps;

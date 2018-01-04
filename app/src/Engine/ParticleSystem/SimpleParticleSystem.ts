@@ -34,7 +34,7 @@ export class SimpleParticleSystem extends Object3D {
         return this.position[1]
     }
 
-    constructor(imageItem, {x=0,y=0,sx=0,sy=0,sh=null,sw=null,row=1,stride=1,size=4,particleCount=200,randomize=1,color=[1, 1, 1, 1],opacity=1,speed=1,scale=1,fade=1}) {
+    constructor(imageItem, {x=0,y=0,sx=0,sy=0,sh=0,sw=0,row=1,stride=1,size=4,particleCount=200,randomize=1,color=[1, 1, 1, 1],opacity=1,speed=1,scale=1,fade=1}) {
         super();
         this.particleCount = particleCount;
         this.enablePerspective = false;

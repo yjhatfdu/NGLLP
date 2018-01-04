@@ -7,15 +7,11 @@
     <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style">
     <meta charset="UTF-8">
     <title>Title</title>
-    <script src="../jspm_packages/system-polyfills.js"></script>
-    <script src="../jspm_packages/system.js"></script>
-    <script src="../config.js"></script>
-    <script>
-        System.defaultJSExtensions=true;
-        System.import('./src/llp/game')
-    </script>
 </head>
 <body style="width: 100%;height:100vh;margin:0;background: black;overflow: hidden">
 <img  src="assets/blackleft.png" style="position: absolute;z-index: 9999;right:0;top:0;height:5vh" onclick="if(!document.createTouch){history.back()}" ontouchend="if(document.createTouch){history.back()}">
 </body>
+<script src="bundle.js">
+
+</script>
 </html>

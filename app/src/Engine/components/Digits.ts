@@ -6,7 +6,7 @@ export class Digits extends Sprite {
     private aspect = 1;
     private _number = null;
     alignCenter = true;
-    private needUpdate = true;
+    needUpdate = true;
     private numberSprs = [];
     private imgItem;
     private _h=1;

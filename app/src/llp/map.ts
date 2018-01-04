@@ -8,6 +8,9 @@ import {rankTiming, rank} from './ranking'
 import * as ranking from './ranking'
 import {Tween} from '../Engine/Animation/Tween'
 import {Settings, delay, userSpeed} from './settings'
+import * as m from './beatMap'
+import * as lzma from '../../lib/lzma'
+
 let channels = [];
 let speed = 160;
 let initialized = false;
@@ -18,20 +21,27 @@ const centerY = 0.501466;
 const channelLength = 1.246334;
 
 
-export function init(map) {
-    speed = userSpeed || map['speed'];
-    channels = map['lane'];
-    currentNotes = channels.map(x=>[]);
+export function init(rawmap) {
+    let data = new Int8Array(rawmap).reverse();
+    let d = lzma.decompress(data);
+    let decompressed = new Uint8Array(new Int8Array(d).buffer).reverse();
+    let map = (<any>m).BeatMap.decode(decompressed);
+    speed = userSpeed || map.speed;
+    channels = map.channels.map((x, i) => {
+         x.notes.forEach(n=>n.lane=i);
+         return x.notes
+    });
+    currentNotes = channels.map(x => []);
     for (let i = 0; i < channels.length; i++) {
         releaseState[i] = touchState[i] = 0
     }
-    ranking.init(channels.reduce((c, x)=>c + x.reduce((cc, xx)=>cc + (xx['longnote'] ? 2 : 1), 0), 0));
+    ranking.init(channels.reduce((c, x) => c + x.reduce((cc, xx) => cc + (xx.longnote ? 2 : 1), 0), 0));
     initialized = true;
     Engine.touchCtl.addEventListener('touchstart', onTouch);
     Engine.touchCtl.addEventListener('touchend', onTouchEnd);
     Engine.keyboard.addEventListener('keydown', onKeyDown);
     Engine.keyboard.addEventListener('keyup', onKeyUp);
-    Engine.eventBus.addEventListener('beforeupdate', ()=> {
+    Engine.eventBus.addEventListener('beforeupdate', () => {
         if (!initialized) {
             return
         }
@@ -154,6 +164,7 @@ function onTouch(e) {
     let channel = Math.round(alpha / Math.PI * 8);
     touchChannel(channel);
 }
+
 function onTouchEnd(e) {
     if (!running) {
         return
@@ -167,6 +178,7 @@ function onTouchEnd(e) {
     let channel = Math.round(alpha / Math.PI * 8);
     releaseChannel(channel);
 }
+
 let keyCodeMap: any = {
     'a': 0,
     's': 1,
@@ -178,16 +190,19 @@ let keyCodeMap: any = {
     'l': 7,
     ';': 8
 };
+
 function onKeyDown(key) {
     if (keyCodeMap[key] > -1) {
         touchChannel(keyCodeMap[key])
     }
 }
+
 function onKeyUp(key) {
     if (keyCodeMap[key] > -1) {
         releaseChannel(keyCodeMap[key])
     }
 }
+
 function touchChannel(ch) {
     touchState[ch]++;
     if (touchState[ch] > 1) {

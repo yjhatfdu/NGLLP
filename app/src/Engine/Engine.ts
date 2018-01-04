@@ -10,7 +10,7 @@ import {AudioCtl} from './Core/AudioCtl'
 import {Keyboard} from "./Events/keyboard";
 
 
-export var settings = {
+export let settings = {
     container: null,
     pixelRatio: 1
 };
@@ -25,14 +25,14 @@ export function setEngine(container, designRes = [1024, 768], pixelRatio = windo
 }
 
 export function loadScript(src) {
-    var scriptNode = document.createElement('script');
+    let scriptNode = document.createElement('script');
     document.body.appendChild(scriptNode);
     scriptNode.src = src
 }
 
-export var audioCtl: AudioCtl;
-export var resourceCtl: ResourceCtl;
-export var render: Render;
-export var touchCtl: TouchCtl;
-export var eventBus: Base.EventBase = new Base.EventBase();
+export let audioCtl: AudioCtl;
+export let resourceCtl: ResourceCtl;
+export let render: Render;
+export let touchCtl: TouchCtl;
+export let eventBus: Base.EventBase = new Base.EventBase();
 export const keyboard: Keyboard = new Keyboard();

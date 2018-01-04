@@ -1,13 +1,9 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "module": "system",
-    "sourceMap": true,
-    "experimentalDecorators": true
-  },
-  "exclude": [
-    "Engine",
-    "node_modules",
-    "jspm_packages"
-  ]
+    "module": "es6",
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "allowJs": true
+  }
 }
