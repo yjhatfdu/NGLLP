@@ -31,6 +31,10 @@ export class Request {
             if (x.status >= 400) {
                 onerror(x.statusText)
             } else {
+                if(x.responseType=='arraybuffer'){
+                    onload(x.response);
+                    return
+                }
                 if (x.getResponseHeader('Content-Type') == 'application/json') {
                     onload(JSON.parse(x.responseText))
                 } else {

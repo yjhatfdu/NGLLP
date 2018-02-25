@@ -9,22 +9,29 @@ module.exports = {
             {
                 test: /\.ts?$/,
                 use: 'ts-loader',
-                exclude: /node_modules/
+                include: [path.resolve(__dirname, "app")]
             },
             {
                 test: /\.(png|svg|jpg|gif)$/,
                 use: [
                     'file-loader'
                 ]
-            }
+            },
+
         ],
+
 
     },
     devServer: {
         contentBase: './dist',
         proxy: {
             "/API": {
-                target:"https://m.tianyi9.com",
+                target: "https://m.tianyi9.com",
+                secure: false,
+                changeOrigin: true
+            },
+            "/upload/.*\.pb$": {
+                target: 'https://ll.iia.pw',
                 secure: false,
                 changeOrigin: true
             }
@@ -34,8 +41,7 @@ module.exports = {
         new CleanWebpackPlugin(['dist']),
         new CopyWebpackPlugin([
             {from: 'app/index.html'},
-            {from: 'app/assets', to: 'assets'},
-            {from:'proto/test.pb.json'}
+            {from: 'app/assets', to: 'assets'}
         ])
     ]
     ,

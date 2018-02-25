@@ -25,7 +25,7 @@ export function init(rawmap) {
     let data = new Int8Array(rawmap).reverse();
     let d = lzma.decompress(data);
     let decompressed = new Uint8Array(new Int8Array(d).buffer).reverse();
-    let map = (<any>m).BeatMap.decode(decompressed);
+    let map = (<any>m).M.decode(decompressed);
     speed = userSpeed || map.speed;
     channels = map.channels.map((x, i) => {
          x.notes.forEach(n=>n.lane=i);

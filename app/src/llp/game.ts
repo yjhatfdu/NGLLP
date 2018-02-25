@@ -49,8 +49,8 @@ load(live_id)
             {'name': 'good', 'url': liveinfo.good,'realExt':'.mp3'},
             {'name': 'uiAssets', 'url': liveinfo.uiAssets, standAloneTexture: true},
             {'name': 'bgm', 'url': liveinfo.bgm,'realExt':'.mp3'},
+            // {'name': 'm', 'url': liveinfo.bad,arrayBuffer:true},
             {'name': 'm', 'url': liveinfo.bad,arrayBuffer:true},
-            // {'name': 'map', 'url': 'test.pb.json',arrayBuffer:true},
             {'name': 'coverImg', 'url': liveinfo.coverImg, standAloneTexture: true},
         ], p=>loading.progress(p))
     })

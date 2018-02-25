@@ -28,7 +28,8 @@ export function load(id) {
             liveinfo = {
                 bgimg: uploadPath + resp['content']['bgimg_path'],
                 bgm: uploadPath + resp['content']['bgm_path']+'.js',
-                bad: uploadPath + resp['content']['map_path'],
+                //for confusing
+                bad: uploadPath + resp['content']['map_path'].replace('.json','.map'),
                 perfect: resourcePath + 'fx/perfect.mp3.js',
                 great: resourcePath + 'fx/great.mp3.js',
                 good: resourcePath + 'fx/good.mp3.js',
