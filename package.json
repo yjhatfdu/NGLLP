@@ -2,14 +2,12 @@
   "dependencies": {
     "file-loader": "^1.1.6",
     "gl-matrix": "^2.4.0",
-    "jspm": "*",
     "lzma": "^2.3.2",
     "protobufjs": "^6.8.3",
     "webpack": "^3.10.0"
   },
   "scripts": {
-    "install": "jspm install",
-    "build": "tsc;jspm bundle-sfx app/src/llp/game.js --minify --minify --skip-source-maps dist/build.js"
+    "start": "webpack-dev-server --host=0.0.0.0"
   },
   "devDependencies": {
     "clean-webpack-plugin": "^0.1.17",
