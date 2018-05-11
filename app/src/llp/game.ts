@@ -62,7 +62,6 @@ load(live_id)
 
         let bg = Engine.resourceCtl.getItem('bg');
         let bgObject = new Sprite(bg, 0, 0, bg.width / bg.height * 2, 2, {});
-
         function resizeBg() {
 
         }
@@ -81,6 +80,7 @@ load(live_id)
         bgObject.opacity = .1;
         bgLayer.opacity = 0;
         Tween(bgLayer, 'opacity').translateTo(1, 500);
+
         GameMap.init(Engine.resourceCtl.getItem('m'));
         let started=false;
         let startGame=()=> {

@@ -7,9 +7,9 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.ts?$/,
+                test: /\.(ts|js)?$/,
                 use: 'ts-loader',
-                exclude: /node_modules/
+                // exclude: /node_modules/
             },
             {
                 test: /\.(png|svg|jpg|gif)$/,

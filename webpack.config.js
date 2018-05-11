@@ -7,9 +7,9 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.ts?$/,
+                test: /\.(ts|js)?$/,
                 use: 'ts-loader',
-                include: [path.resolve(__dirname, "app")]
+                // include: [path.resolve(__dirname, "app")]
             },
             {
                 test: /\.(png|svg|jpg|gif)$/,
@@ -30,8 +30,13 @@ module.exports = {
                 secure: false,
                 changeOrigin: true
             },
-            "/upload/.*\.pb$": {
-                target: 'https://ll.iia.pw',
+            "/upload":{
+                target: 'https://m.tianyi9.com',
+                secure: false,
+                changeOrigin: true
+            },
+            "/llplayer":{
+                target: 'https://m.tianyi9.com',
                 secure: false,
                 changeOrigin: true
             }

@@ -221,7 +221,7 @@ export function sign(url) {
             islogin: false
         }
     }
-    url = url + '&logincookie=' + logininfo.logincookie+"&timestamp="+Date.now();
+    url = url + '&logincookie=' + logininfo.logincookie;
     return [url, sha256_digest(url.match(/\?(.+)/)[1] + logininfo.token)]
 
 }

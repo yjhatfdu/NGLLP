@@ -19,7 +19,25 @@ let touchState = [];
 let releaseState = [];
 const centerY = 0.501466;
 const channelLength = 1.246334;
-
+// support ios 10-
+if(!Int8Array.prototype.reverse){
+    Int8Array.prototype.reverse = function () {
+        let length=this.length;
+        let newArray = new Int8Array(length);
+        for (let i = 0; i < length; i++) {
+            newArray[length-i-1]=this[i]
+        }
+        return newArray
+    };
+    Uint8Array.prototype.reverse=function () {
+        let length=this.length;
+        let newArray = new Uint8Array(length);
+        for (let i = 0; i < length; i++) {
+            newArray[length-i-1]=this[i]
+        }
+        return newArray
+    };
+}
 
 export function init(rawmap) {
     let data = new Int8Array(rawmap).reverse();

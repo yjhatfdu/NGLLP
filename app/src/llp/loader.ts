@@ -2,8 +2,10 @@
  * Created by yjh on 16/8/7.
  */
 import * as Request from '../Engine/Network/Request'
-const uploadPath = 'https://ll.iia.pw/upload/';
-const resourcePath = 'https://ll.iia.pw/llplayer/assets/';
+// const uploadPath = 'https://ll.iia.pw/upload/';
+const uploadPath = '/upload/';
+// const resourcePath = 'https://ll.iia.pw/llplayer/assets/';
+const resourcePath = '/llplayer/assets/';
 import {sign} from './sign'
 export let liveinfo;
 function getId(id) {
