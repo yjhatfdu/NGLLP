@@ -4,12 +4,13 @@
 import * as Engine from '../Engine/Engine'
 import {noteSpriteFactory} from './sprites'
 
-import {rankTiming, rank} from './ranking'
 import * as ranking from './ranking'
+import {rank, rankTiming} from './ranking'
 import {Tween} from '../Engine/Animation/Tween'
-import {Settings, delay, userSpeed} from './settings'
+import {delay, Settings, userSpeed} from './settings'
 import * as m from './beatMap'
 import * as lzma from '../../lib/lzma'
+import {build} from "./expression/expression";
 
 let channels = [];
 let speed = 160;
@@ -19,35 +20,45 @@ let touchState = [];
 let releaseState = [];
 const centerY = 0.501466;
 const channelLength = 1.246334;
+let posXexpression, posYexpression, scaleExpression, rotationExpression, opacityExpression, identifyChannelExpression,
+    frameExpression;
+
 // support ios 10-
-if(!Int8Array.prototype.reverse){
+if (!Int8Array.prototype.reverse) {
     Int8Array.prototype.reverse = function () {
-        let length=this.length;
+        let length = this.length;
         let newArray = new Int8Array(length);
         for (let i = 0; i < length; i++) {
-            newArray[length-i-1]=this[i]
+            newArray[length - i - 1] = this[i]
         }
         return newArray
     };
-    Uint8Array.prototype.reverse=function () {
-        let length=this.length;
+    Uint8Array.prototype.reverse = function () {
+        let length = this.length;
         let newArray = new Uint8Array(length);
         for (let i = 0; i < length; i++) {
-            newArray[length-i-1]=this[i]
+            newArray[length - i - 1] = this[i]
         }
         return newArray
     };
 }
 
 export function init(rawmap) {
+    posXexpression = build(Settings.channelSetting.posX);
+    posYexpression = build(Settings.channelSetting.posY);
+    scaleExpression = build(Settings.channelSetting.scale);
+    opacityExpression = build(Settings.channelSetting.opacity);
+    rotationExpression = build(Settings.channelSetting.rotation);
+    identifyChannelExpression = build(Settings.channelSetting.identifyChannel);
+    frameExpression = build(Settings.channelSetting.frame);
     let data = new Int8Array(rawmap).reverse();
     let d = lzma.decompress(data);
     let decompressed = new Uint8Array(new Int8Array(d).buffer).reverse();
     let map = (<any>m).M.decode(decompressed);
     speed = userSpeed || map.speed;
-    channels = map.channels.map((x, i) => {
-         x.notes.forEach(n=>n.lane=i);
-         return x.notes
+    channels = map.channels.slice(0, Settings.channelSetting.count).map((x, i) => {
+        x.notes.forEach(n => n.lane = i);
+        return x.notes
     });
     currentNotes = channels.map(x => []);
     for (let i = 0; i < channels.length; i++) {
@@ -65,9 +76,9 @@ export function init(rawmap) {
         }
         let currentTime = Engine.audioCtl.getBgmTime() * 1000;
         let noteWidth = 0.37537;
-        for (let i = 0; i < channels.length; i++) {
-            let channel = channels[i];
-            let currentChannel = currentNotes[i];
+        for (let channelIndex = 0; channelIndex < channels.length; channelIndex++) {
+            let channel = channels[channelIndex];
+            let currentChannel = currentNotes[channelIndex];
             while (true) {
                 if (channel.length == 0) {
                     break
@@ -82,7 +93,7 @@ export function init(rawmap) {
                 }
                 theNote.holdCount = 0;
                 currentChannel.push(theNote);
-                touchState[i] = 0;
+                touchState[channelIndex] = 0;
             }
             while (true) {
                 if (currentChannel.length == 0) {
@@ -110,38 +121,41 @@ export function init(rawmap) {
             for (let note of currentChannel) {
                 let currentSpr = note.sprite;
                 let percentage = Math.max(0, 1 - (note.starttime - currentTime) / 128000 * speed);
-                currentSpr.w = currentSpr.h = noteWidth * percentage;//2*128px/768px
-                let length = channelLength * percentage;
-                let alpha = note.lane * 0.125 * Math.PI;
-                let ca = Math.cos(alpha);
-                let sa = Math.sin(alpha);
-                currentSpr.y = (centerY - length * sa);
-                currentSpr.x = -length * ca;
+                currentSpr.w = currentSpr.h = scaleExpression(channelIndex, percentage, 0, 0);//2*128px/768px
+                // let length = channelLength * percentage;
+                // let alpha = note.lane * 0.125 * Math.PI;
+                // let ca = Math.cos(alpha);
+                // let sa = Math.sin(alpha);
+                currentSpr.y = posYexpression(channelIndex, percentage, 0, 0);
+                currentSpr.x = posXexpression(channelIndex, percentage, 0, 0);
+                currentSpr.opacity = opacityExpression(channelIndex, percentage, 0, 0);
+                currentSpr.roration = rotationExpression(channelIndex, percentage, 0, 0);
                 if (note.longnote) {
                     let headPercentage = 1;
                     let tailPercentage = Math.max(1 - (note.endtime - currentTime) / 128000 * speed, 0);
                     let longSpr = note.sprite.longNoteSpr;
-                    let headX = 0, headY = 0;
                     if (note.hold) {
-                        headX = -channelLength * ca;
-                        headY = (centerY - channelLength * sa)
+                        headPercentage = 1
                     } else {
                         headPercentage = percentage;
-                        headX = currentSpr.x;
-                        headY = currentSpr.y
                     }
-                    longSpr.p0[0] = headX + noteWidth * headPercentage * sa * 0.5;
-                    longSpr.p0[1] = headY - noteWidth * headPercentage * ca * 0.5;
-                    longSpr.p2[0] = headX - noteWidth * headPercentage * sa * 0.5;
-                    longSpr.p2[1] = headY + noteWidth * headPercentage * ca * 0.5;
+                    let headSize = scaleExpression(channelIndex, headPercentage, 0, 0);
+                    let tailSize = scaleExpression(channelIndex, tailPercentage, 0, 0);
+                    let headX = posXexpression(channelIndex, headPercentage, 0, 0),
+                        headY = posYexpression(channelIndex, headPercentage, 0, 0),
+                        tailY = posYexpression(channelIndex, tailPercentage, 0, 0),
+                        tailX = posXexpression(channelIndex, tailPercentage, 0, 0);
+                    let sa = Math.sin(Math.atan((headY - tailY) / headX - tailX));
+                    let ca = Math.cos(Math.atan((headY - tailY) / headX - tailX));
+                    longSpr.p0[0] = headX + headSize * sa * 0.5;
+                    longSpr.p0[1] = headY - headSize * ca * 0.5;
+                    longSpr.p2[0] = headX - headSize * sa * 0.5;
+                    longSpr.p2[1] = headY + headSize * ca * 0.5;
 
-                    let tailY = (centerY - channelLength * tailPercentage * sa);
-                    let tailX = -channelLength * tailPercentage * ca;
-
-                    longSpr.p1[0] = tailX - noteWidth * tailPercentage * sa * 0.5;
-                    longSpr.p1[1] = tailY + noteWidth * tailPercentage * ca * 0.5;
-                    longSpr.p3[0] = tailX + noteWidth * tailPercentage * sa * 0.5;
-                    longSpr.p3[1] = tailY - noteWidth * tailPercentage * ca * 0.5;
+                    longSpr.p1[0] = tailX - tailSize * sa * 0.5;
+                    longSpr.p1[1] = tailY + tailSize * ca * 0.5;
+                    longSpr.p3[0] = tailX + tailSize * sa * 0.5;
+                    longSpr.p3[1] = tailY - tailSize * ca * 0.5;
 
                     if (tailPercentage > 0) {
                         let tailSpr = currentSpr.tailSprite;
@@ -174,12 +188,7 @@ function onTouch(e) {
         return
     }
     let x = e.x, y = e.y;
-    if (y > (centerY + 0.37537)) {
-        return
-    }
-    let r = Math.sqrt(x * x + (centerY - y) * (centerY - y));
-    let alpha = Math.acos(-x / r);
-    let channel = Math.round(alpha / Math.PI * 8);
+    let channel = Math.round(identifyChannelExpression(0, 0, x, y));
     touchChannel(channel);
 }
 
@@ -188,12 +197,7 @@ function onTouchEnd(e) {
         return
     }
     let x = e.x, y = e.y;
-    if (y > (centerY + 0.37537)) {
-        return
-    }
-    let r = Math.sqrt(x * x + (centerY - y) * (centerY - y));
-    let alpha = Math.acos(-x / r);
-    let channel = Math.round(alpha / Math.PI * 8);
+    let channel = Math.round(identifyChannelExpression(0, 0, x, y));
     releaseChannel(channel);
 }
 

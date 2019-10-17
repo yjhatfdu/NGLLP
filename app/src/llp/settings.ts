@@ -2,7 +2,7 @@
  * Created by yjh on 16/8/19.
  */
 import * as Requests from '../Engine/Network/Request'
-import {settings} from "../Engine/Engine";
+
 export let Settings = {
     "settingVersion": 1,
     "loadingPromotion": [
@@ -255,15 +255,29 @@ export let Settings = {
                 {"type": "translateTo", "value": 1, "time": 300},
             ]
         }
+    },
+    "channelSetting": {
+        "count": 9,
+        "posX": "-1.246334*cos(channel*0.125*PI)*progress",
+        // "posX": "(channel-4.5)/4.5",
+        "posY": "0.501466-1.246334*sin(channel*0.125*PI)*progress",
+        // "posY": "1-1.8*progress",
+        "scale": "0.37537*progress",
+        // "scale": "0.2",
+        "opacity": "1",
+        "rotation": "0",
+        "identifyChannel": "round(acos(-x / sqrt(x^2 + (0.501466 - y)^2)) / PI * 8)",
+        "frame": "0",
     }
 };
 
 export let renderPrecision = parseFloat(localStorage.getItem('renderP') || '1') || 1;
 export let delay = parseFloat(localStorage.getItem('delay') || '0') || 0;
 export let userSpeed = parseInt(localStorage.getItem('speed') || '0') || null;
+
 export function loadSettings(path) {
     return Requests.GET(path)
-        .then(data=> {
+        .then(data => {
             for (let i in Settings) {
                 if (!data.hasOwnProperty(i)) {
                     data[i] = Settings[i]
