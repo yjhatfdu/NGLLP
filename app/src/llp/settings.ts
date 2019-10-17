@@ -259,11 +259,8 @@ export let Settings = {
     "channelSetting": {
         "count": 9,
         "posX": "-1.246334*cos(channel*0.125*PI)*progress",
-        // "posX": "(channel-4.5)/4.5",
         "posY": "0.501466-1.246334*sin(channel*0.125*PI)*progress",
-        // "posY": "1-1.8*progress",
         "scale": "0.37537*progress",
-        // "scale": "0.2",
         "opacity": "1",
         "rotation": "0",
         "identifyChannel": "round(acos(-x / sqrt(x^2 + (0.501466 - y)^2)) / PI * 8)",

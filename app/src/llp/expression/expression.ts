@@ -54,6 +54,36 @@ function compile(node) {
             }
             return node.name
         }
+        case 'lt': {
+            return `${compile(node.children[0])}<${compile(node.children[1])}`
+        }
+        case 'lte': {
+            return `${compile(node.children[0])}<=${compile(node.children[1])}`
+        }
+        case 'gt': {
+            return `${compile(node.children[0])}>${compile(node.children[1])}`
+        }
+        case 'gte': {
+            return `${compile(node.children[0])}>=${compile(node.children[1])}`
+        }
+        case 'eq': {
+            return `${compile(node.children[0])}==${compile(node.children[1])}`
+        }
+        case 'neq': {
+            return `${compile(node.children[0])}!==${compile(node.children[1])}`
+        }
+        case 'and': {
+            return `${compile(node.children[0])}&&${compile(node.children[1])}`
+        }
+        case 'or': {
+            return `${compile(node.children[0])}||${compile(node.children[1])}`
+        }
+        case 'not': {
+            return `!${compile(node.children[0])}`
+        }
+        case 'tri': {
+            return `${compile(node.children[0])}?${compile(node.children[1])}:${compile(node.children[2])}`
+        }
         default: {
             console.log(JSON.stringify(node));
             throw new Error("Not support node type " + node.type)
@@ -73,6 +103,9 @@ function compile(node) {
 // console.log(build('round(acos(-x / sqrt(x^2 + (0.501466 - y)^2)) / PI * 8)').toString());
 // //Math.round(Math.acos(-x/Math.sqrt(Math.pow(x,2)+Math.pow(0.501466-y,2)))/3.141592653589793*8)
 //
-// console.log(build('1').toString());
+//console.log(build('cos(channel*0.25*PI)*min(0,progress-0.5)*2').toString());
 // //1
+
+//console.log(build('channel>=4?progress:-progress').toString());
+
 
