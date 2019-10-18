@@ -145,17 +145,20 @@ export function init(rawmap) {
                         headY = posYexpression(channelIndex, headPercentage, 0, 0),
                         tailY = posYexpression(channelIndex, tailPercentage, 0, 0),
                         tailX = posXexpression(channelIndex, tailPercentage, 0, 0);
-                    let sa = Math.sin(Math.atan((headY - tailY) / headX - tailX));
-                    let ca = Math.cos(Math.atan((headY - tailY) / headX - tailX));
-                    longSpr.p0[0] = headX + headSize * sa * 0.5;
-                    longSpr.p0[1] = headY - headSize * ca * 0.5;
-                    longSpr.p2[0] = headX - headSize * sa * 0.5;
-                    longSpr.p2[1] = headY + headSize * ca * 0.5;
+                    let deltaX = headX - tailX;
+                    let deltaY = headY - tailY;
+                    let edge = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+                    let sa = deltaX / edge * 0.5;
+                    let ca = deltaY / edge * 0.5;
+                    longSpr.p0[0] = headX + headSize * ca;
+                    longSpr.p0[1] = headY - headSize * sa;
+                    longSpr.p2[0] = headX - headSize * ca;
+                    longSpr.p2[1] = headY + headSize * sa;
 
-                    longSpr.p1[0] = tailX - tailSize * sa * 0.5;
-                    longSpr.p1[1] = tailY + tailSize * ca * 0.5;
-                    longSpr.p3[0] = tailX + tailSize * sa * 0.5;
-                    longSpr.p3[1] = tailY - tailSize * ca * 0.5;
+                    longSpr.p1[0] = tailX - tailSize * ca;
+                    longSpr.p1[1] = tailY + tailSize * sa;
+                    longSpr.p3[0] = tailX + tailSize * ca;
+                    longSpr.p3[1] = tailY - tailSize * sa;
 
 
                     if (tailPercentage > 0) {
