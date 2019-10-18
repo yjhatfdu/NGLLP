@@ -157,6 +157,7 @@ export function init(rawmap) {
                     longSpr.p3[0] = tailX + tailSize * sa * 0.5;
                     longSpr.p3[1] = tailY - tailSize * ca * 0.5;
 
+
                     if (tailPercentage > 0) {
                         let tailSpr = currentSpr.tailSprite;
                         currentSpr.tail = true;
@@ -189,6 +190,9 @@ function onTouch(e) {
     }
     let x = e.x, y = e.y;
     let channel = Math.round(identifyChannelExpression(0, 0, x, y));
+    if (channel < 0 || channel >= channels.length) {
+        return
+    }
     touchChannel(channel);
 }
 
@@ -198,6 +202,9 @@ function onTouchEnd(e) {
     }
     let x = e.x, y = e.y;
     let channel = Math.round(identifyChannelExpression(0, 0, x, y));
+    if (channel < 0 || channel >= channels.length) {
+        return
+    }
     releaseChannel(channel);
 }
 

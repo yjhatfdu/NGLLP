@@ -263,7 +263,7 @@ export let Settings = {
         "scale": "0.37537*progress",
         "opacity": "1",
         "rotation": "0",
-        "identifyChannel": "round(acos(-x / sqrt(x^2 + (0.501466 - y)^2)) / PI * 8)",
+        "identifyChannel": "y>0.876836?-1:round(acos(-x / sqrt(x^2 + (0.501466 - y)^2)) / PI * 8)",
         "frame": "0",
     }
 };

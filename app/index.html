@@ -11,7 +11,43 @@
 <body style="width: 100%;height:100vh;margin:0;background: black;overflow: hidden">
 <img src="assets/blackleft.png" style="position: absolute;z-index: 9999;right:0;top:0;height:5vh"
      onclick="if(!document.createTouch){history.back()}" ontouchend="if(document.createTouch){history.back()}">
+<img id="gofull" src="assets/gofull.png" style="position: absolute;z-index: 9999;left:0;top:0;height:5vh"
+     onclick="if(!document.createTouch){reqFullScreen()}"
+     ontouchend="if(document.createTouch){reqFullScreen()}">
 </body>
+<script>
+    if (!document.body.webkitRequestFullscreen && !document.body.requestFullscreen && document.body.mozRequestFullScreen) {
+        document.querySelector('#gofull').remove()
+    }
+
+    function reqFullScreen() {
+        if (document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement) {
+            if (document.cancelFullScreen) {
+                document.cancelFullScreen();
+            } else {
+                if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else {
+                    if (document.webkitCancelFullScreen) {
+                        document.webkitCancelFullScreen();
+                    }
+                }
+            }
+            return;
+        }
+        if (document.body.webkitRequestFullscreen) {
+            document.body.webkitRequestFullscreen();
+            return
+        }
+        if (document.body.requestFullscreen) {
+            document.body.requestFullscreen();
+            return
+        }
+        if (document.body.mozRequestFullScreen) {
+            document.body.document.body.mozRequestFullScreen()
+        }
+    }
+</script>
 <script src="bundle.js">
 </script>
 </html>
