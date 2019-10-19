@@ -12,7 +12,7 @@ import * as m from './beatMap'
 import * as lzma from '../../lib/lzma'
 import {build} from "./expression/expression";
 
-let channels = [];
+export let channels = [];
 let speed = 160;
 let initialized = false;
 let currentNotes;
@@ -20,7 +20,8 @@ let touchState = [];
 let releaseState = [];
 const centerY = 0.501466;
 const channelLength = 1.246334;
-let posXexpression, posYexpression, scaleExpression, rotationExpression, opacityExpression, identifyChannelExpression,
+export let posXexpression, posYexpression, scaleExpression, rotationExpression, opacityExpression,
+    identifyChannelExpression,
     frameExpression;
 
 // support ios 10-

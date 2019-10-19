@@ -84,6 +84,9 @@ function compile(node) {
         case 'tri': {
             return `${compile(node.children[0])}?${compile(node.children[1])}:${compile(node.children[2])}`
         }
+        case 'bracket': {
+            return `(${compile(node.children[0])})`
+        }
         default: {
             console.log(JSON.stringify(node));
             throw new Error("Not support node type " + node.type)
@@ -106,6 +109,20 @@ function compile(node) {
 //console.log(build('cos(channel*0.25*PI)*min(0,progress-0.5)*2').toString());
 // //1
 
-//console.log(build('channel>=4?progress:-progress').toString());
+// console.log(build('(0.58183107*channel-1.16366214*sign(channel-3.5)-2.03640874)*progress').toString());
 
 
+// function a(channel, progress, x, y
+// ) {
+//     return (0.58183107 * channel - 1.16366214 * Math.sign(channel - 3.5) - 2.03640874) * progress
+// }
+// let b = 0;
+// for (let i = 0; i < 100000000; i++) {
+//     b = a(0, 1, 0, 0)
+// }
+// console.time('100000000 times');
+// for (let i = 0; i < 100000000; i++) {
+//     b = a(0, 1, 0, 0)
+// }
+// console.timeEnd('100000000 times');
+// console.log(b);

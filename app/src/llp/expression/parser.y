@@ -75,7 +75,7 @@ e    :
     | 'E'
         {$$={type:'const',value:Math.E};}
     | '(' e ')'
-        {$$=$2;}
+        {$$={type:'bracket',children:[$2]}}
     | e '+' e
         {$$={type:'plus',children:[$1,$3]};}
     | e '-' e
