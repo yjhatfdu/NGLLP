@@ -3,12 +3,12 @@ import * as parser from './parser'
 declare module 'fs'
 const functionMap = {};
 
-const varSet = new Set([
-    'channel',
-    'progress',
-    'x',
-    'y'
-]);
+const varSet = {
+    'channel': 1,
+    'progress': 1,
+    'x': 1,
+    'y': 1
+};
 
 export function build(exp) {
     return new Function('channel', 'progress', 'x', 'y', 'return ' + compile(parser.parse(exp)))
@@ -49,7 +49,7 @@ function compile(node) {
             return 'Math.pow(' + compile(node.children[0]) + ',' + compile(node.children[1]) + ')'
         }
         case 'var': {
-            if (!varSet.has(node.name)) {
+            if (!varSet[node.name]) {
                 throw new Error("Not support variable " + node.name)
             }
             return node.name
@@ -87,6 +87,9 @@ function compile(node) {
         case 'bracket': {
             return `(${compile(node.children[0])})`
         }
+        case 'mod': {
+            return `${compile(node.children[0])}%${compile(node.children[1])}`
+        }
         default: {
             console.log(JSON.stringify(node));
             throw new Error("Not support node type " + node.type)
@@ -109,13 +112,14 @@ function compile(node) {
 //console.log(build('cos(channel*0.25*PI)*min(0,progress-0.5)*2').toString());
 // //1
 
-// console.log(build('(0.58183107*channel-1.16366214*sign(channel-3.5)-2.03640874)*progress').toString());
+// console.log(build('0.501466-1.246334*sin(channel*0.125*PI)*(0.5*progress+0.5)').toString());
 
 
 // function a(channel, progress, x, y
 // ) {
 //     return (0.58183107 * channel - 1.16366214 * Math.sign(channel - 3.5) - 2.03640874) * progress
 // }
+// let a = build('(round((atan2(y,x)/pi*180+195)/30)>10 ? (round((atan2(y,x)/pi*180+195)/30)-11):(round((atan2(y,x)/pi*180+195)/30)>4 ? (round((atan2(y,x)/pi*180+195)/30)-1):(round((atan2(y,x)/pi*180+195)/30)<3 ? (round((atan2(y,x)/pi*180+195)/30)+1):(-1))))')
 // let b = 0;
 // for (let i = 0; i < 100000000; i++) {
 //     b = a(0, 1, 0, 0)

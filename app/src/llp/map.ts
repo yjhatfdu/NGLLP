@@ -76,7 +76,6 @@ export function init(rawmap) {
             return
         }
         let currentTime = Engine.audioCtl.getBgmTime() * 1000;
-        let noteWidth = 0.37537;
         for (let channelIndex = 0; channelIndex < channels.length; channelIndex++) {
             let channel = channels[channelIndex];
             let currentChannel = currentNotes[channelIndex];
@@ -167,7 +166,7 @@ export function init(rawmap) {
                         currentSpr.tail = true;
                         tailSpr.x = tailX;
                         tailSpr.y = tailY;
-                        tailSpr.w = tailSpr.h = noteWidth * tailPercentage
+                        tailSpr.w = tailSpr.h = tailSize
                     } else {
                         currentSpr.tail = false;
                     }

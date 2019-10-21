@@ -9,16 +9,17 @@ import {QuadrangleSprite} from "../Engine/Core2D/QuadrangleSprite";
 import {Settings} from './settings'
 
 
-let noteSpritePool:Array<Note> = [];
+let noteSpritePool: Array<Note> = [];
 
 function init() {
 }
 
 class Note extends Sprite {
-    parallelSpr:Sprite;
-    noteSpr:Sprite;
-    longNoteSpr:QuadrangleSprite;
-    tailSprite:Sprite;
+    parallelSpr: Sprite;
+    noteSpr: Sprite;
+    longNoteSpr: QuadrangleSprite;
+    tailSprite: Sprite;
+    random = Math.random();
 
     set parallel(v) {
         this.parallelSpr.opacity = v ? 1 : 0;
@@ -50,6 +51,7 @@ class Note extends Sprite {
     }
 
 }
+
 export function noteSpriteFactory(parallel = false) {
     if (noteSpritePool.length > 0) {
         let note = noteSpritePool.pop();

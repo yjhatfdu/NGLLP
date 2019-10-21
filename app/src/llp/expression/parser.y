@@ -30,6 +30,7 @@
 "!"             return  'not'
 "?"             return  '?'
 ":"             return  ':'
+"%"             return  '%'
 
 [\w\d\u4e00-\u9fa5.]+	{ return 'NAME'};
 <<EOF>>	return 'EOF';
@@ -44,7 +45,7 @@
 %left 'not'
 %left 'gt' 'gte' 'lt' 'lte' 'eq' 'neq'
 %left '+' '-'
-%left '*' '/'
+%left '*' '/' '%'
 %left '^'
 %right '('
 
@@ -84,6 +85,8 @@ e    :
         {$$={type:'mul',children:[$1,$3]};}
     | e '/' e
         {$$={type:'div',children:[$1,$3]};}
+    | e '%' e
+        {$$={type:'mod',children:[$1,$3]};}
     | e '^' e
         {$$={type:'pow',children:[$1,$3]};}
     | '-' e
