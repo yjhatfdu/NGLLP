@@ -10,7 +10,7 @@ import {Tween} from '../Engine/Animation/Tween'
 import {delay, Settings, userSpeed} from './settings'
 import * as m from './beatMap'
 import * as lzma from '../../lib/lzma'
-import {build} from "./expression/expression";
+import {build} from "llp-script";
 
 export let channels = [];
 let speed = 160;
@@ -45,12 +45,12 @@ if (!Int8Array.prototype.reverse) {
 }
 
 export function init(rawmap) {
-    posXexpression = build(Settings.channelSetting.posX);
-    posYexpression = build(Settings.channelSetting.posY);
-    scaleExpression = build(Settings.channelSetting.scale);
-    opacityExpression = build(Settings.channelSetting.opacity);
-    rotationExpression = build(Settings.channelSetting.rotation);
-    identifyChannelExpression = build(Settings.channelSetting.identifyChannel);
+    posXexpression = build(Settings.channelSetting.posX, 'channel', 'progress');
+    posYexpression = build(Settings.channelSetting.posY, 'channel', 'progress');
+    scaleExpression = build(Settings.channelSetting.scale, 'channel', 'progress');
+    opacityExpression = build(Settings.channelSetting.opacity, 'channel', 'progress');
+    rotationExpression = build(Settings.channelSetting.rotation, 'channel', 'progress');
+    identifyChannelExpression = build(Settings.channelSetting.identifyChannel, 'x', 'y');
     frameExpression = build(Settings.channelSetting.frame);
     let data = new Int8Array(rawmap).reverse();
     let d = lzma.decompress(data);
