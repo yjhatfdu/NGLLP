@@ -2,6 +2,7 @@
  * Created by yjh on 16/8/19.
  */
 import * as Requests from '../Engine/Network/Request'
+import {eventBus, settings} from "../Engine/Engine";
 
 export let Settings = {
     "settingVersion": 1,
@@ -265,21 +266,40 @@ export let Settings = {
         "rotation": "0",
         "identifyChannel": "y>0.876836?-1:round(acos(-x / sqrt(x^2 + (0.501466 - y)^2)) / PI * 8)",
         "frame": "0",
-    }
+    },
+    "canvasSetting": {
+        "width": 1024,
+        "height": 682,
+        "rotation": "0",
+        "scale": "1",
+        "opacity": "1"
+    },
+    "speedRatio": 1,
 };
 
 export let renderPrecision = parseFloat(localStorage.getItem('renderP') || '1') || 1;
 export let delay = parseFloat(localStorage.getItem('delay') || '0') || 0;
 export let userSpeed = parseInt(localStorage.getItem('speed') || '0') || null;
 
+function merge(source, target) {
+    for (let key in target) {
+        if (target.hasOwnProperty(key)) {
+            if (!source.hasOwnProperty(key)) {
+                source[key] = target[key]
+            } else {
+                if (target[key] instanceof Object) {
+                    merge(source[key], target[key])
+                } else {
+                    source[key] = target[key]
+                }
+            }
+        }
+    }
+}
+
 export function loadSettings(path) {
     return Requests.GET(path)
         .then(data => {
-            for (let i in Settings) {
-                if (!data.hasOwnProperty(i)) {
-                    data[i] = Settings[i]
-                }
-            }
-            Settings = data
-        })
+            merge(settings, data)
+        }).catch(e => eventBus.dispatchEvent("error", 'settings loading error,' + e.message))
 }

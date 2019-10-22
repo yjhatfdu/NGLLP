@@ -45,18 +45,18 @@ if (!Int8Array.prototype.reverse) {
 }
 
 export function init(rawmap) {
-    posXexpression = build(Settings.channelSetting.posX, 'channel', 'progress');
-    posYexpression = build(Settings.channelSetting.posY, 'channel', 'progress');
-    scaleExpression = build(Settings.channelSetting.scale, 'channel', 'progress');
-    opacityExpression = build(Settings.channelSetting.opacity, 'channel', 'progress');
-    rotationExpression = build(Settings.channelSetting.rotation, 'channel', 'progress');
-    identifyChannelExpression = build(Settings.channelSetting.identifyChannel, 'x', 'y');
+    posXexpression = build(Settings.channelSetting.posX, 'channel', 'progress', 'currentTime');
+    posYexpression = build(Settings.channelSetting.posY, 'channel', 'progress', 'currentTime');
+    scaleExpression = build(Settings.channelSetting.scale, 'channel', 'progress', 'currentTime');
+    opacityExpression = build(Settings.channelSetting.opacity, 'channel', 'progress', 'currentTime');
+    rotationExpression = build(Settings.channelSetting.rotation, 'channel', 'progress', 'currentTime');
+    identifyChannelExpression = build(Settings.channelSetting.identifyChannel, 'x', 'y', 'currentTime');
     frameExpression = build(Settings.channelSetting.frame);
     let data = new Int8Array(rawmap).reverse();
     let d = lzma.decompress(data);
     let decompressed = new Uint8Array(new Int8Array(d).buffer).reverse();
     let map = (<any>m).M.decode(decompressed);
-    speed = userSpeed || map.speed;
+    speed = (userSpeed || map.speed) * Settings.speedRatio;
     channels = map.channels.slice(0, Settings.channelSetting.count).map((x, i) => {
         x.notes.forEach(n => n.lane = i);
         return x.notes
@@ -126,10 +126,10 @@ export function init(rawmap) {
                 // let alpha = note.lane * 0.125 * Math.PI;
                 // let ca = Math.cos(alpha);
                 // let sa = Math.sin(alpha);
-                currentSpr.y = posYexpression(channelIndex, percentage, 0, 0);
-                currentSpr.x = posXexpression(channelIndex, percentage, 0, 0);
-                currentSpr.opacity = opacityExpression(channelIndex, percentage, 0, 0);
-                currentSpr.roration = rotationExpression(channelIndex, percentage, 0, 0);
+                currentSpr.y = posYexpression(channelIndex, percentage, currentTime);
+                currentSpr.x = posXexpression(channelIndex, percentage, currentTime);
+                currentSpr.opacity = opacityExpression(channelIndex, percentage, currentTime);
+                currentSpr.roration = rotationExpression(channelIndex, percentage, currentTime);
                 if (note.longnote) {
                     let headPercentage = 1;
                     let tailPercentage = Math.max(1 - (note.endtime - currentTime) / 128000 * speed, 0);
@@ -139,12 +139,12 @@ export function init(rawmap) {
                     } else {
                         headPercentage = percentage;
                     }
-                    let headSize = scaleExpression(channelIndex, headPercentage, 0, 0);
-                    let tailSize = scaleExpression(channelIndex, tailPercentage, 0, 0);
-                    let headX = posXexpression(channelIndex, headPercentage, 0, 0),
-                        headY = posYexpression(channelIndex, headPercentage, 0, 0),
-                        tailY = posYexpression(channelIndex, tailPercentage, 0, 0),
-                        tailX = posXexpression(channelIndex, tailPercentage, 0, 0);
+                    let headSize = scaleExpression(channelIndex, headPercentage, currentTime);
+                    let tailSize = scaleExpression(channelIndex, tailPercentage, currentTime);
+                    let headX = posXexpression(channelIndex, headPercentage, currentTime),
+                        headY = posYexpression(channelIndex, headPercentage, currentTime),
+                        tailY = posYexpression(channelIndex, tailPercentage, currentTime),
+                        tailX = posXexpression(channelIndex, tailPercentage, currentTime);
                     let deltaX = headX - tailX;
                     let deltaY = headY - tailY;
                     let edge = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
@@ -192,7 +192,7 @@ function onTouch(e) {
         return
     }
     let x = e.x, y = e.y;
-    let channel = Math.round(identifyChannelExpression(0, 0, x, y));
+    let channel = Math.round(identifyChannelExpression(x, y, Engine.audioCtl.getBgmTime() * 1000));
     if (channel < 0 || channel >= channels.length) {
         return
     }
@@ -204,7 +204,7 @@ function onTouchEnd(e) {
         return
     }
     let x = e.x, y = e.y;
-    let channel = Math.round(identifyChannelExpression(0, 0, x, y));
+    let channel = Math.round(identifyChannelExpression(x, y, Engine.audioCtl.getBgmTime() * 1000));
     if (channel < 0 || channel >= channels.length) {
         return
     }
