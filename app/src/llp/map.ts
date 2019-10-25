@@ -120,7 +120,7 @@ export function init(rawmap) {
             for (let note of currentChannel) {
                 let currentSpr = note.sprite;
                 let percentage = Math.max(0, 1 - (note.starttime - currentTime) / 128000 * speed);
-                currentSpr.w = currentSpr.h = scaleExpression(channelIndex, percentage, 0, 0);//2*128px/768px
+                currentSpr.w = currentSpr.h = scaleExpression(channelIndex, percentage,currentTime);//2*128px/768px
                 // let length = channelLength * percentage;
                 // let alpha = note.lane * 0.125 * Math.PI;
                 // let ca = Math.cos(alpha);
