@@ -57,8 +57,7 @@ export function init(rawmap) {
     let decompressed = new Uint8Array(new Int8Array(d).buffer).reverse();
     let map = (<any>m).M.decode(decompressed);
     speed = (userSpeed || map.speed) * Settings.speedRatio;
-    channels = map.channels.slice(0, Settings.channelSetting.count).map((x, i) => {
-        x.notes.forEach(n => n.lane = i);
+    channels = map.channels.slice(0, Settings.channelSetting.count).map(x => {
         return x.notes
     });
     currentNotes = channels.map(x => []);
@@ -211,6 +210,18 @@ function onTouchEnd(e) {
     releaseChannel(channel);
 }
 
+function onTouchMove(e) {
+    if (!running) {
+        return
+    }
+    let x = e.x, y = e.y;
+    let channel = Math.round(identifyChannelExpression(x, y, Engine.audioCtl.getBgmTime() * 1000));
+    if (channel < 0 || channel >= channels.length) {
+        return
+    }
+    touchMoveChannel(channel);
+}
+
 let keyCodeMap: any = {
     'a': 0,
     's': 1,
@@ -288,4 +299,11 @@ function releaseChannel(ch) {
     }
 }
 
+function touchMoveChannel(ch) {
+    let note = currentNotes[ch][0];
+    if (!note) {
+        return
+    }
+
+}
 

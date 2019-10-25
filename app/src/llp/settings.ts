@@ -300,6 +300,6 @@ function merge(source, target) {
 export function loadSettings(path) {
     return Requests.GET(path)
         .then(data => {
-            merge(settings, data)
+            merge(Settings, data)
         }).catch(e => eventBus.dispatchEvent("error", 'settings loading error,' + e.message))
 }

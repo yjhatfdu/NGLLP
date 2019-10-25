@@ -63,12 +63,7 @@ load(live_id)
         let bgRotation = build(Settings.canvasSetting.rotation, 'currentTime');
         let bgScale = build(Settings.canvasSetting.scale, 'currentTime');
         let bgOpacity = build(Settings.canvasSetting.opacity, 'currentTime');
-        Engine.eventBus.addEventListener('beforeupdate', () => {
-            let current = Engine.audioCtl.getBgmTime() * 1000 || 0;
-            bgObject.rotation = bgRotation(current);
-            bgObject.scale = bgScale(current);
-            bgObject.opacity=bgOpacity(current);
-        });
+
         Engine.audioCtl.loadBgm(Engine.resourceCtl.getItem('bgm'));
         let cover = Engine.resourceCtl.getItem('coverImg');
         let coverSprite = new Sprite(cover, 0, 0.3, cover.width / cover.height, 1, {});
@@ -87,7 +82,16 @@ load(live_id)
             if (started) {
                 return
             }
+
             started = true;
+            Engine.eventBus.addEventListener('beforeupdate', () => {
+                let current = Engine.audioCtl.getBgmTime() * 1000 || 0;
+                if(current>0){
+                    bgObject.rotation = bgRotation(current);
+                    bgObject.scale = bgScale(current);
+                    bgObject.opacity=bgOpacity(current);
+                }
+            });
             GameMap.enableTouch();
             Engine.audioCtl.play(1.5);
             Tween(clickToStart, 'opacity').translateTo(0, 200)

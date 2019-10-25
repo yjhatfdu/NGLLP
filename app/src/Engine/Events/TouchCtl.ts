@@ -35,11 +35,14 @@ export const TouchEvents = {
     touchend: 'touchend',
 
 };
+
+
 export class TouchCtl extends Base.EventBase {
     private canvas;
     private itemList = {};
 
     public enableTracking = false;
+    public touchList: Array<Array<number>>;
 
     constructor() {
         super();
@@ -47,6 +50,7 @@ export class TouchCtl extends Base.EventBase {
         if (document.createTouch) {
             this.canvas.addEventListener("touchstart", this.onTouchStart.bind(this), true);
             this.canvas.addEventListener("touchend", this.onTouchEnd.bind(this), true);
+            this.canvas.addEventListener("touchmove", this.onTouchMove.bind(this), true)
         } else {
             this.canvas.addEventListener("mousedown", this.onMouseDown.bind(this), true);
             this.canvas.addEventListener("mouseup", this.onMouseUp.bind(this), true);
@@ -57,33 +61,53 @@ export class TouchCtl extends Base.EventBase {
         if (Engine.render.landscape) {
             return [(2 * x / Engine.render.width - 1) / Engine.render.aspect, 1 - 2 * y / Engine.render.height]
         } else {
-            return [(2 * x / Engine.render.width - 1)/Engine.render.designAspect, Engine.render.aspect / Engine.render.designAspect *(1- 2 * y / Engine.render.height)];
-
-
+            return [(2 * x / Engine.render.width - 1) / Engine.render.designAspect, Engine.render.aspect / Engine.render.designAspect * (1 - 2 * y / Engine.render.height)];
         }
     }
 
-    private onTouchStart(e) {
+    private updateTouch(touches: TouchList) {
+        this.touchList = [];
+        for (let i = 0; i < touches.length; i++) {
+            let t = touches[i];
+            let pos = this.getPos(t.pageX, t.pageY);
+            this.touchList.push(pos)
+        }
+    }
+
+    private onTouchStart(e: TouchEvent) {
         e.stopPropagation();
         e.preventDefault();
+        if (this.enableTracking) {
+            this.updateTouch(e.touches)
+        }
         for (let i = 0; i < e.changedTouches.length; i++) {
             let touch = e.changedTouches[i];
-            let [x,y]=this.getPos(touch.pageX, touch.pageY);
+            let [x, y] = this.getPos(touch.pageX, touch.pageY);
             this.findAndDispatchEvent(TouchEvents.touchstart, x, y);
             this.dispatchEvent("touchstart", {x, y})
         }
     }
 
     private onTouchMove(e) {
-
+        if (this.enableTracking) {
+            this.updateTouch(e.touches)
+        }
+        for (let i = 0; i < e.changedTouches.length; i++) {
+            let touch = e.changedTouches[i];
+            let [x, y] = this.getPos(touch.pageX, touch.pageY);
+            this.dispatchEvent("touchmove", {x, y})
+        }
     }
 
     private onTouchEnd(e) {
         e.stopPropagation();
         e.preventDefault();
+        if (this.enableTracking) {
+            this.updateTouch(e.touches)
+        }
         for (let i = 0; i < e.changedTouches.length; i++) {
             let touch = e.changedTouches[i];
-            let [x,y]=this.getPos(touch.pageX, touch.pageY);
+            let [x, y] = this.getPos(touch.pageX, touch.pageY);
             this.findAndDispatchEvent(TouchEvents.touchend, x, y);
             this.dispatchEvent("touchend", {x, y});
         }
@@ -93,7 +117,7 @@ export class TouchCtl extends Base.EventBase {
     private onMouseDown(e) {
         e.stopPropagation();
         e.preventDefault();
-        let [x,y]=this.getPos(e.offsetX, e.offsetY);
+        let [x, y] = this.getPos(e.offsetX, e.offsetY);
         this.findAndDispatchEvent(TouchEvents.touchstart, x, y);
         this.dispatchEvent("touchstart", {x, y});
     }
@@ -104,13 +128,9 @@ export class TouchCtl extends Base.EventBase {
     private onMouseUp(e) {
         e.stopPropagation();
         e.preventDefault();
-        let [x,y]=this.getPos(e.offsetX, e.offsetY);
+        let [x, y] = this.getPos(e.offsetX, e.offsetY);
         this.findAndDispatchEvent(TouchEvents.touchend, x, y);
         this.dispatchEvent("touchend", {x, y});
-    }
-
-    private trackTouch(id: number, x: number, y: number, remove: boolean) {
-
     }
 
     addTouchItem(item, event) {
