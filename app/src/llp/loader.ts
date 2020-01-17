@@ -29,11 +29,11 @@ export function load(id) {
             Request.GET('/API/startplay?live_id=' + resp['content']['live_id']);
             liveinfo = {
                 bgimg: uploadPath + resp['content']['bgimg_path'],
-                bgm: uploadPath + resp['content']['bgm_path']+'.js',
-                bad: uploadPath + resp['content']['map_path'].replace('.json','.map'),
-                perfect: resourcePath + 'fx/perfect.mp3.js',
-                great: resourcePath + 'fx/great.mp3.js',
-                good: resourcePath + 'fx/good.mp3.js',
+                bgm: uploadPath + resp['content']['bgm_path'],
+                map: uploadPath + resp['content']['map_path'].replace('.json','.map'),
+                perfect: resourcePath + 'fx/perfect.mp3',
+                great: resourcePath + 'fx/great.mp3',
+                good: resourcePath + 'fx/good.mp3',
                 uiAssets: resp['content']['assets_path']?uploadPath + resp['content']['assets_path'] : 'assets/uiAssets.png',
                 title: resp['content']['live_name'],
                 coverImg: uploadPath + resp['content']['cover_path'],

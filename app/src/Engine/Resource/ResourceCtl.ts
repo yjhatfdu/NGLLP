@@ -4,7 +4,7 @@
 ///<reference path='ResourceItem.ts'/>
 import * as Base from '../Base'
 import * as Engine from '../Engine'
-import {ResourceItem, AudioItem, ImageItem,TextItem} from './ResourceItem'
+import {AudioItem, ImageItem, ResourceItem, TextItem} from './ResourceItem'
 import {GET} from '../Network/Request'
 
 export class ResourceCtl extends Base.EventBase {
@@ -18,9 +18,9 @@ export class ResourceCtl extends Base.EventBase {
 
     private loadResources_raw(list: Array<any>, callBack, failCallBack?, progressCallBack?) {
         failCallBack = failCallBack || function () {
-            };
+        };
         progressCallBack = progressCallBack || function () {
-            };
+        };
         let jobCount = 0;
         let runningJobCount = 0;
         let progress = [];
@@ -30,18 +30,18 @@ export class ResourceCtl extends Base.EventBase {
             let url = job['url'];
             let cache = job['cache'];
             let standAlone = job['standAloneTexture'] || false;
-            let realExt=job['realExt'];
+            let realExt = job['realExt'];
 
             //todo implement filesystem api cache in chrome
 
-            let newJob = function (name, url, cache, standAlone,realExt?) {
-                if (/.*\.(jpg|png|jpeg)$/.test((realExt||url).toLowerCase())) {
+            let newJob = function (name, url, cache, standAlone, realExt?) {
+                if (/.*\.(jpg|png|jpeg)$/.test((realExt || url).toLowerCase())) {
                     jobCount++;
                     runningJobCount++;
                     progress[i] = 0;
                     let index = i;
                     let img = document.createElement('img');
-                    img.crossOrigin='Anonymous';
+                    img.crossOrigin = 'Anonymous';
                     img.onload = function () {
                         this.resultDic[name] = new ImageItem(img, this, name);
                         this.resultDic[name].prepare(standAlone);
@@ -60,7 +60,7 @@ export class ResourceCtl extends Base.EventBase {
                         failCallBack(e.toString())
                     };
                     img.src = url
-                } else if (/.*\.(mp3|m4a)$/.test((realExt||url).toLowerCase())) {
+                } else if (/.*\.(mp3|m4a)$/.test((realExt || url).toLowerCase())) {
                     jobCount++;
                     runningJobCount++;
                     progress[i] = 0;
@@ -70,7 +70,7 @@ export class ResourceCtl extends Base.EventBase {
                     x.responseType = 'arraybuffer';
                     x.onload = function () {
                         if (x.status >= 400) {
-                            failCallBack(x.statusText)
+                            failCallBack(job.name + " error: " + x.statusText || x.status)
                         }
                         Engine.audioCtl.ctx.decodeAudioData(
                             x.response,
@@ -95,18 +95,18 @@ export class ResourceCtl extends Base.EventBase {
                         progressCallBack(p / jobCount);
                     };
                     x.onerror = function () {
-                        failCallBack(x.statusText)
+                        failCallBack(job.name + " error: " + x.statusText || x.status)
                     };
                     x.send()
-                } else if (job.arrayBuffer){
+                } else if (job.arrayBuffer) {
                     jobCount++;
                     runningJobCount++;
                     progress[i] = 0;
                     let index = i;
-                    GET(url,null,'arraybuffer',x=>{
+                    GET(url, null, 'arraybuffer', x => {
 
-                    }).then(resp=>{
-                        this.resultDic[name]=resp;
+                    }).then(resp => {
+                        this.resultDic[name] = resp;
                         runningJobCount--;
                         progress[index] = 1;
                         progressCallBack(progress);
@@ -114,18 +114,18 @@ export class ResourceCtl extends Base.EventBase {
                             callBack()
                         }
 
-                    }).catch(err=>{
-                        failCallBack(err)
+                    }).catch(err => {
+                        failCallBack(job.name + " error: " + err.toString())
                     })
-                }else{
+                } else {
                     jobCount++;
                     runningJobCount++;
                     progress[i] = 0;
                     let index = i;
-                    GET(url,null,null,x=>{
+                    GET(url, null, null, x => {
 
-                    }).then(resp=>{
-                        this.resultDic[name]=new TextItem(resp,this,name);
+                    }).then(resp => {
+                        this.resultDic[name] = new TextItem(resp, this, name);
                         runningJobCount--;
                         progress[index] = 1;
                         progressCallBack(progress);
@@ -133,13 +133,13 @@ export class ResourceCtl extends Base.EventBase {
                             callBack()
                         }
 
-                    }).catch(err=>{
-                        failCallBack(err)
+                    }).catch(err => {
+                        failCallBack(job.name + " error: " + err.toString())
                     })
                 }
             }.bind(this);
 
-            newJob(name, url, cache, standAlone,realExt)
+            newJob(name, url, cache, standAlone, realExt)
 
         }
     }

@@ -48,11 +48,13 @@ load(live_id)
             {'name': 'uiAssets', 'url': liveinfo.uiAssets, standAloneTexture: true},
             {'name': 'bgm', 'url': liveinfo.bgm, 'realExt': '.mp3'},
             // {'name': 'm', 'url': liveinfo.bad,arrayBuffer:true},
-            {'name': 'm', 'url': liveinfo.bad, arrayBuffer: true},
+            {'name': 'map', 'url': liveinfo.map, arrayBuffer: true},
             {'name': 'coverImg', 'url': liveinfo.coverImg, standAloneTexture: true},
         ], p => loading.progress(p))
     })
-    .then(() => loading.stop())
+    .then(() => loading.stop(), err => {
+        alert(err)
+    })
     .then(() => {
         bgLayer = new SpriteBatchNode();
         uiLayer = new SpriteBatchNode(64);
@@ -76,7 +78,7 @@ load(live_id)
         bgLayer.opacity = 0;
         Tween(bgLayer, 'opacity').translateTo(1, 500);
 
-        GameMap.init(Engine.resourceCtl.getItem('m'));
+        GameMap.init(Engine.resourceCtl.getItem('map'));
         let started = false;
         let startGame = () => {
             if (started) {
@@ -86,10 +88,10 @@ load(live_id)
             started = true;
             Engine.eventBus.addEventListener('beforeupdate', () => {
                 let current = Engine.audioCtl.getBgmTime() * 1000 || 0;
-                if(current>0){
+                if (current > 0) {
                     bgObject.rotation = bgRotation(current);
                     bgObject.scale = bgScale(current);
-                    bgObject.opacity=bgOpacity(current);
+                    bgObject.opacity = bgOpacity(current);
                 }
             });
             GameMap.enableTouch();

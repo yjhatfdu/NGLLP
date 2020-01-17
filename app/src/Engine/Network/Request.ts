@@ -31,7 +31,7 @@ export class Request {
             if (x.status >= 400) {
                 onerror(x.statusText)
             } else {
-                if(x.responseType=='arraybuffer'){
+                if (x.responseType == 'arraybuffer') {
                     onload(x.response);
                     return
                 }
@@ -43,7 +43,7 @@ export class Request {
             }
         };
         x.onerror = function (e) {
-            onerror(x.statusText)
+            onerror(x.statusText || x.status)
         };
         x.onprogress = function (e) {
             onprogress(e.loaded / e.total, e)
@@ -52,7 +52,11 @@ export class Request {
     }
 
 }
-export function HTTP(url, method = 'GET', config = {headers: {}, params: {}}, postObject = null, type, onprogress?):Promise<any> {
+
+export function HTTP(url, method = 'GET', config = {
+    headers: {},
+    params: {}
+}, postObject = null, type, onprogress?): Promise<any> {
     return new Promise(function (resolve, reject) {
         config = config || {headers: {}, params: {}};
         var request = new Request();
@@ -66,10 +70,10 @@ export function HTTP(url, method = 'GET', config = {headers: {}, params: {}}, po
     });
 }
 
-export function GET(url, config = {headers: {}, params: {}}, type?, onprogress?):Promise<any> {
+export function GET(url, config = {headers: {}, params: {}}, type?, onprogress?): Promise<any> {
     return HTTP(url, 'GET', config, null, type, onprogress)
 }
 
-export function POST(url, config = {headers: {}, params: {}}, postObject = null, onprogress?):Promise<any> {
+export function POST(url, config = {headers: {}, params: {}}, postObject = null, onprogress?): Promise<any> {
     return HTTP(url, 'POST', config, postObject, onprogress)
 }
